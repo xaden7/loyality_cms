@@ -1,0 +1,97 @@
+<div class="container-fluid">
+    <form action="submit" [formGroup]="mainForm">
+        <div class="container p-2">
+
+            <div class="row">
+                <mat-form-field>
+                    <input matInput placeholder="Название акции" formControlName="name">
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field>
+                    <mat-label>Период действия акции</mat-label>
+                    <mat-date-range-input formGroupName="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                    </mat-date-range-input>
+<!--                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>-->
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <div class="row">
+                    <mat-form-field>
+                        <mat-label>Описание акции</mat-label>
+                        <textarea matInput formControlName="description" placeholder="Описание акции"></textarea>
+                    </mat-form-field>
+                    <div *ngIf="mode=='create'" class="col-2">
+                        <mat-form-field>
+                            <ngx-mat-file-input formControlName="image" [multiple]="false">
+                            </ngx-mat-file-input>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="mode=='edit'" class="col-2">
+                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                             alt="Shiba Inu" width="300" height="300">
+                    </div>
+                </div>
+
+
+
+
+                <mat-list>
+                <mat-list-item lines="3">
+                            <div class="row p-3">
+                                <div class="col-2">
+                                    <img src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                                         alt="Shiba Inu" width="100" height="100">
+                                </div>
+                                <div class="col-lg-10">
+                                    <mat-form-field class="p-2">
+                                        <input matInput placeholder="Название товара" formControlName="name">
+                                    </mat-form-field>
+                                    <mat-form-field class="p-2">
+                                        <input matInput placeholder="Описание товара"
+                                               formControlName="description">
+                                    </mat-form-field>
+                                    <mat-form-field class="p-2">
+                                        <input matInput placeholder="Цена товара" formControlName="price">
+                                    </mat-form-field>
+
+                                    <button class="btn btn-primary m-2">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button class="btn btn-danger">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </mat-list-item>
+                    <mat-divider></mat-divider>
+                    </mat-list>
+                    <div class="row mt-lg-5">
+
+                        <button class="btn btn-primary">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+
+            </div>
+
+
+
+            <div class="container-fluid">
+                <button class="btn btn-primary m-3">
+                    <mat-icon>save</mat-icon>
+                </button>
+                <button class="btn btn-danger m-3">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </div>
+
+
+        </div>
+    </form>
+</div>

@@ -29,8 +29,8 @@
     <td>{{promo.startDate | date}}</td>
     <td>{{promo.endDate | date}}</td>
     <td>
-      <mat-icon>edit</mat-icon>
-      <mat-icon>delete</mat-icon>
+      <button class="btn" routerLink="/promotions/{{promo.id}}"><mat-icon>edit</mat-icon></button>
+      <button class="btn"><mat-icon>delete</mat-icon></button>
     </td>
   </tr>
   </tbody>

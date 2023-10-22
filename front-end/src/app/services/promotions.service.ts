@@ -12,4 +12,8 @@ export class PromotionsService {
   getPromotions(): Observable<any> {
     return this.http.get('http://localhost:8080/api/promotions/get-all');
   }
+
+  getPromotionById(id: number): Observable<any> {
+    return this.http.get(`http://localhost:8080/api/promotions/get-details-by-promotion-id?promotionId=${id}`);
+  }
 }
