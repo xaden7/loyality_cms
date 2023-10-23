@@ -29,7 +29,7 @@
     <td>{{promo.startDate | date}}</td>
     <td>{{promo.endDate | date}}</td>
     <td>
-      <button class="btn" routerLink="/promotions/{{promo.id}}"><mat-icon>edit</mat-icon></button>
+      <button class="btn" (click)="openDetails(promo)"><mat-icon>edit</mat-icon></button>
       <button class="btn"><mat-icon>delete</mat-icon></button>
     </td>
   </tr>

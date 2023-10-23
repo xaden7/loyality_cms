@@ -14,7 +14,7 @@
                         <input matStartDate formControlName="start" placeholder="Start date">
                         <input matEndDate formControlName="end" placeholder="End date">
                     </mat-date-range-input>
-<!--                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>-->
+                    <!--                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>-->
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
@@ -37,11 +37,10 @@
                     </div>
                 </div>
 
+                <mat-list formArrayName="productsArray">
+                    <div *ngFor="let product of productsControls; let i = index" formGroupName="{{i}}">
+                        <mat-list-item lines="3">
 
-
-
-                <mat-list>
-                <mat-list-item lines="3">
                             <div class="row p-3">
                                 <div class="col-2">
                                     <img src="https://material.angular.io/assets/img/examples/shiba2.jpg"
@@ -65,21 +64,23 @@
                                     <button class="btn btn-danger">
                                         <mat-icon>delete</mat-icon>
                                     </button>
-
                                 </div>
                             </div>
-                        </mat-list-item>
-                    <mat-divider></mat-divider>
-                    </mat-list>
-                    <div class="row mt-lg-5">
 
-                        <button class="btn btn-primary">
-                            <mat-icon>add</mat-icon>
-                        </button>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+
                     </div>
 
-            </div>
+                </mat-list>
+                <div class="row mt-lg-5">
 
+                    <button class="btn btn-primary">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+
+            </div>
 
 
             <div class="container-fluid">

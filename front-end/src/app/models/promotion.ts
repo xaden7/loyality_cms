@@ -2,8 +2,8 @@ export interface Promotion {
   id: number;
   name: string;
   description: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   status?: string;
   upToDiscount: number;
   upToBonus?: number;

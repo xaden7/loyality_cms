@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PromotionsService} from "../../services/promotions.service";
 import {Promotion} from "../../models/promotion";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-promo-list',
@@ -10,7 +11,8 @@ import {Promotion} from "../../models/promotion";
 export class PromoListComponent implements OnInit {
   promotions: Promotion[] = [];
 
-  constructor(private promoService: PromotionsService) {
+  constructor(private promoService: PromotionsService,
+              private router: Router) {
 
   }
 
@@ -20,4 +22,8 @@ export class PromoListComponent implements OnInit {
     });
   }
 
+  openDetails(promo: Promotion) {
+    this.promoService.setCurrentPromotion(promo);
+    this.router.navigateByUrl('/promotions/' + promo.id);
+  }
 }
