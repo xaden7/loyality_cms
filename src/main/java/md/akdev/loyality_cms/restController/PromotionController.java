@@ -1,6 +1,7 @@
 package md.akdev.loyality_cms.restController;
 
 import md.akdev.loyality_cms.dto.PromotionDTO;
+import md.akdev.loyality_cms.dto.PromotionDetailsDTO;
 import md.akdev.loyality_cms.model.Promotion;
 import md.akdev.loyality_cms.repository.PromotionDetailsRepository;
 import md.akdev.loyality_cms.repository.PromotionRepository;
@@ -45,12 +46,18 @@ public class PromotionController {
         );
     }
 
+    @RequestMapping("/get-by-id")
+    public ResponseEntity<?> getById(Integer id){
+        return ResponseEntity.ok().body(
+                modelMapper.map(promotionRepository.findById(id), PromotionDTO.class)
+        );
+    }
 
     @RequestMapping("/get-details-by-promotion-id")
     public ResponseEntity<?> getDetailsByPromotionId(Integer promotionId){
         return ResponseEntity.ok().body(
                 promotionDetailsRepository.findByPromotionId(promotionId).stream().map((element) ->
-                        modelMapper.map(element, PromotionDTO.class)).collect(Collectors.toList()
+                        modelMapper.map(element, PromotionDetailsDTO.class)).collect(Collectors.toList()
                 ));
     }
 
