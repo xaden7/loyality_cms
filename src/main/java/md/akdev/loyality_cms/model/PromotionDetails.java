@@ -2,17 +2,24 @@ package md.akdev.loyality_cms.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
+
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class PromotionDetails {
     //details class of promotion
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @ManyToOne
-    @JoinColumn(name = "promotion", referencedColumnName = "id")
+    @JoinColumn(name = "promotion_id", referencedColumnName = "id")
     @JsonBackReference
     private Promotion promotion;
     @Column(name = "product_id")
@@ -30,6 +37,6 @@ public class PromotionDetails {
     @Column(name = "image_type")
     private String imageType;
     @Column(name = "image")
-    @Lob
     private String image;
+
 }

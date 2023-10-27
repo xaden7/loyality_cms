@@ -1,9 +1,14 @@
 package md.akdev.loyality_cms.dto;
 
-import jakarta.persistence.Column;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PromotionDetailsDTO {
     private Integer id;
     private String productName;

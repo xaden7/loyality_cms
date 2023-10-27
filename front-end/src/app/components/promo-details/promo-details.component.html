@@ -1,96 +1,129 @@
 <div class="container-fluid">
-    <form action="submit" [formGroup]="mainForm">
+    <form [action]="save()" [formGroup]="mainForm">
         <div class="container p-2">
 
             <div class="row">
-                <mat-form-field>
-                    <input matInput placeholder="Название акции" formControlName="name">
-                </mat-form-field>
+                <div class="row">
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Название акции" formControlName="name">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Сумма бонусов" formControlName="upToBonus">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Сумма скидки" formControlName="upToDiscount">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Период действия акции</mat-label>
+                        <mat-date-range-input formGroupName="range" [rangePicker]="picker">
+                            <input matStartDate formControlName="start" placeholder="Start date">
+                            <input matEndDate formControlName="end" placeholder="End date">
+                        </mat-date-range-input>
+                        <!--                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>-->
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="row">
-                <mat-form-field>
-                    <mat-label>Период действия акции</mat-label>
-                    <mat-date-range-input formGroupName="range" [rangePicker]="picker">
-                        <input matStartDate formControlName="start" placeholder="Start date">
-                        <input matEndDate formControlName="end" placeholder="End date">
-                    </mat-date-range-input>
-                    <!--                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>-->
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                </mat-form-field>
-            </div>
+
             <div class="row">
                 <div class="row">
-                    <mat-form-field>
+<!--                    <div *ngIf="mode=='create'">-->
+<!--                        <mat-form-field>-->
+<!--                            <ngx-mat-file-input formControlName="image" [multiple]="false">-->
+<!--                            </ngx-mat-file-input>-->
+<!--                        </mat-form-field>-->
+<!--                    </div>-->
+                    <div>
+                        <img [src]="imagePath" width="600" alt="Upload an image">
+
+                        <input type="file" class="file-input"
+                               (change)="onMainFileSelected($event)" #fileUpload>
+
+
+                        <button mat-mini-fab color="primary" class="upload-btn"
+                                (click)="fileUpload.click()">
+                            <mat-icon>attach_file</mat-icon>
+                        </button>
+                        <button mat-mini-fab (click)="deleteMainFile()">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <mat-form-field appearance="outline">
                         <mat-label>Описание акции</mat-label>
                         <textarea matInput formControlName="description" placeholder="Описание акции"></textarea>
                     </mat-form-field>
-                    <div *ngIf="mode=='create'" class="col-2">
-                        <mat-form-field>
-                            <ngx-mat-file-input formControlName="image" [multiple]="false">
-                            </ngx-mat-file-input>
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="mode=='edit'" class="col-2">
-                        <img src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                             alt="Shiba Inu" width="300" height="300">
-                    </div>
                 </div>
+                <mat-divider></mat-divider>
 
-                <mat-list formArrayName="productsArray">
-                    <div *ngFor="let product of productsControls; let i = index" formGroupName="{{i}}">
-                        <mat-list-item lines="3">
+            </div>
 
-                            <div class="row p-3">
-                                <div class="col-2">
-                                    <img src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                                         alt="Shiba Inu" width="100" height="100">
-                                </div>
-                                <div class="col-lg-10">
-                                    <mat-form-field class="p-2">
-                                        <input matInput placeholder="Название товара" formControlName="name">
-                                    </mat-form-field>
-                                    <mat-form-field class="p-2">
-                                        <input matInput placeholder="Описание товара"
-                                               formControlName="description">
-                                    </mat-form-field>
-                                    <mat-form-field class="p-2">
-                                        <input matInput placeholder="Цена товара" formControlName="price">
-                                    </mat-form-field>
+            <div class="row">
 
-                                    <button class="btn btn-primary m-2">
-                                        <mat-icon>edit</mat-icon>
+                <ol formArrayName="productsArray">
+
+                    <li *ngFor="let control of productsControls.controls; let i = index" [formGroupName]="i">
+                        <div class="row p-3">
+                            <div class="col-2">
+                                <img [src]="getImage(i)" height="100" alt="Upload an image">
+
+
+                                <input type="file" class="file-input"
+                                       (change)="onProductFileSelected($event, control)" #fileUpload>
+                                <div>
+                                    <button mat-mini-fab color="primary" class="upload-btn"
+                                            (click)="fileUpload.click()">
+                                        <mat-icon>attach_file</mat-icon>
                                     </button>
-                                    <button class="btn btn-danger">
+                                    <button mat-mini-fab (click)="deleteProductFile(i)">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </div>
                             </div>
 
-                        </mat-list-item>
-                        <mat-divider></mat-divider>
+                            <div class="col-lg-10">
 
-                    </div>
+                                <mat-form-field class="p-2" appearance="outline">
+                                    <input matInput placeholder="Название товара" formControlName="name">
+                                </mat-form-field>
+                                <mat-form-field class="p-2" appearance="outline">
+                                    <input matInput placeholder="Цена товара" formControlName="price">
+                                </mat-form-field>
 
-                </mat-list>
+                                <button class="btn btn-danger" (click)="deleteProduct(i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                    </li>
+                    <mat-divider></mat-divider>
+
+                </ol>
                 <div class="row mt-lg-5">
 
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" (click)="addProduct()">
                         <mat-icon>add</mat-icon>
                     </button>
                 </div>
 
             </div>
 
-
-            <div class="container-fluid">
-                <button class="btn btn-primary m-3">
-                    <mat-icon>save</mat-icon>
-                </button>
-                <button class="btn btn-danger m-3">
-                    <mat-icon>cancel</mat-icon>
-                </button>
-            </div>
+            <button class="btn btn-primary m-3" (click)="save()">
+                <mat-icon>save</mat-icon>
+            </button>
+            <button class="btn btn-danger m-3" routerLink="/promotions">
+                <mat-icon>cancel</mat-icon>
+            </button>
 
 
         </div>

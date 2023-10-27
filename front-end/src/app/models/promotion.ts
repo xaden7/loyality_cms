@@ -1,17 +1,35 @@
 export interface Promotion {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   startDate: Date;
   endDate: Date;
   status?: string;
   upToDiscount: number;
-  upToBonus?: number;
-  imageName: string;
+  upToBonus: number;
+  imageName?: string;
   imageType?: string;
   image: string;
+  promotionDetails: PromotionDetails[];
 
 }
+
+
+ export interface PromotionDetails {
+    id?: number;
+    promotionId?: number;
+    productName: string;
+    productPrice: number;
+    productDiscount?: number;
+    productBonus?: number;
+    imageName?: string;
+    imageType?: string;
+    image: string;
+
+}
+
+
+
 
 // private Integer id;
 // private String name;

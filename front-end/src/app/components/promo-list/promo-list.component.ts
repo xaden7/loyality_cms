@@ -26,4 +26,8 @@ export class PromoListComponent implements OnInit {
     this.promoService.setCurrentPromotion(promo);
     this.router.navigateByUrl('/promotions/' + promo.id);
   }
+
+  createPromo() {
+    this.router.navigateByUrl('/promotions/');
+  }
 }

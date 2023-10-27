@@ -18,7 +18,7 @@ export class PromotionsService {
   }
 
   getPromotionById(id: number): Observable<any> {
-    return this.http.get(`http://localhost:8080/api/promotions/get-details-by-promotion-id?promotionId=${id}`);
+    return this.http.get(`http://localhost:8080/api/promotions/get-by-id?id=${id}`);
   }
 
   setCurrentPromotion(promotion: Promotion) {
@@ -27,5 +27,9 @@ export class PromotionsService {
 
   getCurrentPromotion(): Observable<Promotion> {
     return this.currentPromotion.asObservable();
+  }
+
+  savePromotion(savedPromotion: Promotion) {
+    return this.http.post('http://localhost:8080/api/promotions/new-promotion', savedPromotion);
   }
 }
