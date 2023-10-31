@@ -12,10 +12,10 @@ import java.util.UUID;
 @Setter
 public class ClientDeviceDto {
 
-    private UUID Id;
-    private String ClientName;
-    private String PhoneNumber;
-    private String CodeCard;
-    private String DeviceId;
-    private Double Bonus;
+    private UUID id;
+    private String clientName;
+    private String phoneNumber;
+    private String codeCard;
+    private String deviceId;
+    private Double bonus;
 }

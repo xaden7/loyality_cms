@@ -2,45 +2,56 @@ package md.akdev.loyality_cms.restController;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.model.ClientsModel;
-import md.akdev.loyality_cms.model.DevicesModel;
-import md.akdev.loyality_cms.utils.MappingUtils;
+import md.akdev.loyality_cms.model.JwtResponse;
+import md.akdev.loyality_cms.service.ClientService;
+import md.akdev.loyality_cms.service.JwtAuthService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/auth")
 public class ClientDeviceDtoController {
 
-    private final MappingUtils mappingUtils;
-    private final ClientsRestController clientsRestController;
-    private final DevicesRestController devicesRestController;
+   private final ClientService clientService;
+   private final JwtAuthService jwtAuthService;
 
-    public ClientDeviceDtoController(MappingUtils mappingUtils, ClientsRestController clientsRestController, DevicesRestController devicesRestController) {
-        this.mappingUtils = mappingUtils;
-        this.clientsRestController = clientsRestController;
-        this.devicesRestController = devicesRestController;
+
+    public ClientDeviceDtoController(ClientService clientService, JwtAuthService jwtAuthService) {
+        this.clientService = clientService;
+        this.jwtAuthService = jwtAuthService;
     }
 
-    @GetMapping("/api/clients/phone={phone}&barcode={barcode}&deviceId={deviceId}")
-    public ClientDeviceDto getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode, @PathVariable String deviceId){
+    @GetMapping("login/phone={phone}&barcode={barcode}")
+    public ResponseEntity<?> getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode){
 
         ClientDeviceDto inputClient = new ClientDeviceDto();
         inputClient.setPhoneNumber(phone);
         inputClient.setCodeCard(barcode);
-        inputClient.setDeviceId(deviceId);
 
-        ClientsModel clientsModel = mappingUtils.mapToClientsModel(inputClient);
-        ClientsModel getClient = clientsRestController.getClientByPhoneAndBarcode(clientsModel);
+        ClientsModel clientsModel = clientService.mapToClientsModel(inputClient);
+        try {
+            ClientsModel getClient = clientService.getClientByPhoneNumberAndCodeCard(clientsModel);
 
-        inputClient.setId(getClient.getId());
-        inputClient.setBonus(getClient.getBonus());
-        inputClient.setClientName(getClient.getClientName());
+            inputClient.setId(getClient.getId());
+            inputClient.setBonus(getClient.getBonus());
+            inputClient.setClientName(getClient.getClientName());
 
-        DevicesModel devicesModel = mappingUtils.mapToDeviceModel(inputClient);
-        devicesRestController.addDevice(devicesModel);
+            final JwtResponse token = jwtAuthService.login(phone, barcode);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("accessToken", token.getAccessToken());
+            responseHeaders.set("refreshToken", token.getRefreshToken());
+            return ResponseEntity.ok()
+                    .headers(responseHeaders)
+                    .body(inputClient);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
-        return inputClient;
     }
 
 }

@@ -19,13 +19,13 @@ public class ClientsModel {
     private UUID id;
     @Column
     @NotEmpty
-    private String ClientName;
+    private String clientName;
     @Column
     @NotEmpty
-    private String PhoneNumber;
+    private String phoneNumber;
     @Column
     @NotEmpty
-    private String CodeCard;
+    private String codeCard;
     @Column
-    private Double Bonus;
+    private Double bonus;
 }

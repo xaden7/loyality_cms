@@ -2,7 +2,6 @@ package md.akdev.loyality_cms.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,11 +18,11 @@ import java.util.UUID;
 public class DevicesModel {
 
   @Column
-  private UUID ClientId;
+  private UUID clientId;
   @Id
   @Column
   @NotEmpty
-  private String DeviceId;
+  private String deviceId;
 
 
 
