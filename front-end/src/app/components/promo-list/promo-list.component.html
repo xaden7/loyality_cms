@@ -1,0 +1,41 @@
+<table class="table table-bordered table-hover">
+  <thead>
+  <tr>
+    <td>
+      #
+    </td>
+    <td>
+      Name
+    </td>
+    <td>
+      Description
+    </td>
+    <td>
+      Start Date
+    </td>
+    <td>
+      End Date
+    </td>
+    <td>
+      Actions
+    </td>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let promo of promotions">
+    <td>{{promo.id}}</td>
+    <td>{{promo.name}}</td>
+    <td>{{promo.description}}</td>
+    <td>{{promo.startDate | date}}</td>
+    <td>{{promo.endDate | date}}</td>
+    <td>
+      <button class="btn" (click)="openDetails(promo)"><mat-icon>edit</mat-icon></button>
+      <button class="btn"><mat-icon>delete</mat-icon></button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="mat-action-list">
+  <button class="btn btn-primary" (click)="createPromo()"><mat-icon>add</mat-icon></button>
+</div>
