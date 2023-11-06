@@ -27,7 +27,8 @@ public class ClientsRestController {
         if (getClient == null) {
          restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor("OnicaIon", "tbND3tkEDVKO"));
         try {
-            ClientsModel getClientLoyality = restTemplate.getForObject("http://violetta:8010/discount/hs/GetBonus?phone={phone}&barcode={barcode}", ClientsModel.class, phone, barcode);
+            ClientsModel getClientLoyality = restTemplate.getForObject("http://10.0.220.147:8010/discount/hs/GetBonus?phone={phone}&barcode={barcode}", ClientsModel.class, phone, barcode);
+            System.out.println("getClientLoyality = " + getClientLoyality + " phone = " + phone + " barcode = " + barcode);
             getClientLoyality.setPhoneNumber(phone);
             getClientLoyality.setCodeCard(barcode);
              ClientsModel postClient = addClient(getClientLoyality);
