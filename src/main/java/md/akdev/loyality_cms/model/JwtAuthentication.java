@@ -13,8 +13,9 @@ import java.util.Collection;
 public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
-    private String username;
-    private String firstName;
+    private String uuid;
+    private String phoneNumber;
+    //private String firstName;
 
     /*Оставим на будущее*/
     //private Set<Role> roles;
@@ -33,7 +34,7 @@ public class JwtAuthentication implements Authentication {
     public Object getDetails() { return null; }
 
     @Override
-    public Object getPrincipal() { return username; }
+    public Object getPrincipal() { return uuid; }
 
     @Override
     public boolean isAuthenticated() { return authenticated; }
@@ -44,6 +45,6 @@ public class JwtAuthentication implements Authentication {
     }
 
     @Override
-    public String getName() { return firstName; }
+    public String getName() { return phoneNumber; }
 
 }

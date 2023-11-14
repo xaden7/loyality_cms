@@ -3,6 +3,7 @@ package md.akdev.loyality_cms.restController;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -15,6 +16,9 @@ import java.util.Optional;
 public class ClientsRestController {
     @Autowired
     ClientsRepository clientsRepository;
+    @Value("${spring.datasource1c.username}") String userName;
+    @Value("${spring.datasource1c.password}") String password;
+    @Value("${spring.datasource1c.url.getBonus}") String urlGetBonus;
 
     final RestTemplate restTemplate = new RestTemplate();
 
@@ -25,10 +29,10 @@ public class ClientsRestController {
 
         ClientsModel getClient = clientsRepository.getClientByPhoneNumberAndCodeCard(phone, barcode).orElse(null);
         if (getClient == null) {
-         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor("OnicaIon", "tbND3tkEDVKO"));
+         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
         try {
-            ClientsModel getClientLoyality = restTemplate.getForObject("http://10.0.220.147:8010/discount/hs/GetBonus?phone={phone}&barcode={barcode}", ClientsModel.class, phone, barcode);
-            System.out.println("getClientLoyality = " + getClientLoyality + " phone = " + phone + " barcode = " + barcode);
+            ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phone, barcode);
+            //System.out.println("getClientLoyality = " + getClientLoyality + " phone = " + phone + " barcode = " + barcode);
             getClientLoyality.setPhoneNumber(phone);
             getClientLoyality.setCodeCard(barcode);
              ClientsModel postClient = addClient(getClientLoyality);

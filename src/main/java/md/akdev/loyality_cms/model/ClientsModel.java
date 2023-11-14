@@ -28,4 +28,6 @@ public class ClientsModel {
     private String codeCard;
     @Column
     private Double bonus;
+    @Column
+    private String uuid1c;
 }

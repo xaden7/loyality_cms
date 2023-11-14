@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class ClientDeviceDtoController {
-
    private final ClientService clientService;
    private final JwtAuthService jwtAuthService;
-
 
     public ClientDeviceDtoController(ClientService clientService, JwtAuthService jwtAuthService) {
         this.clientService = clientService;
@@ -51,7 +49,6 @@ public class ClientDeviceDtoController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
     }
 
 }

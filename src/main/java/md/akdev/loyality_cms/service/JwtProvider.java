@@ -39,6 +39,7 @@ public class JwtProvider {
                 .setSubject(user.getPhoneNumber())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
+                .claim("uuid", user.getUuid1c())
                 .claim("phoneNumber", user.getPhoneNumber())
                 .claim("codeCard", user.getCodeCard())
                 .compact();
@@ -52,6 +53,9 @@ public class JwtProvider {
                 .setSubject(user.getPhoneNumber())
                 .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
+                .claim("uuid", user.getUuid1c())
+                .claim("phoneNumber", user.getPhoneNumber())
+                .claim("codeCard", user.getCodeCard())
                 .compact();
     }
 

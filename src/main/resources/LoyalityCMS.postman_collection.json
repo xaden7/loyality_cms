@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "34252822-2401-423d-93a6-f4aeb6a4cc74",
+		"name": "LoyalityCMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18400305"
+	},
+	"item": [
+		{
+			"name": "LoginClient",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "getTransaction",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "getRefreshBonus",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "newAccessToken",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "newAccesAndRefreshToken",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbnRvbiIsImV4cCI6MTY1ODM4NTg2NH0.gfE8Gr_1Sp_Um3vXG2EaDgqz6p9iLo1_wZgKksme13pg2q4cXVyShBtMTZ0ApfdcGzXcJ2MUoFHtTJCMj8ROUQ\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/newRefreshToken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"newRefreshToken"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
