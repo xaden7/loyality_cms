@@ -19,5 +19,5 @@ public class PromotionDTO {
     private String imageType;
     private String status;
     private List<PromotionDetailDTO> promotionDetails;
-    private List<TagsDTO> tags;
+    private List<TagDTO> tags;
 }

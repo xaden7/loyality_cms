@@ -47,8 +47,7 @@ public class PromotionDetail {
     @Column(name = "product_old_price")
     private Double productOldPrice;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 

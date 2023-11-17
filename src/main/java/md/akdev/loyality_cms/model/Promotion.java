@@ -55,12 +55,12 @@ public class Promotion {
     @Column(name = "status")
     private String status;
 
-    @OneToMany(mappedBy = "promotion", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "promotion", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     private List<PromotionDetail> promotionDetails;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "promotions_tags",
             joinColumns = @JoinColumn(name = "promotion_id"),
