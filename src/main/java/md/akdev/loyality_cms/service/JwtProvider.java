@@ -7,6 +7,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import md.akdev.loyality_cms.model.ClientsModel;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -33,7 +34,7 @@ public class JwtProvider {
 
     public String generateAccessToken(ClientsModel user) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
+        final Instant accessExpirationInstant = now.plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
                 .setSubject(user.getPhoneNumber())
@@ -68,6 +69,7 @@ public class JwtProvider {
     }
 
     private boolean validateToken(@NonNull String token, @NonNull Key secret) {
+
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secret)

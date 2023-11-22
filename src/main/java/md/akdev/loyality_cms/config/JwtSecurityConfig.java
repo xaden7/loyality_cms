@@ -30,7 +30,7 @@ public class JwtSecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers( new AntPathRequestMatcher("/user/token/**")).permitAll()
+                                .requestMatchers( new AntPathRequestMatcher("/auth/token/**")).permitAll()
                                 .requestMatchers( new AntPathRequestMatcher("/auth/login/**")).permitAll()
                                 .anyRequest().authenticated()
                 )
