@@ -25,7 +25,7 @@ public class QuestionaryRestController {
         }
     }
 
-    @PostMapping ("updateQuestionary")
+    @PatchMapping ("updateQuestionary")
     public ResponseEntity<?> updateQuestionary(@RequestBody QuestionaryModel questionaryModel){
         try {
             QuestionaryModel postQuestionaryModel = questionaryService.updateQuestionary(questionaryModel);
