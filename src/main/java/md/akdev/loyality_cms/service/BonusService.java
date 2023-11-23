@@ -29,7 +29,7 @@ public class BonusService {
         ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
         try {
-            ClientsModel clientsModel1c = restTemplate.getForObject(urlGetRefreshBonus, ClientsModel.class, authentication.getUuid());
+            ClientsModel clientsModel1c = restTemplate.getForObject(urlGetRefreshBonus, ClientsModel.class, clientsModel.getUuid1c());
             clientsModel.setBonus(clientsModel1c.getBonus());
             return clientsModel;
         }
