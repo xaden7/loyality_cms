@@ -25,10 +25,10 @@ public class QuestionaryRestController {
         }
     }
 
-    @PutMapping("postQuestionary")
-    public ResponseEntity<?> postQuestionary(@RequestBody QuestionaryModel questionaryModel){
+    @PostMapping ("updateQuestionary")
+    public ResponseEntity<?> updateQuestionary(@RequestBody QuestionaryModel questionaryModel){
         try {
-            QuestionaryModel postQuestionaryModel = questionaryService.postQuestionary(questionaryModel);
+            QuestionaryModel postQuestionaryModel = questionaryService.updateQuestionary(questionaryModel);
             return new ResponseEntity(postQuestionaryModel, HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
