@@ -105,6 +105,7 @@ public class SmsService {
                     return ResponseEntity.ok("Code is valid");
                 } else {
                     smsCodeStorageRepository.delete(smsCodeStorage);  // delete code from storage
+                    return ResponseEntity.badRequest().body("Code is expired");
                 }
             }
         }
