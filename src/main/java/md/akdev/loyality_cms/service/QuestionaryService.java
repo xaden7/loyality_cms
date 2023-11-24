@@ -1,10 +1,11 @@
 package md.akdev.loyality_cms.service;
 
+import jakarta.validation.constraints.NotNull;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.model.JwtAuthentication;
 import md.akdev.loyality_cms.model.QuestionaryModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Service;

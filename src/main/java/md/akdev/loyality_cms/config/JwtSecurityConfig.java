@@ -32,6 +32,7 @@ public class JwtSecurityConfig {
                         auth -> auth
                                 .requestMatchers( new AntPathRequestMatcher("/auth/token/**")).permitAll()
                                 .requestMatchers( new AntPathRequestMatcher("/auth/login/**")).permitAll()
+                                .requestMatchers( new AntPathRequestMatcher("/api/sms/**")).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
