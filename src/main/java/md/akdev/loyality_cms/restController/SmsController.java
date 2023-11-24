@@ -4,10 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import md.akdev.loyality_cms.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -29,6 +26,11 @@ public class SmsController {
     @PostMapping("/verify-sms")
     public ResponseEntity<?> verifySms(@NotNull String phone, @NotNull Integer code) {
         return smsService.verifySmsCode(phone, code);
+    }
+
+    @GetMapping("/get-all-sms")
+    public ResponseEntity<?> getAllSms() {
+        return ResponseEntity.ok(smsService.getAllSmsCodeStorage());
     }
 
 }

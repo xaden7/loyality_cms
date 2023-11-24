@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class SmsService {
@@ -127,6 +128,10 @@ public class SmsService {
     private void saveSmsLog(SmsCodeLog smsCodeLog) {
         //  SmsCodeLog smsCodeLog = new SmsCodeLog(phone, result.getCode(), result.getMessageId(), operation);
         smsCodeLogsRepository.save(smsCodeLog);
+    }
+
+    public List<SmsCodeStorage> getAllSmsCodeStorage() {
+        return smsCodeStorageRepository.findAll();
     }
 }
 
