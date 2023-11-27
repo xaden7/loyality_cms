@@ -4,6 +4,7 @@ import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.model.JwtRefreshRequest;
 import md.akdev.loyality_cms.model.JwtResponse;
+import md.akdev.loyality_cms.model.QuestionaryModel;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.JwtAuthService;
 import org.springframework.http.HttpHeaders;
@@ -59,6 +60,16 @@ public class AuthRestController {
     public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody JwtRefreshRequest request){
         final JwtResponse token = jwtAuthService.refresh(request.getRefreshToken());
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("newClient")
+    public ResponseEntity<?> newClient(@RequestBody QuestionaryModel questionaryModel){
+        try{
+            QuestionaryModel postQustionaryModel = clientService.newClient(questionaryModel);
+            return new ResponseEntity(postQustionaryModel, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 }
