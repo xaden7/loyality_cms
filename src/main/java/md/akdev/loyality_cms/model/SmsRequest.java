@@ -28,5 +28,7 @@ public class SmsRequest {
         private String text;
         @JsonProperty("validity")
         private Integer validity;
+        @JsonProperty("priority")
+        private String priority;
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -30,6 +32,8 @@ public class SmsService {
     @Value("${devino.sms.sender}")
      String smsSender;
 
+    final String priority = "HIGH";
+
     private final SmsCodeStorageRepository smsCodeStorageRepository;
 
     private final SmsCodeLogsRepository smsCodeLogsRepository;
@@ -39,7 +43,7 @@ public class SmsService {
         this.smsCodeLogsRepository = smsCodeLogsRepository;
     }
 
-    public ResponseEntity<?> sendSms(String phone) {
+    public ResponseEntity<?> sendSms(String phone){
 
         Integer code = getRandomNumber();
 
@@ -50,7 +54,7 @@ public class SmsService {
         httpHeaders.set("Authorization", "Key " + smsApiKey);
 
         SmsRequest smsRequest = new SmsRequest(Collections.singletonList(
-                                        new SmsRequest.Message(smsSender, phone, messageToSend, 0)));
+                                        new SmsRequest.Message(smsSender, phone, messageToSend, 0, priority)));
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonBody;
         try {
