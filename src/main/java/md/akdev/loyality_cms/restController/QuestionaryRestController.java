@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("user/token")
+@RequestMapping("api/user")
 public class QuestionaryRestController {
     private final QuestionaryService questionaryService;
 
@@ -19,17 +19,17 @@ public class QuestionaryRestController {
     public ResponseEntity<?> getQuestionary(){
         try {
             QuestionaryModel questionaryModel = questionaryService.getQuestionary();
-            return new ResponseEntity(questionaryModel, HttpStatus.OK);
+            return new ResponseEntity<>(questionaryModel, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
-    @PatchMapping ("updateQuestionary")
+    @PostMapping ("updateQuestionary")
     public ResponseEntity<?> updateQuestionary(@RequestBody QuestionaryModel questionaryModel){
         try {
             QuestionaryModel postQuestionaryModel = questionaryService.updateQuestionary(questionaryModel);
-            return new ResponseEntity(postQuestionaryModel, HttpStatus.OK);
+            return new ResponseEntity<>(postQuestionaryModel, HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

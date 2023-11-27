@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("user/token")
+@RequestMapping("api/bonus")
 public class BonusRestController {
 
     private final BonusService bonusService;
@@ -18,11 +18,11 @@ public class BonusRestController {
         this.bonusService = bonusService;
     }
 
-    @GetMapping("getRefreshBonus")
+    @GetMapping("/getRefreshBonus")
     public ResponseEntity<?> getRefreshBonus(){
         try {
             ClientsModel clientsModel = bonusService.getRefreshBonus();
-            return new ResponseEntity(clientsModel, HttpStatus.OK);
+            return new ResponseEntity<>(clientsModel, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
