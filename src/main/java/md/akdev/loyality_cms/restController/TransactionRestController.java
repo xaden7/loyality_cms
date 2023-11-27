@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("user/token")
+@RequestMapping("api/user")
 public class TransactionRestController {
     private final TransactionService transactionService;
 
@@ -19,7 +19,7 @@ public class TransactionRestController {
     public ResponseEntity<?> getTransaction(){
         try{
             String transaction = transactionService.getTransaction();
-            return new ResponseEntity(transaction, HttpStatus.OK);
+            return new ResponseEntity<>(transaction, HttpStatus.OK);
         }catch (Exception e)
         {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
