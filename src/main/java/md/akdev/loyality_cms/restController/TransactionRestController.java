@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("user/token")
+@RequestMapping("api/user")
 public class TransactionRestController {
     private final TransactionService transactionService;
 
@@ -23,6 +23,7 @@ public class TransactionRestController {
         try{
             List<TransactionModel> transaction = transactionService.getTransaction();
             return new ResponseEntity(transaction, HttpStatus.OK);
+
         }catch (Exception e)
         {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

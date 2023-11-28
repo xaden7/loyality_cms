@@ -25,6 +25,10 @@ public class Branch {
     @Column(name = "city", length = 30)
     private String city;
 
+    @Size(max = 30)
+    @Column(name = "region", length = 30)
+    private String region;
+
     @Size(max = 100)
     @Column(name = "address", length = 100)
     private String address;
@@ -47,6 +51,10 @@ public class Branch {
     @Column(name = "working_saturday_hours", length = 100)
     private String workingSaturdayHours;
 
+    @Size(max = 100)
+    @Column(name = "working_sunday_hours", length = 100)
+    private String workingSundayHours;
+
     @Column(name = "optics")
     private Boolean optics;
 
@@ -61,6 +69,10 @@ public class Branch {
     @Size(max = 100)
     @Column(name = "optics_working_saturday_hours", length = 100)
     private String opticsWorkingSaturdayHours;
+
+    @Size(max = 100)
+    @Column(name = "optics_working_sunday_hours", length = 100)
+    private String opticsWorkingSundayHours;
 
     @Column(name = "created_at")
     private Instant createdAt;
