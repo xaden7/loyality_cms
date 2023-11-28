@@ -15,4 +15,5 @@ public class QuestionaryModel implements Serializable {
     private String barcode;
     private String language;
     private LocalDateTime birthday;
+    private String sex;
 }

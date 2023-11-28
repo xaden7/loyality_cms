@@ -42,14 +42,14 @@ public class QuestionaryService {
         ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
         clientsModel.setClientName(questionaryModel.getName() + " " + questionaryModel.getFirstName());
         clientsModel.setPhoneNumber(questionaryModel.getPhoneNumber());
-
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
         try{
             return restTemplate.postForObject(urlUpdateQuestionary, questionaryModel, QuestionaryModel.class, authentication.getUuid());
         }catch (Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
         }
-
     }
+
+
 
 }
