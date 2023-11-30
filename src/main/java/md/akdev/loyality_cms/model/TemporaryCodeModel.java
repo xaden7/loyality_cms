@@ -11,4 +11,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class TemporaryCodeModel implements Serializable {
     private Integer code;
+    private Integer lifeTimeInMinutes;
 }
