@@ -66,7 +66,15 @@ public class AuthRestController {
     public ResponseEntity<?> newClient(@RequestBody QuestionaryModel questionaryModel){
         try{
             QuestionaryModel postQustionaryModel = clientService.newClient(questionaryModel);
-            return new ResponseEntity(postQustionaryModel, HttpStatus.OK);
+            ClientsModel clientsModel = clientService.mapQuestionaryToClientsModel(postQustionaryModel);
+            ClientsModel client = clientService.getClientByPhoneNumberAndCodeCard(clientsModel);
+            final JwtResponse token = jwtAuthService.login(client.getPhoneNumber(), client.getCodeCard());
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("accessToken", token.getAccessToken());
+            responseHeaders.set("refreshToken", token.getRefreshToken());
+            return ResponseEntity.ok()
+                    .headers(responseHeaders)
+                    .body(postQustionaryModel);
         }catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

@@ -3,6 +3,7 @@ package md.akdev.loyality_cms.service;
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.model.QuestionaryModel;
+import md.akdev.loyality_cms.model.TemporaryCodeModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.utils.MappingUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ public class ClientService {
     @Value("${spring.datasource1c.password}") String password;
     @Value("${spring.datasource1c.url.getBonus}") String urlGetBonus;
     @Value("${spring.datasource1c.url.newClient}") String urlNewClient;
+    @Value("${spring.datasource1c.url.temporaryCode}") String urlTemporaryCode;
 
     final RestTemplate restTemplate = new RestTemplate();
     private final MappingUtils mappingUtils;
@@ -35,11 +37,14 @@ public class ClientService {
     public ClientsModel mapToClientsModel(ClientDeviceDto dto) {
         return mappingUtils.mapToClientsModel(dto);
     }
-
+    public ClientsModel mapQuestionaryToClientsModel(QuestionaryModel questionaryModel){
+        return mappingUtils.mapQuestionaryToClientsModel(questionaryModel);
+    }
 
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String phone = inputClient.getPhoneNumber();
+        phone = phone.substring(phone.length()-8);
         String barcode = inputClient.getCodeCard();
 
         ClientsModel getClient = clientsRepository.getClientByPhoneNumberAndCodeCard(phone, barcode).orElse(null);
@@ -80,4 +85,21 @@ public class ClientService {
         }
     }
 
+    public TemporaryCodeModel temporaryCode(String uuid1c) throws Exception{
+        try{
+            TemporaryCodeModel newTemporaryCodeModel = new TemporaryCodeModel();
+            newTemporaryCodeModel.setCode(getRandomNumber());
+            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+            TemporaryCodeModel response = restTemplate.postForObject(urlTemporaryCode, newTemporaryCodeModel, TemporaryCodeModel.class, uuid1c);
+            return response;
+        } catch(Exception e){
+            throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
+        }
+    }
+
+    private Integer getRandomNumber() {
+        int min = 100000;
+        int max = 999999;
+        return (int) ((Math.random() * (max - min)) + min);
+    }
 }
