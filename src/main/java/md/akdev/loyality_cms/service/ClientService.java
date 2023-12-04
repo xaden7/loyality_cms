@@ -53,6 +53,10 @@ public class ClientService {
             try {
 
                 ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phone, barcode);
+                if(clientsRepository.getClientByUuid1c(getClientLoyality != null ? getClientLoyality.getUuid1c() : null) != null)
+                {
+                    getClientLoyality = clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c());
+                }
                 getClientLoyality.setPhoneNumber(phone);
                 getClientLoyality.setCodeCard(barcode);
                 ClientsModel postClient = addClient(getClientLoyality);
