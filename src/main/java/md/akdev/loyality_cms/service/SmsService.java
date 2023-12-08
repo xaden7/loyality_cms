@@ -45,7 +45,8 @@ public class SmsService {
 
     public ResponseEntity<?> sendSms(String phone){
 
-        Integer code = getRandomNumber();
+//        Integer code = getRandomNumber();
+        Integer code = 111111; //for apple review
 
         String messageToSend = "Codul de verificare este: " + code;
 
