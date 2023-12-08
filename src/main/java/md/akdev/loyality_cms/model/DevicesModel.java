@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -23,7 +24,22 @@ public class DevicesModel {
   @Column
   @NotEmpty
   private String deviceId;
-
+  @Column
+  private String deviceName;
+  @Column
+  private String os;
+  @Column
+  private String osVersion;
+  @Column
+  private String appVersion;
+  @Column
+  private String appBuild;
+  @Column
+  private String appPackage;
+  @Column
+  private String fcmToken;
+  @Column
+  private LocalDateTime lastConnect;
 
 
 }

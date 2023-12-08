@@ -2,6 +2,7 @@ package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.model.ClientsModel;
+import md.akdev.loyality_cms.model.DevicesModel;
 import md.akdev.loyality_cms.model.QuestionaryModel;
 import md.akdev.loyality_cms.model.TemporaryCodeModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
@@ -106,4 +107,5 @@ public class ClientService {
         int max = 999999;
         return (int) ((Math.random() * (max - min)) + min);
     }
+
 }
