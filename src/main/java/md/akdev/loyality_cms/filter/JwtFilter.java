@@ -50,7 +50,7 @@ public class JwtFilter extends GenericFilterBean {
                     final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
                     jwtInfoToken.setAuthenticated(true);
                     SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
-                    if(!deviceId.isEmpty()){
+                    if(deviceId != null){
                         deviceService.lastConnectDate(deviceId);
                     }
                 }
@@ -96,8 +96,11 @@ public class JwtFilter extends GenericFilterBean {
     }
 
     private String getDeviceId(HttpServletRequest request){
-        final String deviceId = request.getHeader("deviceId");
-        return deviceId;
+        try {
+            final String deviceId = request.getHeader("deviceId");
+            return deviceId;
+        }catch (Exception e){ return null; }
+
     }
 
 }
