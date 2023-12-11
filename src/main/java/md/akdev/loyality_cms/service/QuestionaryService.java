@@ -27,7 +27,6 @@ public class QuestionaryService {
 
     public QuestionaryModel getQuestionary() throws Exception {
         final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
-        //ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
         try {
             return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, authentication.getUuid());

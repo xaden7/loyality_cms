@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import md.akdev.loyality_cms.model.JwtAuthentication;
+import md.akdev.loyality_cms.service.DeviceService;
 import md.akdev.loyality_cms.service.JwtProvider;
 import md.akdev.loyality_cms.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ public class JwtFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "Authorization";
     private final JwtProvider jwtProvider;
+    private final DeviceService deviceService;
     @Value("${jwt.secret.access}")
     String jwtAccessSecret;
 
@@ -39,6 +41,7 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
 
         final String token = getTokenFromRequest((HttpServletRequest) request);
+        final String deviceId = getDeviceId((HttpServletRequest) request);
         if (token != null ) {
             try {
                 Claims tClaims = Jwts.parserBuilder().setSigningKey(jwtAccessSecret).build().parseClaimsJws(token).getBody();
@@ -47,8 +50,10 @@ public class JwtFilter extends GenericFilterBean {
                     final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
                     jwtInfoToken.setAuthenticated(true);
                     SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
+                    if(deviceId != null){
+                        deviceService.lastConnectDate(deviceId);
+                    }
                 }
-             //   fc.doFilter(request, response);
             } catch (ExpiredJwtException expExc) {
                 ObjectMapper mapper = new ObjectMapper();
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -88,6 +93,14 @@ public class JwtFilter extends GenericFilterBean {
             return bearer.substring(7);
         }
         return null;
+    }
+
+    private String getDeviceId(HttpServletRequest request){
+        try {
+            final String deviceId = request.getHeader("deviceId");
+            return deviceId;
+        }catch (Exception e){ return null; }
+
     }
 
 }
