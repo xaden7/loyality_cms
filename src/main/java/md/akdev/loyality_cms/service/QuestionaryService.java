@@ -29,7 +29,11 @@ public class QuestionaryService {
         final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
         try {
-            return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, authentication.getUuid());
+            QuestionaryModel questionaryModel = restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, authentication.getUuid());
+            ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
+            assert questionaryModel != null;
+            questionaryModel.setId(clientsModel.getId());
+            return questionaryModel;
         }catch (Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
         }
