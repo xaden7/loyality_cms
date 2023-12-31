@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DeviceService {
+
     public final DevicesRepository devicesRepository;
 
     public DeviceService(DevicesRepository devicesRepository) {
         this.devicesRepository = devicesRepository;
     }
-
 
     public ResponseEntity<?> addDevice(DevicesModel inputDevice) {
             devicesRepository.save(inputDevice);
