@@ -79,14 +79,4 @@ public class AuthRestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-    @GetMapping("getBarcode/phone={phone}")
-    public ResponseEntity<?> getBarcode(@PathVariable String phone){
-        try{
-            ResponseEntity<?> getBarcodeModel = clientService.getBarcode(phone);
-            return  getBarcodeModel;
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
 }

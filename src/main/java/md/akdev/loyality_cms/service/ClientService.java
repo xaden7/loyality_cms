@@ -5,7 +5,6 @@ import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.utils.MappingUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -59,9 +58,8 @@ public class ClientService {
                 }
                 getClientLoyality.setPhoneNumber(phone);
                 getClientLoyality.setCodeCard(barcode);
-                ClientsModel postClient = addClient(getClientLoyality);
 
-                return postClient;
+                return addClient(getClientLoyality);
             }
             catch(Exception e)
             {
@@ -83,8 +81,7 @@ public class ClientService {
     public QuestionaryModel newClient(QuestionaryModel questionaryModel) throws Exception{
         try{
             restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
-            QuestionaryModel newQuestionary = restTemplate.postForObject(urlNewClient, questionaryModel, QuestionaryModel.class);
-            return newQuestionary;
+            return restTemplate.postForObject(urlNewClient, questionaryModel, QuestionaryModel.class);
         } catch(Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
         }
@@ -95,8 +92,7 @@ public class ClientService {
             TemporaryCodeModel newTemporaryCodeModel = new TemporaryCodeModel();
             newTemporaryCodeModel.setCode(getRandomNumber());
             restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
-            TemporaryCodeModel response = restTemplate.postForObject(urlTemporaryCode, newTemporaryCodeModel, TemporaryCodeModel.class, uuid1c);
-            return response;
+            return restTemplate.postForObject(urlTemporaryCode, newTemporaryCodeModel, TemporaryCodeModel.class, uuid1c);
         } catch(Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
         }
@@ -109,7 +105,7 @@ public class ClientService {
     }
 
     public void addBonusForFirstLogin(ClientsModel inputClient){
-        List<BonusModel> listBonusModel = new ArrayList();
+        List<BonusModel> listBonusModel = new ArrayList<>();
         listBonusModel.stream()
                 .filter(e->e.getClientUid() == inputClient.getUuid1c() && e.getTypeBonus() == BonusModel.typeBonus.FIRST_LOGIN)
                 .findFirst()
@@ -123,8 +119,9 @@ public class ClientService {
         }
     }
 
-    public ResponseEntity<?> getBarcode(String phone) throws Exception {
+    public String getBarcode(String phone) throws Exception {
         try{
+            System.out.println("Keep trying");
                 restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
                 GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
                 String smsText;
@@ -133,18 +130,16 @@ public class ClientService {
                          smsText = "De acest numar de telefon este legat Card Frumos:" + getBarcodeModel.getLastBarcode();
                         //otpraviti soobshenie
                         System.out.println(smsText);
-                        break;
+                        return smsText;
                     case 2:
                          smsText = "Pe acest numar de telefon sunt inregistrate mai multe carduri. Cel mai recent ai utilizat acest Card Frumos:" + getBarcodeModel.getLastBarcode() + "\n" +
                                  "\n" +
                                  "Conform regulamentului, peste 7 zile, restul cardurilor vor fi dezactivate. Info 022323333\n" +
                                  "\n";
-                        System.out.println(smsText);
-                        break;
+                        return smsText;
                     default:
-                        System.out.println("Что то пошло не так");
+                      return "Nu exista carduri legate de acest numar de telefon";
                 }
-                return ResponseEntity.ok("Successful");
         }catch (Exception e) {
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
         }

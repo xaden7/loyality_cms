@@ -14,8 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -43,12 +41,11 @@ public class SmsService {
         this.smsCodeLogsRepository = smsCodeLogsRepository;
     }
 
-    public ResponseEntity<?> sendSms(String phone){
+    public ResponseEntity<?> sendSms(String phone, String messageToSend) {
 
-//        Integer code = getRandomNumber();
-        Integer code = 111111; //for apple review
+        Integer code = getRandomNumber();
 
-        String messageToSend = "Codul de verificare este: " + code;
+//        String messageToSend = "Codul de verificare este: " + code;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -118,14 +115,15 @@ public class SmsService {
         return ResponseEntity.badRequest().body("Code is not valid");
     }
 
-    private Integer getRandomNumber() {
+    public Integer getRandomNumber() {
         int min = 100000;
         int max = 999999;
-        return (int) ((Math.random() * (max - min)) + min);
+//        return (int) ((Math.random() * (max - min)) + min);
+        return 111111; //for apple review
     }
 
     private void saveSmsCode(String phone, Integer code) {
-        long EXPIRATION_TIME = System.currentTimeMillis() + 5 * 60 * 1000; ; // current time plus 5 minutes
+        long EXPIRATION_TIME = System.currentTimeMillis() + 5 * 60 * 1000; // current time plus 5 minutes
         SmsCodeStorage smsCodeStorage = new SmsCodeStorage(phone, code.toString(), EXPIRATION_TIME);
         smsCodeStorageRepository.save(smsCodeStorage);
     }
