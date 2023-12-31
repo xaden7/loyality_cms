@@ -1,10 +1,7 @@
 package md.akdev.loyality_cms.restController;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
-import md.akdev.loyality_cms.model.ClientsModel;
-import md.akdev.loyality_cms.model.JwtRefreshRequest;
-import md.akdev.loyality_cms.model.JwtResponse;
-import md.akdev.loyality_cms.model.QuestionaryModel;
+import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.JwtAuthService;
 import org.springframework.http.HttpHeaders;
@@ -42,6 +39,9 @@ public class AuthRestController {
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("accessToken", token.getAccessToken());
             responseHeaders.set("refreshToken", token.getRefreshToken());
+
+            clientService.addBonusForFirstLogin(getClient);
+
             return ResponseEntity.ok()
                     .headers(responseHeaders)
                     .body(inputClient);
@@ -80,4 +80,13 @@ public class AuthRestController {
         }
     }
 
+    @GetMapping("getBarcode/phone={phone}")
+    public ResponseEntity<?> getBarcode(@PathVariable String phone){
+        try{
+            ResponseEntity<?> getBarcodeModel = clientService.getBarcode(phone);
+            return  getBarcodeModel;
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
