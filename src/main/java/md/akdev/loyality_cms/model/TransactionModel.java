@@ -17,7 +17,7 @@ public class TransactionModel implements Serializable {
     private Double docSum;
     private Double bonusReceived;
     private Double bonusUsed;
-    private boolean fifthPurchase;
+    private boolean additionalBonus;
     private List<TransactionProductsModel> products;
 
 }
