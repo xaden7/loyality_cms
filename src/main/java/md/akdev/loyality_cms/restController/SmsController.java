@@ -3,6 +3,8 @@ package md.akdev.loyality_cms.restController;
 import jakarta.validation.constraints.NotNull;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.SmsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ public class SmsController {
 
     private final SmsService smsService;
     private final ClientService clientService;
-
+    Logger logger = LoggerFactory.getLogger(SmsController.class);
     @Autowired
     public SmsController(SmsService smsService, ClientService clientService) {
         this.smsService = smsService;
@@ -24,6 +26,8 @@ public class SmsController {
 
     @PostMapping("/send-sms-code")
     public ResponseEntity<?> sendSms(@NotNull String phone) {
+
+        logger.info("trying to send sms to phone: " + phone);
 
         String formattedPhone = phone.replaceAll("\\s+", "");
         formattedPhone =  formattedPhone.substring(phone.length() - 8);

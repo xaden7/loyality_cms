@@ -8,6 +8,8 @@ import md.akdev.loyality_cms.model.SmsCodeStorage;
 import md.akdev.loyality_cms.model.SmsRequest;
 import md.akdev.loyality_cms.repository.SmsCodeLogsRepository;
 import md.akdev.loyality_cms.repository.SmsCodeStorageRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SmsService {
@@ -36,6 +39,8 @@ public class SmsService {
 
     private final SmsCodeLogsRepository smsCodeLogsRepository;
 
+    Logger logger = LoggerFactory.getLogger(SmsService.class);
+
     public SmsService(SmsCodeStorageRepository smsCodeStorageRepository, SmsCodeLogsRepository smsCodeLogsRepository) {
         this.smsCodeStorageRepository = smsCodeStorageRepository;
         this.smsCodeLogsRepository = smsCodeLogsRepository;
@@ -44,12 +49,13 @@ public class SmsService {
     public ResponseEntity<?> sendSms(String phone, String messageToSend) {
 
         Integer code = getRandomNumber();
-
+        logger.info("Sending sms to phone: " + phone + " with code: " + code);
 //        String messageToSend = "Codul de verificare este: " + code;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.set("Authorization", "Key " + smsApiKey);
+
 
         SmsRequest smsRequest = new SmsRequest(Collections.singletonList(
                                         new SmsRequest.Message(smsSender, phone, messageToSend, 0, priority)));
@@ -76,7 +82,7 @@ public class SmsService {
                 SmsCodeLog smsCodeLog = new SmsCodeLog(phone
                         , result.getCode()
                         , code.toString(), result.getMessageId(), "SEND SMS");
-
+                logger.info("Sms - save result to DB: " + phone + " with code: " + code);
                 saveSmsLog(smsCodeLog);
 
                 if ("OK".equals(result.getCode())) {
@@ -112,7 +118,8 @@ public class SmsService {
                 }
             }
         }
-        return ResponseEntity.badRequest().body("Code is not valid");
+      //  return ResponseEntity.badRequest().body("Code is not valid");
+        return new ResponseEntity<>(Map.of("reason", "Code is not valid"), org.springframework.http.HttpStatus.NOT_FOUND);
     }
 
     public Integer getRandomNumber() {
