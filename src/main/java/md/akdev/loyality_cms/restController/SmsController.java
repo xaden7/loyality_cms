@@ -36,7 +36,8 @@ public class SmsController {
             return ResponseEntity.badRequest().body("Phone number is not valid");
         }
 
-        String message = "Codul de verificare este: " + smsService.getRandomNumber();
+        String message = "Codul de verificare este: " ;
+                //smsService.getRandomNumber();
 
 
         return smsService.sendSms("373" + formattedPhone, message);

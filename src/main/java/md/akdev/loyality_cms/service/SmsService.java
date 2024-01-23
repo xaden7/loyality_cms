@@ -49,6 +49,8 @@ public class SmsService {
     public ResponseEntity<?> sendSms(String phone, String messageToSend) {
 
         Integer code = getRandomNumber();
+        messageToSend = messageToSend + code;
+
         logger.info("Sending sms to phone: " + phone + " with code: " + code);
 //        String messageToSend = "Codul de verificare este: " + code;
 
@@ -125,8 +127,8 @@ public class SmsService {
     public Integer getRandomNumber() {
         int min = 100000;
         int max = 999999;
-//        return (int) ((Math.random() * (max - min)) + min);
-        return 111111; //for apple review
+        return (int) ((Math.random() * (max - min)) + min);
+//        return 111111; //for apple review
     }
 
     private void saveSmsCode(String phone, Integer code) {
