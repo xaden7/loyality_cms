@@ -1,6 +1,10 @@
 package md.akdev.loyality_cms.restController;
 
 import jakarta.validation.constraints.NotNull;
+import md.akdev.loyality_cms.model.SmsApiResponse;
+import md.akdev.loyality_cms.model.SmsCodeLog;
+import md.akdev.loyality_cms.repository.SmsCodeLogsRepository;
+import md.akdev.loyality_cms.repository.SmsCodeStorageRepository;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.SmsService;
 import org.slf4j.Logger;
@@ -10,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/sms")
@@ -17,6 +23,8 @@ public class SmsController {
 
     private final SmsService smsService;
     private final ClientService clientService;
+
+
     Logger logger = LoggerFactory.getLogger(SmsController.class);
     @Autowired
     public SmsController(SmsService smsService, ClientService clientService) {
@@ -36,11 +44,37 @@ public class SmsController {
             return ResponseEntity.badRequest().body("Phone number is not valid");
         }
 
-        String message = "Codul de verificare este: " ;
-                //smsService.getRandomNumber();
+        Integer code = smsService.getRandomNumber();
 
+        String message = "Codul de verificare este: " + code;
 
-        return smsService.sendSms("373" + formattedPhone, message);
+        logger.info("Sending sms to phone: " + formattedPhone + " with code: " + code);
+
+        ResponseEntity<?> responseEntity = smsService.sendSms("373" + formattedPhone, message);
+
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            SmsApiResponse smsApiResponse = (SmsApiResponse) responseEntity.getBody();
+
+            if (smsApiResponse != null && smsApiResponse.getResult() != null && !smsApiResponse.getResult().isEmpty()) {
+
+                SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
+
+                SmsCodeLog smsCodeLog = new SmsCodeLog("373" + formattedPhone
+                        , result.getCode()
+                        , code.toString(), result.getMessageId(), "SEND SMS");
+                logger.info("Sms - save result to DB: " + "373" + formattedPhone + " with code: " + code);
+                smsService.saveSmsLog(smsCodeLog);
+
+                if ("OK".equals(result.getCode())) {
+                    smsService.saveSmsCode("373" +formattedPhone, code);
+                    return ResponseEntity.ok("Sms sent successfully");
+                } else {
+                    return ResponseEntity.badRequest().body("Error while sending sms");
+                }
+            }
+
+        }
+        return ResponseEntity.badRequest().body("Error while sending sms");
     }
 
     @PostMapping("/send-sms-card")
@@ -55,11 +89,37 @@ public class SmsController {
 
         try{
            String message  = clientService.getBarcode(phone);
-           return smsService.sendSms("373" + formattedPhone, message);
+
+           logger.info("Sending sms to phone: " + phone + " with message: " + message);
+
+            ResponseEntity<?> responseEntity = smsService.sendSms("373" + formattedPhone, message);
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()){
+
+                SmsApiResponse smsApiResponse = (SmsApiResponse) responseEntity.getBody();
+
+                if (smsApiResponse != null && smsApiResponse.getResult() != null && !smsApiResponse.getResult().isEmpty()) {
+
+                    SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
+
+                    SmsCodeLog smsCodeLog = new SmsCodeLog(phone
+                            , result.getCode()
+                            , message, result.getMessageId(), "SEND SMS");
+
+                    smsService.saveSmsLog(smsCodeLog);
+
+                    if ("OK".equals(result.getCode())) {
+                        return ResponseEntity.ok("Sms sent successfully");
+                    } else {
+                        return ResponseEntity.badRequest().body("Error while sending sms");
+                    }
+                }
+            }
+
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
+        return ResponseEntity.badRequest().body("Error while sending sms");
     }
 
     @PostMapping("/verify-sms")

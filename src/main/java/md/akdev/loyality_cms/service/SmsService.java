@@ -48,10 +48,10 @@ public class SmsService {
 
     public ResponseEntity<?> sendSms(String phone, String messageToSend) {
 
-        Integer code = getRandomNumber();
-        messageToSend = messageToSend + code;
+ //       Integer code = getRandomNumber();
+//        messageToSend = messageToSend ;
 
-        logger.info("Sending sms to phone: " + phone + " with code: " + code);
+//        logger.info("Sending sms to phone: " + phone + " with code: " + code);
 //        String messageToSend = "Codul de verificare este: " + code;
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -71,7 +71,8 @@ public class SmsService {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonBody, httpHeaders);
 
-        ResponseEntity<SmsApiResponse> response = new RestTemplate().postForEntity(smsApiUrl, httpEntity, SmsApiResponse.class);
+
+        /* //#######--- disable block and move to SmsController 23.01.2024 start
 
         if (response.getStatusCode().is2xxSuccessful()) {
 
@@ -98,6 +99,9 @@ public class SmsService {
 
       return ResponseEntity.badRequest().body("Error while sending sms");
 
+     //// disable block and move to SmsController 23.01.2024 start
+       */
+        return new RestTemplate().postForEntity(smsApiUrl, httpEntity, SmsApiResponse.class);
     }
 
     public ResponseEntity<?> verifySmsCode(String phone, Integer code) {
@@ -131,13 +135,13 @@ public class SmsService {
 //        return 111111; //for apple review
     }
 
-    private void saveSmsCode(String phone, Integer code) {
+    public void saveSmsCode(String phone, Integer code) {
         long EXPIRATION_TIME = System.currentTimeMillis() + 5 * 60 * 1000; // current time plus 5 minutes
         SmsCodeStorage smsCodeStorage = new SmsCodeStorage(phone, code.toString(), EXPIRATION_TIME);
         smsCodeStorageRepository.save(smsCodeStorage);
     }
 
-    private void saveSmsLog(SmsCodeLog smsCodeLog) {
+    public void saveSmsLog(SmsCodeLog smsCodeLog) {
         //  SmsCodeLog smsCodeLog = new SmsCodeLog(phone, result.getCode(), result.getMessageId(), operation);
         smsCodeLogsRepository.save(smsCodeLog);
     }

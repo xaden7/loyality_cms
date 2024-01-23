@@ -18,6 +18,6 @@ public class PromotionDTO {
     private String imageName;
     private String imageType;
     private String status;
-    private List<PromotionDetailDTO> promotionDetails;
+   // private List<PromotionDetailDTO> promotionDetails;
     private List<TagDTO> tags;
 }
