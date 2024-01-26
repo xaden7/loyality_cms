@@ -14,10 +14,10 @@ public class PromotionDTO {
     private Instant endDate;
     private Double upToDiscount;
     private Double upToBonus;
-    private String image;
+//    private String image;
     private String imageName;
     private String imageType;
     private String status;
-   // private List<PromotionDetailDTO> promotionDetails;
+    private List<PromotionDetailDTO> promotionDetails;
     private List<TagDTO> tags;
 }

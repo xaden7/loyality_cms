@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PromotionDetailDTO {
     private Integer id;
-    private String image;
+//    private String image;
     private String imageName;
     private String imageType;
     private Double productBonus;
