@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class PromotionController {
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllPromotions(){
         return ResponseEntity.ok().body(
-                promotionRepository.findAll().stream().map((element) ->
+                promotionRepository.findAllActive(LocalDate.now()).stream().map((element) ->
                         modelMapper.map(element, PromotionDTO.class)).collect(Collectors.toList()));
     }
 

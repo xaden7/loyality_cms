@@ -127,14 +127,15 @@ public class ClientService {
                 String smsText;
                 switch(getBarcodeModel.getQtyBarcode()){
                     case 1:
-                         smsText = "De acest numar de telefon este legat Card Frumos:" + getBarcodeModel.getLastBarcode();
+                        // smsText = "De acest numar de telefon este legat Card Frumos cu codul: " + getBarcodeModel.getLastBarcode();
+                            smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: " + getBarcodeModel.getLastBarcode();
                         //otpraviti soobshenie
                         System.out.println(smsText);
                         return smsText;
                     case 2:
-                         smsText = "Pe acest numar de telefon sunt inregistrate mai multe carduri. Cel mai recent ai utilizat acest Card Frumos:" + getBarcodeModel.getLastBarcode() + "\n" +
+                         smsText = "Pe acest numar de telefon sunt inregistrate mai multe carduri. Cel mai recent ai utilizat acest Card Frumos cu codul: " + getBarcodeModel.getLastBarcode() + "\n" +
                                  "\n" +
-                                 "Conform regulamentului, peste 7 zile, restul cardurilor vor fi dezactivate. Info 022323333\n" +
+                                 " Conform regulamentului, peste 7 zile, restul cardurilor vor fi dezactivate. Info 022323333\n" +
                                  "\n";
                         return smsText;
                     default:

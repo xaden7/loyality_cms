@@ -20,14 +20,14 @@ public class SmsCodeLog {
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Size(max = 20)
+    @Size(max = 100)
     @NotNull
-    @Column(name = "code", nullable = false, length = 20)
+    @Column(name = "code", nullable = false, length = 100)
     private String code;
 
-    @Size(max = 20)
+    @Size(max = 200)
     @NotNull
-    @Column(name = "io_code", nullable = false, length = 20)
+    @Column(name = "io_code", nullable = false, length = 200)
     private String ioCode;
     @Size(max = 20)
     @NotNull

@@ -104,7 +104,7 @@ public class SmsController {
 
                     SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
 
-                    SmsCodeLog smsCodeLog = new SmsCodeLog(phone
+                    SmsCodeLog smsCodeLog = new SmsCodeLog("373" + phone
                             , result.getCode()
                             , message, result.getMessageId(), "SEND SMS");
 

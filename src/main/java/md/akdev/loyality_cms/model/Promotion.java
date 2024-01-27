@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -29,10 +30,10 @@ public class Promotion {
     private String description;
 
     @Column(name = "start_date")
-    private Instant startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private Instant endDate;
+    private LocalDate endDate;
 
     @Column(name = "up_to_discount")
     private Double upToDiscount;
@@ -45,11 +46,11 @@ public class Promotion {
 
     @Size(max = 100)
     @Column(name = "image_name", length = 100)
-    private String imageName;
+    private String imageName = "image.jpg";
 
     @Size(max = 255)
     @Column(name = "image_type")
-    private String imageType;
+    private String imageType = "image/jpeg";
 
     @Size(max = 255)
     @Column(name = "status")

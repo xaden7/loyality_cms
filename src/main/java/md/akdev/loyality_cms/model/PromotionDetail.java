@@ -22,11 +22,11 @@ public class PromotionDetail {
 
     @Size(max = 255)
     @Column(name = "image_name")
-    private String imageName;
+    private String imageName = "image.jpg";
 
     @Size(max = 255)
     @Column(name = "image_type")
-    private String imageType;
+    private String imageType = "image/jpeg";
 
     @Column(name = "product_bonus")
     private Double productBonus;
