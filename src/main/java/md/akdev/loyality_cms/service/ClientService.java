@@ -2,6 +2,7 @@ package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.model.*;
+import md.akdev.loyality_cms.repository.BonusRepository;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.utils.MappingUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,10 +26,12 @@ public class ClientService {
     final RestTemplate restTemplate = new RestTemplate();
     private final MappingUtils mappingUtils;
     private final ClientsRepository clientsRepository;
+    private final BonusRepository bonusRepository;
 
-    public ClientService(ClientsRepository clientsRepository, MappingUtils mappingUtils) {
+    public ClientService(ClientsRepository clientsRepository, MappingUtils mappingUtils, BonusRepository bonusRepository) {
         this.clientsRepository = clientsRepository;
         this.mappingUtils = mappingUtils;
+        this.bonusRepository = bonusRepository;
     }
 
     public ClientsModel mapToClientsModel(ClientDeviceDto dto) {
@@ -104,24 +105,25 @@ public class ClientService {
         return (int) ((Math.random() * (max - min)) + min);
     }
 
+    public void saveBonusFirstLogin(BonusModel bonusModel){
+        bonusRepository.save(bonusModel);
+    }
+
     public void addBonusForFirstLogin(ClientsModel inputClient){
-        List<BonusModel> listBonusModel = new ArrayList<>();
-        listBonusModel.stream()
-                .filter(e->e.getClientUid() == inputClient.getUuid1c() && e.getTypeBonus() == BonusModel.typeBonus.FIRST_LOGIN)
-                .findFirst()
-                .orElse(null);
-        if (listBonusModel.isEmpty()) {
+        BonusModel bonusModel = bonusRepository.getBonusByClientUidAndTypeBonus(inputClient.getUuid1c(), BonusModel.typeBonus.FIRST_LOGIN).orElse(null);
+        if (bonusModel==null) {
             BonusModel addBonusModel = new BonusModel();
             addBonusModel.setClientUid(inputClient.getUuid1c());
             addBonusModel.setTypeBonus(BonusModel.typeBonus.FIRST_LOGIN);
             addBonusModel.setBonus(300);
             addBonusModel.setAccured(false);
+            saveBonusFirstLogin(addBonusModel);
         }
     }
 
     public String getBarcode(String phone) throws Exception {
         try{
-            System.out.println("Keep trying");
+          //  System.out.println("Keep trying");
                 restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
                 GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
                 String smsText;
