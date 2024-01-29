@@ -17,18 +17,18 @@ public class BonusModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column
+    @Column(name = "client_uid")
     private String clientUid;
-    @Column
+    @Column(name = "type_bonus")
     private typeBonus typeBonus;
     @Column
     private Integer bonus;
-    @Column
+    @Column(name = "date_insert")
     @CreatedDate
     private LocalDateTime dateInsert;
     @Column
     private Boolean accured;
-    @Column
+    @Column(name = "date_accured")
     private LocalDateTime dateAccured;
 
 }

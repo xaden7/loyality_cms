@@ -38,11 +38,12 @@ public class TransactionService {
 
             Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, authentication.getUuid());
             ObjectMapper mapper = new ObjectMapper();
+            assert transaction != null;
             List<TransactionModel> transactionModels = Arrays.stream(transaction)
                     .map(e -> mapper.convertValue(e, TransactionModel.class))
                     .collect(Collectors.toList());
 
-            transactionModels.stream()
+            transactionModels
                     .forEach(e -> e.setAddress(pharmaAddress(e.getPharmCode())));
 
             return transactionModels;
@@ -56,7 +57,7 @@ public class TransactionService {
 
     public String pharmaAddress(String pharmaCode){
         Optional<Branch> branchModel = branchRepository.findByCode(pharmaCode);
-        return branchModel.get().getAddress();
+        return branchModel.isPresent() ? branchModel.get().getAddress() : "";
     }
 
 }
