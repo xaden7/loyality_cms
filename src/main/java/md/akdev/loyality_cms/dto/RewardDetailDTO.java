@@ -11,4 +11,5 @@ public class RewardDetailDTO {
     private Integer id;
     private String qrCode;
     private BigDecimal bonusQty;
+    private String description;
 }

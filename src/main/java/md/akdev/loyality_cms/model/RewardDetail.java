@@ -31,4 +31,8 @@ public class RewardDetail {
 
     @Column(name = "bonus_qty")
     private BigDecimal bonusQty;
+
+    @Column(name = "description")
+    private String description;
+
 }

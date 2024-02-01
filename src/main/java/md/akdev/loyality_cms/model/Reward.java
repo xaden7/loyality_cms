@@ -42,9 +42,12 @@ public class Reward {
     @NotNull
     private String imageName = "image.jpg";
 
-    @Column(name = "image_type", nullable = false, length = 255)
+    @Column(name = "image_type", nullable = false, length = 100)
     @NotNull
     private String imageType = "image/jpeg";
+
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @OneToMany(mappedBy = "reward", cascade = {CascadeType.ALL},  fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
