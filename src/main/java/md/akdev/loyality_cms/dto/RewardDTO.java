@@ -13,5 +13,7 @@ public class RewardDTO {
     private RewardsTypeDTO rewardType;
     private LocalDate dateFrom;
     private LocalDate dateTo;
+    private String imageName;
+    private String imageType;
     List<RewardDetailDTO> rewardDetails;
 }

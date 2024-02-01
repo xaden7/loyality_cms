@@ -34,6 +34,18 @@ public class Reward {
     @Column(name = "date_to", nullable = false)
     private LocalDate dateTo;
 
+    @Column(name = "image", nullable = false, length = Integer.MAX_VALUE)
+    @NotNull
+    private String image;
+
+    @Column(name = "image_name", nullable = false, length = 100)
+    @NotNull
+    private String imageName = "image.jpg";
+
+    @Column(name = "image_type", nullable = false, length = 255)
+    @NotNull
+    private String imageType = "image/jpeg";
+
     @OneToMany(mappedBy = "reward", cascade = {CascadeType.ALL},  fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference

@@ -13,10 +13,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rewards")
@@ -59,6 +62,25 @@ public class RewardController {
 
         return ResponseEntity.ok().body(rewardService.findAll().stream().map((element) ->
                 modelMapper.map(element, RewardDTO.class)).collect(java.util.stream.Collectors.toList()));
+    }
+
+    @GetMapping("/header/get-image")
+    public ResponseEntity<?> getImage(Integer id){
+
+        Optional<Reward> reward = rewardService.findById(id);
+
+        String data = reward.isPresent() ? reward.get().getImage() : "";
+
+        if (data.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/jpeg")).body(new byte[0]);
+        }
+
+        String base64Image = data.split(",")[1];
+        byte[] imageBytes = java.util.Base64.getDecoder().decode(base64Image);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf(reward.get().getImageType()))
+                .body(imageBytes);
     }
 
 
