@@ -2,13 +2,17 @@ package md.akdev.loyality_cms.restController;
 
 
 import md.akdev.loyality_cms.dto.RewardDTO;
+import md.akdev.loyality_cms.dto.RewardUsedDTO;
 import md.akdev.loyality_cms.dto.RewardsTypeDTO;
 import md.akdev.loyality_cms.model.Reward;
+import md.akdev.loyality_cms.model.RewardUsed;
 import md.akdev.loyality_cms.model.RewardsType;
 import md.akdev.loyality_cms.repository.RewardTypeRepository;
 import md.akdev.loyality_cms.service.RewardService;
+import md.akdev.loyality_cms.service.RewardUsedService;
 import md.akdev.loyality_cms.utils.exceptions.CstErrorResponse;
 import md.akdev.loyality_cms.utils.exceptions.NotFoundException;
+import md.akdev.loyality_cms.utils.exceptions.RewardAlreadyUsedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,12 +31,14 @@ public class RewardController {
     private final RewardTypeRepository rewardsTypeRepository;
     private final RewardService rewardService;
     private final ModelMapper modelMapper;
+    private final RewardUsedService rewardUsedService;
 
     @Autowired
-    public RewardController(RewardTypeRepository rewardsTypeRepository, RewardService rewardService, ModelMapper modelMapper) {
+    public RewardController(RewardTypeRepository rewardsTypeRepository, RewardService rewardService, ModelMapper modelMapper, RewardUsedService rewardUsedService) {
         this.rewardsTypeRepository = rewardsTypeRepository;
         this.rewardService = rewardService;
         this.modelMapper = modelMapper;
+        this.rewardUsedService = rewardUsedService;
     }
 
 
@@ -83,9 +89,13 @@ public class RewardController {
                 .body(imageBytes);
     }
 
+    @PostMapping("/new-qr-reward-to-use")
+    public ResponseEntity<?> newUsedReward(@RequestBody RewardUsedDTO rewardUsed){
+        rewardUsedService.saveQrRewardUsed(rewardUsed);
+        return ResponseEntity.ok("Reward used successfully");
+    }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({NotFoundException.class, MethodArgumentNotValidException.class,
+    @ExceptionHandler({NotFoundException.class, MethodArgumentNotValidException.class, RewardAlreadyUsedException.class,
             DataIntegrityViolationException.class, RuntimeException.class, AccessDeniedException.class})
     private ResponseEntity<CstErrorResponse> handeException(Exception e){
 
@@ -94,6 +104,13 @@ public class RewardController {
                 System.currentTimeMillis()
         );
 
-        return new ResponseEntity<>(cstErrorResponse, HttpStatus.BAD_REQUEST );
+        HttpStatus status = switch (e.getClass().getSimpleName()) {
+            case "NotFoundException" -> HttpStatus.NOT_FOUND;
+            case "RewardAlreadyUsedException", "DataIntegrityViolationException" -> HttpStatus.CONFLICT;
+            case "AccessDeniedException" -> HttpStatus.FORBIDDEN;
+            default -> HttpStatus.BAD_REQUEST;
+        };
+
+        return new ResponseEntity<>(cstErrorResponse, status);
     }
 }

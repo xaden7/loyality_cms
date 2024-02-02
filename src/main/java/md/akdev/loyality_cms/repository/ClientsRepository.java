@@ -16,4 +16,5 @@ public interface ClientsRepository extends JpaRepository<ClientsModel, UUID> {
     Optional<ClientsModel> getClientByPhoneNumber(String phoneNumber);
     ClientsModel getClientByUuid1c(String uuid1c);
 
+
 }
