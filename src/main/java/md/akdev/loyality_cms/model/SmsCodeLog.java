@@ -25,7 +25,7 @@ public class SmsCodeLog {
     @Column(name = "code", nullable = false, length = 100)
     private String code;
 
-    @Size(max = 200)
+    @Size(max = 500)
     @NotNull
     @Column(name = "io_code", nullable = false, length = 200)
     private String ioCode;
