@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("auth/login")
 public class AuthRestController {
@@ -49,9 +52,8 @@ public class AuthRestController {
                     .headers(responseHeaders)
                     .body(inputClient);
         } catch (Exception e) {
-//            Map<String, String> errorMessage = new HashMap<>();
-//            errorMessage.put("reason", e.getMessage());
-            String errorMessage = "{ reason: " + e.getMessage() + " }";
+            Map<String, String> errorMessage = new HashMap<>();
+            errorMessage.put("reason", e.getMessage());
             return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
         }
     }
