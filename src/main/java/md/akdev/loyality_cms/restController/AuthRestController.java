@@ -1,19 +1,16 @@
 package md.akdev.loyality_cms.restController;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
-import md.akdev.loyality_cms.exception.CustomException;
-import md.akdev.loyality_cms.model.*;
+import md.akdev.loyality_cms.model.ClientsModel;
+import md.akdev.loyality_cms.model.JwtRefreshRequest;
+import md.akdev.loyality_cms.model.JwtResponse;
+import md.akdev.loyality_cms.model.QuestionaryModel;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.JwtAuthService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("auth/login")
@@ -52,8 +49,9 @@ public class AuthRestController {
                     .headers(responseHeaders)
                     .body(inputClient);
         } catch (Exception e) {
-            Map<String, String> errorMessage = new HashMap<>();
-            errorMessage.put("reason", e.getMessage());
+//            Map<String, String> errorMessage = new HashMap<>();
+//            errorMessage.put("reason", e.getMessage());
+            String errorMessage = "reason: " + e.getMessage();
             return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
         }
     }
