@@ -24,6 +24,9 @@ public class RewardsType {
         @Column(name = "reward_type", unique = true)
         private String rewardType;
 
+        @Column(name = "reward_method", nullable = false)
+        private Integer rewardMethod;
+
         @NotNull(message = "description must be not empty")
         @Column(name = "description")
         private String description;

@@ -26,12 +26,10 @@ public class Reward {
     @NotNull
     private RewardsType rewardType;
 
-    @NotNull
-    @Column(name = "date_from", nullable = false)
+    @Column(name = "date_from")
     private LocalDate dateFrom;
 
-    @NotNull
-    @Column(name = "date_to", nullable = false)
+    @Column(name = "date_to")
     private LocalDate dateTo;
 
     @Column(name = "image", nullable = false, length = Integer.MAX_VALUE)

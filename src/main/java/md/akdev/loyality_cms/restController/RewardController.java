@@ -89,9 +89,9 @@ public class RewardController {
                 .body(imageBytes);
     }
 
-    @PostMapping("/new-qr-reward-to-use")
+    @PostMapping("/new-reward-to-use")
     public ResponseEntity<?> newUsedReward(@RequestBody RewardUsedDTO rewardUsed){
-        rewardUsedService.saveQrRewardUsed(rewardUsed);
+        rewardUsedService.saveRewardUsed(rewardUsed);
         return ResponseEntity.ok("Reward used successfully");
     }
 
