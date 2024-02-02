@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -57,8 +58,10 @@ public class ClientService {
                 ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phone, barcode);
                 if(clientsRepository.getClientByUuid1c(getClientLoyality != null ? getClientLoyality.getUuid1c() : null) != null)
                 {
+                    assert getClientLoyality != null;
                     getClientLoyality = clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c());
                 }
+                assert getClientLoyality != null;
                 getClientLoyality.setPhoneNumber(phone);
                 getClientLoyality.setCodeCard(barcode);
 
@@ -69,8 +72,8 @@ public class ClientService {
                 throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
             }
         }
-        else if(getClient.getCodeCard() != barcode){
-            throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos: "+getClient.getCodeCard());
+        else if(!Objects.equals(getClient.getCodeCard(), barcode)){
+            throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos "+getClient.getCodeCard());
         } else
             return getClient;
     }
@@ -131,7 +134,7 @@ public class ClientService {
                 restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
                 GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
                 String smsText;
-                switch(getBarcodeModel.getQtyBarcode()){
+                switch(Objects.requireNonNull(getBarcodeModel).getQtyBarcode()){
                     case 1:
                         // smsText = "De acest numar de telefon este legat Card Frumos cu codul: " + getBarcodeModel.getLastBarcode();
                             smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: " + getBarcodeModel.getLastBarcode();
