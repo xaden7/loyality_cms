@@ -53,7 +53,7 @@ public class AuthRestController {
                     .body(inputClient);
         } catch (Exception e) {
             Map<String, String> errorMessage = new HashMap<>();
-            errorMessage.put("reason", e.getMessage());
+            errorMessage.put("\"reason\"", "\"" + e.getMessage() + "\"" );
             return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
         }
     }
