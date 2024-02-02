@@ -73,7 +73,7 @@ public class ClientService {
             }
         }
         else if(!Objects.equals(getClient.getCodeCard(), barcode)){
-            throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos "+getClient.getCodeCard());
+            throw new Exception("Ați activat deja aplicația pentru un alt Card Frumos "+getClient.getCodeCard());
         } else
             return getClient;
     }
