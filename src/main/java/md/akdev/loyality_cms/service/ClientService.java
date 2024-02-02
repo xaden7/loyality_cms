@@ -1,6 +1,7 @@
 package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
+import md.akdev.loyality_cms.exception.CustomException;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.BonusRepository;
 import md.akdev.loyality_cms.repository.ClientsRepository;
@@ -47,7 +48,8 @@ public class ClientService {
         phone = phone.substring(phone.length()-8);
         String barcode = inputClient.getCodeCard();
 
-        ClientsModel getClient = clientsRepository.getClientByPhoneNumberAndCodeCard(phone, barcode).orElse(null);
+        //ClientsModel getClient = clientsRepository.getClientByPhoneNumberAndCodeCard(phone, barcode).orElse(null);
+        ClientsModel getClient = getClientByPhoneNumber(phone).orElse(null);
         if (getClient == null) {
             restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             try {
@@ -67,7 +69,9 @@ public class ClientService {
                 throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
             }
         }
-        else
+        else if(getClient.getCodeCard() != barcode){
+            throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos: "+getClient.getCodeCard());
+        } else
             return getClient;
     }
 
