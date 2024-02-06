@@ -46,7 +46,7 @@ public class AuthRestController {
             responseHeaders.set("accessToken", token.getAccessToken());
             responseHeaders.set("refreshToken", token.getRefreshToken());
 
-            clientService.addBonusForFirstLogin(getClient);
+//            clientService.addBonusForFirstLogin(getClient);
 
             return ResponseEntity.ok()
                     .headers(responseHeaders)
