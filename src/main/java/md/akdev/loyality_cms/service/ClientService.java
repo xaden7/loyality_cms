@@ -1,6 +1,7 @@
 package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
+import md.akdev.loyality_cms.exception.CustomException;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.BonusRepository;
 import md.akdev.loyality_cms.repository.ClientsRepository;
@@ -72,7 +73,7 @@ public class ClientService {
             }
         }
         else if(!Objects.equals(getClient.getCodeCard(), barcode)){
-            throw new Exception("Ați activat deja aplicația pentru un alt Card Frumos: "+getClient.getCodeCard());
+            throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos: " +getClient.getCodeCard());
         } else
             return getClient;
     }
