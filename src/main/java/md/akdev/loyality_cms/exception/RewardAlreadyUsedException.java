@@ -1,4 +1,4 @@
-package md.akdev.loyality_cms.utils.exceptions;
+package md.akdev.loyality_cms.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class NotFoundException  extends RuntimeException{
-    private String message = "no data found";
+public class RewardAlreadyUsedException extends RuntimeException{
+    private String message = "Reward already used";
 }

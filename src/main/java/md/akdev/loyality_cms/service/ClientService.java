@@ -137,7 +137,7 @@ public class ClientService {
                 switch(Objects.requireNonNull(getBarcodeModel).getQtyBarcode()){
                     case 1:
                         // smsText = "De acest numar de telefon este legat Card Frumos cu codul: " + getBarcodeModel.getLastBarcode();
-                            smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: " + getBarcodeModel.getLastBarcode();
+                            smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: \n" + getBarcodeModel.getLastBarcode();
                         //otpraviti soobshenie
                         System.out.println(smsText);
                         return smsText;

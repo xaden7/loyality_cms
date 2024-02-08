@@ -4,15 +4,13 @@ package md.akdev.loyality_cms.service;
 import md.akdev.loyality_cms.dto.RewardUsedDTO;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.ClientsRepository;
-import md.akdev.loyality_cms.repository.RewardTypeRepository;
 import md.akdev.loyality_cms.repository.RewardUsedRepository;
 import md.akdev.loyality_cms.repository.RewardUsedLogRepository;
-import md.akdev.loyality_cms.utils.exceptions.NotFoundException;
-import md.akdev.loyality_cms.utils.exceptions.RewardAlreadyUsedException;
+import md.akdev.loyality_cms.exception.NotFoundException;
+import md.akdev.loyality_cms.exception.RewardAlreadyUsedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.time.LocalDate.now;

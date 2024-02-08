@@ -1,4 +1,4 @@
-package md.akdev.loyality_cms.utils.exceptions;
+package md.akdev.loyality_cms.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
