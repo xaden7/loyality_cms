@@ -12,10 +12,10 @@ import java.util.List;
 
 @Repository
 public interface RewardRepository extends JpaRepository<Reward,Integer> {
-    @Query("select p from Reward p where ?1 between p.dateFrom and p.dateFrom and p.rewardType = ?2")
+    @Query("select p from Reward p where ?1 between p.dateFrom and p.dateTo and p.rewardType = ?2")
     List<Reward> findActiveRewards(LocalDate now, RewardsType rewardType);
 
-    @Query("select p from Reward p where ?1 between p.dateFrom and p.dateFrom")
+    @Query("select p from Reward p where ?1 between p.dateFrom and p.dateTo")
     List<Reward> findAllActiveRewards(LocalDate now);
 
     @Query( value = "select * from rewards where ( :dateFrom between date_from and date_to or :dateTo between date_from and date_to ) and reward_type = :rewardType", nativeQuery = true)
