@@ -21,6 +21,9 @@ public class Promotion {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "priority",columnDefinition = "INT DEFAULT 1")
+    private Integer priority;
+
     @Size(max = 50)
     @Column(name = "name", length = 50)
     private String name;

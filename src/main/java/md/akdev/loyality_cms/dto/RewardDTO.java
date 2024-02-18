@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class RewardDTO {
     private Integer id;
+    private Integer priority;
     private RewardsTypeDTO rewardType;
     private LocalDate dateFrom;
     private LocalDate dateTo;

@@ -21,6 +21,9 @@ public class Reward {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "priority",columnDefinition = "INT DEFAULT 1")
+    private Integer priority;
+
     @OneToOne
     @JoinColumn(name = "reward_type")
     @NotNull
