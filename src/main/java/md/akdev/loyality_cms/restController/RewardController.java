@@ -64,7 +64,6 @@ public class RewardController {
 
     @GetMapping("/get-all-rewards")
     public ResponseEntity<?> getAllRewardsType(){
-
         return ResponseEntity.ok().body(rewardService.findAll().stream().map((element) ->
                 modelMapper.map(element, RewardDTO.class)).collect(java.util.stream.Collectors.toList()));
     }

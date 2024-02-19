@@ -9,6 +9,7 @@ import java.util.List;
 public class PromotionDTO {
 
     private Integer id;
+    private Integer priority;
     private String name;
     private String description;
     private LocalDate startDate;
