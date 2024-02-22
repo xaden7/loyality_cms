@@ -18,7 +18,7 @@ public class BonusRestController {
         this.bonusService = bonusService;
     }
 
-    @GetMapping("/restemp")
+    @GetMapping("/getRefreshBonus")
     public ResponseEntity<?> getRefreshBonus(){
         try {
             ClientsModel clientsModel = bonusService.getRefreshBonus();
