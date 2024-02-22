@@ -24,13 +24,14 @@ public class TransactionService {
 
     private final JwtAuthService jwtAuthService;
     private final BranchRepository branchRepository;
+    private final RestTemplate restTemplate;
 
-
-    public TransactionService(JwtAuthService jwtAuthService, BranchRepository branchRepository) {
+    public TransactionService(JwtAuthService jwtAuthService, BranchRepository branchRepository, RestTemplate restTemplate) {
         this.jwtAuthService = jwtAuthService;
         this.branchRepository = branchRepository;
+        this.restTemplate = restTemplate;
     }
-    final RestTemplate restTemplate  = new RestTemplate();
+//    final RestTemplate restTemplate  = new RestTemplate();
     public List<TransactionModel> getTransaction() throws Exception {
         final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));

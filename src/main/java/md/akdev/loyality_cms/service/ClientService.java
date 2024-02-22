@@ -25,15 +25,18 @@ public class ClientService {
     @Value("${spring.datasource1c.url.temporaryCode}") String urlTemporaryCode;
     @Value("${spring.datasource1c.url.getBarcode}") String urlGetBarcode;
 
-    final RestTemplate restTemplate = new RestTemplate();
+//    final RestTemplate restTemplate = new RestTemplate();
     private final MappingUtils mappingUtils;
     private final ClientsRepository clientsRepository;
     private final BonusRepository bonusRepository;
 
-    public ClientService(ClientsRepository clientsRepository, MappingUtils mappingUtils, BonusRepository bonusRepository) {
+    private final RestTemplate restTemplate;
+
+    public ClientService(ClientsRepository clientsRepository, MappingUtils mappingUtils, BonusRepository bonusRepository, RestTemplate restTemplate) {
         this.clientsRepository = clientsRepository;
         this.mappingUtils = mappingUtils;
         this.bonusRepository = bonusRepository;
+        this.restTemplate = restTemplate;
     }
 
     public ClientsModel mapToClientsModel(ClientDeviceDto dto) {
@@ -52,7 +55,7 @@ public class ClientService {
         //ClientsModel getClient = clientsRepository.getClientByPhoneNumberAndCodeCard(phone, barcode).orElse(null);
         ClientsModel getClient = getClientByPhoneNumber(phone).orElse(null);
         if (getClient == null) {
-            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+//            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             try {
 
                 ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phone, barcode);
@@ -88,7 +91,7 @@ public class ClientService {
 
     public QuestionaryModel newClient(QuestionaryModel questionaryModel) throws Exception{
         try{
-            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+//            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             return restTemplate.postForObject(urlNewClient, questionaryModel, QuestionaryModel.class);
         } catch(Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
@@ -99,7 +102,7 @@ public class ClientService {
         try{
             TemporaryCodeModel newTemporaryCodeModel = new TemporaryCodeModel();
             newTemporaryCodeModel.setCode(getRandomNumber());
-            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+//            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             return restTemplate.postForObject(urlTemporaryCode, newTemporaryCodeModel, TemporaryCodeModel.class, uuid1c);
         } catch(Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
@@ -131,7 +134,7 @@ public class ClientService {
     public String getBarcode(String phone) throws Exception {
         try{
           //  System.out.println("Keep trying");
-                restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+//                restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
                 GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
                 String smsText;
                 switch(Objects.requireNonNull(getBarcodeModel).getQtyBarcode()){
