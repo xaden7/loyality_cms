@@ -106,6 +106,9 @@ public class SmsService {
 
     public ResponseEntity<?> verifySmsCode(String phone, Integer code) {
         SmsCodeStorage smsCodeStorage = smsCodeStorageRepository.findByPhone(phone);
+
+        code = code != null ? code : 0;
+
         if (smsCodeStorage != null) {
             if (smsCodeStorage.getCode().equals(code.toString())) {
 

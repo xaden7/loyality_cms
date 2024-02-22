@@ -37,12 +37,15 @@ public class SmsController {
 
         logger.info("trying to send sms to phone: " + phone);
 
+        phone = phoneDefaultIfNull(phone);
+
         String formattedPhone = phone.replaceAll("\\s+", "");
-        formattedPhone =  formattedPhone.substring(phone.length() - 8);
 
         if (formattedPhone.length() != 8) {
             return ResponseEntity.badRequest().body("Phone number is not valid");
         }
+
+        formattedPhone =  formattedPhone.substring(phone.length() - 8);
 
         Integer code = smsService.getRandomNumber();
         if(formattedPhone.equals("61031319")) {
@@ -79,15 +82,20 @@ public class SmsController {
         return ResponseEntity.badRequest().body("Error while sending sms");
     }
 
+
+
     @PostMapping("/send-sms-card")
     public ResponseEntity<?> sendSmsCard(@NotNull String phone) {
 
+        phone = phoneDefaultIfNull(phone);
+
         String formattedPhone = phone.replaceAll("\\s+", "");
-        formattedPhone = formattedPhone.substring(phone.length() - 8);
 
         if (formattedPhone.length() != 8) {
             return ResponseEntity.badRequest().body("Phone number is not valid");
         }
+
+        formattedPhone = formattedPhone.substring(phone.length() - 8);
 
         try{
            String message  = clientService.getBarcode(phone);
@@ -130,6 +138,11 @@ public class SmsController {
         formattedPhone =  formattedPhone.substring(phone.length() - 8);
 
         return smsService.verifySmsCode("373" + formattedPhone, code);
+    }
+
+    private static String phoneDefaultIfNull(String phone) {
+        phone = phone != null ? phone : "0";
+        return phone;
     }
 
     @GetMapping("/get-all-sms")
