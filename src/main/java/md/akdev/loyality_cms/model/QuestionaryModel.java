@@ -1,21 +1,45 @@
 package md.akdev.loyality_cms.model;
 
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class QuestionaryModel implements Serializable {
-    private UUID id;
+@Data
+@Table(name = "questionary")
+@Entity
+public class QuestionaryModel implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "last_name")
     private String name;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "phone_number")
     private String phoneNumber;
+    @Column(name = "email")
     private String email;
+    @Column(name = "barcode")
     private String barcode;
+    @Column(name = "language")
     private String language;
-    private LocalDateTime birthday;
+    @Column(name = "birth_date")
+    private LocalDate birthday;
+    @Column(name = "client_id")
+    private UUID clientId;
+    @Column(name = "sex")
     private String sex;
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }
