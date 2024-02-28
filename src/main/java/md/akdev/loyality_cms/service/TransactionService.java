@@ -5,11 +5,14 @@ import md.akdev.loyality_cms.model.Branch;
 import md.akdev.loyality_cms.model.JwtAuthentication;
 import md.akdev.loyality_cms.model.TransactionModel;
 import md.akdev.loyality_cms.repository.BranchRepository;
+import md.akdev.loyality_cms.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,8 @@ public class TransactionService {
     @Value("${spring.datasource1c.username}") String userName;
     @Value("${spring.datasource1c.password}") String password;
     @Value("${spring.datasource1c.url.getTransaction}") String urlGetTransaction;
+    @Value("${spring.datasource1c.ipAddress}")
+    String ipAddress;
 
     private final JwtAuthService jwtAuthService;
     private final BranchRepository branchRepository;
@@ -34,9 +39,9 @@ public class TransactionService {
 //    final RestTemplate restTemplate  = new RestTemplate();
     public List<TransactionModel> getTransaction() throws Exception {
         final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
-        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+       // restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
         try {
-
+            /*
             Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, authentication.getUuid());
             ObjectMapper mapper = new ObjectMapper();
             assert transaction != null;
@@ -48,7 +53,8 @@ public class TransactionService {
                     .forEach(e -> e.setAddress(pharmaAddress(e.getPharmCode())));
 
             return transactionModels;
-
+            */
+            return getTransactionFrom1c(authentication);
         }
             catch (Exception e)
         {
@@ -59,6 +65,22 @@ public class TransactionService {
     public String pharmaAddress(String pharmaCode){
         Optional<Branch> branchModel = branchRepository.findByCode(pharmaCode);
         return branchModel.isPresent() ? branchModel.get().getAddress() : "";
+    }
+
+
+    private List<TransactionModel> getTransactionFrom1c(JwtAuthentication authentication) {
+
+        if (NetworkUtils.sourceIsAvailable(ipAddress)) {
+            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+            Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, authentication.getUuid());
+            ObjectMapper mapper = new ObjectMapper();
+            assert transaction != null;
+            return Arrays.stream(transaction)
+                    .map(e -> mapper.convertValue(e, TransactionModel.class))
+                    .peek(e -> e.setAddress(pharmaAddress(e.getPharmCode())))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
 }
