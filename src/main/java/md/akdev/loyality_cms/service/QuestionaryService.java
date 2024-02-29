@@ -38,22 +38,24 @@ public class QuestionaryService {
     public QuestionaryModel getQuestionary() {
         final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
 
-        QuestionaryModel questionaryModel;
+        QuestionaryModel questionaryModel =  new QuestionaryModel();
         //try to obtain questionary from local db
         ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
+//
+//        if (clientsModel != null) {
+//             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(authentication));
+//
+//            //if questionary is not in local db, save it
+//           if (questionaryModel.getId() == null && questionaryModel.getName() != null && questionaryModel.getFirstName() != null){
+//               questionaryModel.setClientId(clientsModel.getId());
+//               questionaryRepository.save(questionaryModel);
+//           }
+//        }
 
-        if (clientsModel != null) {
-             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(authentication));
-
-            //if questionary is not in local db, save it
-           if (questionaryModel.getId() == null && questionaryModel.getName() != null && questionaryModel.getFirstName() != null){
-               questionaryModel.setClientId(clientsModel.getId());
-               questionaryRepository.save(questionaryModel);
-           }
-        }
-        else {
+      //  if (questionaryModel.getClientId() == null)
             questionaryModel = getQuestionaryFrom1c(authentication);
-        }
+            questionaryModel.setClientId(clientsModel.getId());
+
 
         return questionaryModel;
     }
@@ -112,11 +114,11 @@ public class QuestionaryService {
 
     private QuestionaryModel getQuestionaryFrom1c(JwtAuthentication authentication) {
 
-        if (NetworkUtils.sourceIsAvailable(ipAddress)) {
+      //  if (NetworkUtils.sourceIsAvailable(ipAddress)) {
             return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, authentication.getUuid());
-        } else {
-            return new QuestionaryModel();
-        }
+      //  } else {
+        //    return new QuestionaryModel();
+       // }
 
     }
 
