@@ -46,7 +46,7 @@ public class RewardService {
         ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
 
         if (clientsModel.getId() != null) {
-            rewardRepository.findAllActiveRewards(LocalDate.now(), clientsModel.getId());
+        return    rewardRepository.findAllActiveRewards(LocalDate.now(), clientsModel.getId());
         }
 
         return new ArrayList<>();
