@@ -38,18 +38,21 @@ public class QuestionaryService {
     public QuestionaryModel getQuestionary() {
         final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
 
-        QuestionaryModel questionaryModel = new QuestionaryModel();
+        QuestionaryModel questionaryModel;
         //try to obtain questionary from local db
         ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
+
         if (clientsModel != null) {
-             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () ->
-                        getQuestionaryFrom1c(authentication)
-            );
+             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(authentication));
+
             //if questionary is not in local db, save it
            if (questionaryModel.getId() == null && questionaryModel.getName() != null && questionaryModel.getFirstName() != null){
                questionaryModel.setClientId(clientsModel.getId());
                questionaryRepository.save(questionaryModel);
            }
+        }
+        else {
+            questionaryModel = getQuestionaryFrom1c(authentication);
         }
 
         return questionaryModel;
