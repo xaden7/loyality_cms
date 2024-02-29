@@ -1,5 +1,6 @@
 package md.akdev.loyality_cms.restController;
 
+import md.akdev.loyality_cms.dto.QuestionaryDTO;
 import md.akdev.loyality_cms.model.QuestionaryModel;
 import md.akdev.loyality_cms.service.QuestionaryService;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class QuestionaryRestController {
     @GetMapping("getQuestionary")
     public ResponseEntity<?> getQuestionary(){
         try {
-            QuestionaryModel questionaryModel = questionaryService.getQuestionary();
+            QuestionaryDTO questionaryModel = questionaryService.getQuestionary();
             return new ResponseEntity<>(questionaryModel, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

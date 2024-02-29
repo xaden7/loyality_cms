@@ -1,5 +1,6 @@
 package md.akdev.loyality_cms.service;
 
+import md.akdev.loyality_cms.dto.QuestionaryDTO;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.model.JwtAuthentication;
 import md.akdev.loyality_cms.model.QuestionaryModel;
@@ -35,29 +36,26 @@ public class QuestionaryService {
         this.questionaryRepository = questionaryRepository;
     }
 
-    public QuestionaryModel getQuestionary() {
+    public QuestionaryDTO getQuestionary() {
         final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
 
-        QuestionaryModel questionaryModel =  new QuestionaryModel();
+        QuestionaryModel questionaryModel = new QuestionaryModel();
+        QuestionaryDTO questionaryDTO = new QuestionaryDTO();
+
         //try to obtain questionary from local db
         ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
-//
-//        if (clientsModel != null) {
-//             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(authentication));
-//
-//            //if questionary is not in local db, save it
-//           if (questionaryModel.getId() == null && questionaryModel.getName() != null && questionaryModel.getFirstName() != null){
-//               questionaryModel.setClientId(clientsModel.getId());
-//               questionaryRepository.save(questionaryModel);
-//           }
-//        }
 
-      //  if (questionaryModel.getClientId() == null)
-            questionaryModel = getQuestionaryFrom1c(authentication);
-            questionaryModel.setClientId(clientsModel.getId());
+        if (clientsModel != null) {
+             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(authentication));
 
+            //if questionary is not in local db, save it
+           if (questionaryModel.getId() == null && questionaryModel.getName() != null && questionaryModel.getFirstName() != null){
+               questionaryModel.setClientId(clientsModel.getId());
+               questionaryRepository.save(questionaryModel);
+           }
+        }
 
-        return questionaryModel;
+        return mapModels(questionaryModel);
     }
 
     public QuestionaryModel updateQuestionary(QuestionaryModel questionaryModel)  {
@@ -114,13 +112,26 @@ public class QuestionaryService {
 
     private QuestionaryModel getQuestionaryFrom1c(JwtAuthentication authentication) {
 
-      //  if (NetworkUtils.sourceIsAvailable(ipAddress)) {
+        if (NetworkUtils.sourceIsAvailable(ipAddress)) {
             return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, authentication.getUuid());
-      //  } else {
-        //    return new QuestionaryModel();
-       // }
+        } else {
+            return new QuestionaryModel();
+        }
 
     }
 
+    private QuestionaryDTO mapModels(QuestionaryModel questionaryModel) {
+        QuestionaryDTO questionaryDTO = new QuestionaryDTO();
+        questionaryDTO.setId(questionaryModel.getClientId());
+        questionaryDTO.setName(questionaryModel.getName());
+        questionaryDTO.setFirstName(questionaryModel.getFirstName());
+        questionaryDTO.setPhoneNumber(questionaryModel.getPhoneNumber());
+        questionaryDTO.setBarcode(questionaryModel.getBarcode());
 
+        questionaryDTO.setEmail(questionaryModel.getEmail());
+        questionaryDTO.setLanguage(questionaryModel.getLanguage());
+        questionaryDTO.setBirthday(questionaryModel.getBirthday());
+        questionaryDTO.setSex(questionaryModel.getSex());
+    return questionaryDTO;
+    }
 }
