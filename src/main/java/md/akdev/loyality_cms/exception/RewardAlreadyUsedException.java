@@ -1,14 +1,12 @@
 package md.akdev.loyality_cms.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class RewardAlreadyUsedException extends RuntimeException{
     private String message = "Reward already used";
 }

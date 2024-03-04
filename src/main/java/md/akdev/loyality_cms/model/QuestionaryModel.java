@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "questionary")
 @Entity
 public class QuestionaryModel implements Serializable{

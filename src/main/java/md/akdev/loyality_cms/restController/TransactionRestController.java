@@ -22,7 +22,7 @@ public class TransactionRestController {
     public ResponseEntity<?> getTransaction(){
         try{
             List<TransactionModel> transaction = transactionService.getTransaction();
-            return new ResponseEntity(transaction, HttpStatus.OK);
+            return new ResponseEntity<>(transaction, HttpStatus.OK);
 
         }catch (Exception e)
         {

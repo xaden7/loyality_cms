@@ -1,13 +1,14 @@
 package md.akdev.loyality_cms.dto;
 
-import jakarta.persistence.Column;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 public class QuestionaryDTO implements Serializable {
     private UUID id;
     private String name;

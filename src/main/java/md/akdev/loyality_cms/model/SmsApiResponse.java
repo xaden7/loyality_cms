@@ -1,16 +1,21 @@
 package md.akdev.loyality_cms.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class SmsApiResponse {
 
     @JsonProperty("result")
     private List<Result> result;
-    @Data
+    @Getter
+    @Setter
+    @NoArgsConstructor
     public static class Result{
         @JsonProperty("code")
         private String code;

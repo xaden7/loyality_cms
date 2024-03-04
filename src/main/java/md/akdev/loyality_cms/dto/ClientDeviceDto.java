@@ -1,11 +1,9 @@
 package md.akdev.loyality_cms.dto;
 
-import jakarta.persistence.Entity;
 import lombok.*;
 
 import java.util.UUID;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

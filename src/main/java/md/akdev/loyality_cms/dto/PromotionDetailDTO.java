@@ -1,8 +1,11 @@
 package md.akdev.loyality_cms.dto;
 
-import lombok.Data;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PromotionDetailDTO {
     private Integer id;
 //    private String image;
