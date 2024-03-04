@@ -1,7 +1,6 @@
 package md.akdev.loyality_cms.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +17,6 @@ public class PromotionDTO {
     private LocalDate endDate;
     private Double upToDiscount;
     private Double upToBonus;
-//    private String image;
     private String imageName;
     private String imageType;
     private String status;

@@ -2,10 +2,12 @@ package md.akdev.loyality_cms.restController;
 
 import md.akdev.loyality_cms.dto.PromotionDTO;
 import md.akdev.loyality_cms.dto.PromotionDetailDTO;
+import md.akdev.loyality_cms.dto.TagDTO;
 import md.akdev.loyality_cms.model.Promotion;
 import md.akdev.loyality_cms.model.PromotionDetail;
 import md.akdev.loyality_cms.repository.PromotionDetailsRepository;
 import md.akdev.loyality_cms.repository.PromotionRepository;
+import md.akdev.loyality_cms.repository.TagRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,20 +29,29 @@ import java.util.stream.Collectors;
 public class PromotionController {
     private final PromotionRepository promotionRepository;
     private final ModelMapper modelMapper;
-
     private final PromotionDetailsRepository promotionDetailsRepository;
+
+    private final TagRepository tagRepository;
     @Autowired
-    public PromotionController(PromotionRepository promotionRepository, ModelMapper modelMapper, PromotionDetailsRepository promotionDetailsRepository) {
+    public PromotionController(PromotionRepository promotionRepository, ModelMapper modelMapper, PromotionDetailsRepository promotionDetailsRepository, TagRepository tagRepository) {
         this.promotionRepository = promotionRepository;
         this.modelMapper = modelMapper;
         this.promotionDetailsRepository = promotionDetailsRepository;
+        this.tagRepository = tagRepository;
     }
 
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllPromotions(){
-        return ResponseEntity.ok().body(
-                promotionRepository.findAllActive(LocalDate.now()).stream().map((element) ->
-                        modelMapper.map(element, PromotionDTO.class)).collect(Collectors.toList()));
+
+     List<PromotionDTO> promotion = promotionRepository.findAllActive(LocalDate.now()).stream().map((element) ->
+                        modelMapper.map(element, PromotionDTO.class)).toList()
+             .stream().peek((element) -> {
+                         element.setTags(tagRepository.findAllByPromotionId(element.getId()).stream().map((tag) -> modelMapper.map(tag, TagDTO.class)).toList());
+                         element.setPromotionDetails(promotionDetailsRepository.findAllByPromotionId(element.getId()).stream().map((detail) -> modelMapper.map(detail, PromotionDetailDTO.class)).toList());
+             }
+             ).toList();
+
+        return ResponseEntity.ok().body(promotion);
     }
 
     @GetMapping("/get-details-by-promotion-id")
