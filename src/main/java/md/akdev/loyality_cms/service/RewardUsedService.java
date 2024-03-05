@@ -9,8 +9,10 @@ import md.akdev.loyality_cms.repository.RewardUsedLogRepository;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.exception.RewardAlreadyUsedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.time.LocalDate.now;
@@ -20,16 +22,14 @@ public class RewardUsedService {
     private final RewardUsedRepository rewardUsedRepository;
     private final RewardService rewardService;
     private final ClientsRepository clientsRepository;
-    private final JwtAuthService jwtAuthService;
     private final RewardUsedLogRepository rewardUsedLogRepository;
 
 
     @Autowired
-    public RewardUsedService(RewardUsedRepository rewardUsedRepository, RewardService rewardService, ClientsRepository clientsRepository, JwtAuthService jwtAuthService, RewardUsedLogRepository rewardUsedLogRepository) {
+    public RewardUsedService(RewardUsedRepository rewardUsedRepository, RewardService rewardService, ClientsRepository clientsRepository,  RewardUsedLogRepository rewardUsedLogRepository) {
         this.rewardUsedRepository = rewardUsedRepository;
         this.rewardService = rewardService;
         this.clientsRepository = clientsRepository;
-        this.jwtAuthService = jwtAuthService;
         this.rewardUsedLogRepository = rewardUsedLogRepository;
 
     }
@@ -89,7 +89,6 @@ public class RewardUsedService {
 
     private void verifyRewardUsed(RewardUsedDTO rewardUsed, String operation){
 
-        final JwtAuthentication authentication;
         UUID clientId;
 
         if(rewardUsed == null)
@@ -99,12 +98,12 @@ public class RewardUsedService {
             throw new NotFoundException("Reward object (reward id) is required");
 
         if (rewardUsed.getClientId() == null){
-            authentication = jwtAuthService.getAuthInfo();
 
-            if (authentication == null)
+            String clientUuid1c = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (Objects.equals(clientUuid1c, "anonymousUser"))
                 throw new NotFoundException("Client object (id key)  is required, please login first");
 
-            clientId = clientsRepository.getClientByUuid1c(authentication.getUuid()).getId();
+            clientId = clientsRepository.getClientByUuid1c(clientUuid1c).getId();
 
             rewardUsed.setClientId(clientId);
         }

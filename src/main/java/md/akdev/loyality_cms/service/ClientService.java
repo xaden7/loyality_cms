@@ -7,7 +7,6 @@ import md.akdev.loyality_cms.repository.BonusRepository;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.utils.MappingUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -25,11 +24,9 @@ public class ClientService {
     @Value("${spring.datasource1c.url.temporaryCode}") String urlTemporaryCode;
     @Value("${spring.datasource1c.url.getBarcode}") String urlGetBarcode;
 
-//    final RestTemplate restTemplate = new RestTemplate();
     private final MappingUtils mappingUtils;
     private final ClientsRepository clientsRepository;
     private final BonusRepository bonusRepository;
-
     private final RestTemplate restTemplate;
 
     public ClientService(ClientsRepository clientsRepository, MappingUtils mappingUtils, BonusRepository bonusRepository, RestTemplate restTemplate) {
@@ -52,10 +49,8 @@ public class ClientService {
         phone = phone.substring(phone.length()-8);
         String barcode = inputClient.getCodeCard();
 
-        //ClientsModel getClient = clientsRepository.getClientByPhoneNumberAndCodeCard(phone, barcode).orElse(null);
         ClientsModel getClient = getClientByPhoneNumber(phone).orElse(null);
         if (getClient == null) {
-//            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             try {
 
                 ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phone, barcode);
@@ -91,7 +86,6 @@ public class ClientService {
 
     public QuestionaryModel newClient(QuestionaryModel questionaryModel) throws Exception{
         try{
-//            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             return restTemplate.postForObject(urlNewClient, questionaryModel, QuestionaryModel.class);
         } catch(Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
@@ -102,7 +96,6 @@ public class ClientService {
         try{
             TemporaryCodeModel newTemporaryCodeModel = new TemporaryCodeModel();
             newTemporaryCodeModel.setCode(getRandomNumber());
-//            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             return restTemplate.postForObject(urlTemporaryCode, newTemporaryCodeModel, TemporaryCodeModel.class, uuid1c);
         } catch(Exception e){
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
@@ -133,15 +126,11 @@ public class ClientService {
 
     public String getBarcode(String phone) throws Exception {
         try{
-          //  System.out.println("Keep trying");
-//                restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
                 GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
                 String smsText;
                 switch(Objects.requireNonNull(getBarcodeModel).getQtyBarcode()){
                     case 1:
-                        // smsText = "De acest numar de telefon este legat Card Frumos cu codul: " + getBarcodeModel.getLastBarcode();
                             smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: \n" + getBarcodeModel.getLastBarcode();
-                        //otpraviti soobshenie
                         System.out.println(smsText);
                         return smsText;
                     case 2:

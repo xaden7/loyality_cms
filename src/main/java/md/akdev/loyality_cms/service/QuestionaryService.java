@@ -2,13 +2,13 @@ package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.QuestionaryDTO;
 import md.akdev.loyality_cms.model.ClientsModel;
-import md.akdev.loyality_cms.model.JwtAuthentication;
 import md.akdev.loyality_cms.model.QuestionaryModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.repository.QuestionaryRepository;
 import md.akdev.loyality_cms.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,37 +16,32 @@ import java.util.Objects;
 
 @Service
 public class QuestionaryService {
-//     @Value("${spring.datasource1c.username}") String userName;
-//    @Value("${spring.datasource1c.password}") String password;
+
     @Value("${spring.datasource1c.url.getQuestionary}") String urlGetQuestionary;
     @Value("${spring.datasource1c.url.updateQuestionary}") String urlUpdateQuestionary;
     @Value("${spring.datasource1c.ipAddress}")
     String ipAddress;
 
     private final RestTemplate restTemplate;
-    private final JwtAuthService jwtAuthService;
     private final ClientsRepository clientsRepository;
     private final QuestionaryRepository questionaryRepository;
 
     @Autowired
-    public QuestionaryService(RestTemplate restTemplate, JwtAuthService jwtAuthService, ClientsRepository clientsRepository, QuestionaryRepository questionaryRepository) {
+    public QuestionaryService(RestTemplate restTemplate,  ClientsRepository clientsRepository, QuestionaryRepository questionaryRepository) {
         this.restTemplate = restTemplate;
-        this.jwtAuthService = jwtAuthService;
         this.clientsRepository = clientsRepository;
         this.questionaryRepository = questionaryRepository;
     }
 
     public QuestionaryDTO getQuestionary() {
-        final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
 
         QuestionaryModel questionaryModel = new QuestionaryModel();
-        QuestionaryDTO questionaryDTO = new QuestionaryDTO();
 
         //try to obtain questionary from local db
-        ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
+        ClientsModel clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         if (clientsModel != null) {
-             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(authentication));
+             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(clientsModel.getUuid1c()));
 
             //if questionary is not in local db, save it
            if (questionaryModel.getId() == null && questionaryModel.getName() != null && questionaryModel.getFirstName() != null){
@@ -60,8 +55,7 @@ public class QuestionaryService {
 
     public QuestionaryModel updateQuestionary(QuestionaryModel questionaryModel)  {
 
-        final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
-        ClientsModel clientsModel = clientsRepository.getClientByUuid1c(authentication.getUuid());
+        ClientsModel clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         if (NetworkUtils.sourceIsAvailable(ipAddress)) {
             questionaryRepository.findByClientId(clientsModel.getId()).ifPresent( i -> {
@@ -97,7 +91,7 @@ public class QuestionaryService {
 
                 questionaryRepository.save(i);
 
-                restTemplate.postForObject(urlUpdateQuestionary, questionaryModel, QuestionaryModel.class, authentication.getUuid());
+                restTemplate.postForObject(urlUpdateQuestionary, questionaryModel, QuestionaryModel.class, clientsModel.getUuid1c());
 
                 clientsModel.setClientName(i.getName() + " " + i.getFirstName());
                 clientsModel.setPhoneNumber(i.getPhoneNumber());
@@ -110,10 +104,10 @@ public class QuestionaryService {
     }
 
 
-    private QuestionaryModel getQuestionaryFrom1c(JwtAuthentication authentication) {
+    private QuestionaryModel getQuestionaryFrom1c(String uuid) {
 
         if (NetworkUtils.sourceIsAvailable(ipAddress)) {
-            return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, authentication.getUuid());
+            return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, uuid);
         } else {
             return new QuestionaryModel();
         }

@@ -48,11 +48,6 @@ public class SmsService {
 
     public ResponseEntity<?> sendSms(String phone, String messageToSend) {
 
- //       Integer code = getRandomNumber();
-//        messageToSend = messageToSend ;
-
-//        logger.info("Sending sms to phone: " + phone + " with code: " + code);
-//        String messageToSend = "Codul de verificare este: " + code;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -71,36 +66,6 @@ public class SmsService {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonBody, httpHeaders);
 
-
-        /* //#######--- disable block and move to SmsController 23.01.2024 start
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-
-            SmsApiResponse smsApiResponse = response.getBody();
-
-            if (smsApiResponse != null && smsApiResponse.getResult() != null && !smsApiResponse.getResult().isEmpty()) {
-
-                SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
-
-                SmsCodeLog smsCodeLog = new SmsCodeLog(phone
-                        , result.getCode()
-                        , code.toString(), result.getMessageId(), "SEND SMS");
-                logger.info("Sms - save result to DB: " + phone + " with code: " + code);
-                saveSmsLog(smsCodeLog);
-
-                if ("OK".equals(result.getCode())) {
-                    saveSmsCode(phone, code);
-                    return ResponseEntity.ok("Sms sent successfully");
-                } else {
-                    return ResponseEntity.badRequest().body("Error while sending sms");
-                }
-            }
-        }
-
-      return ResponseEntity.badRequest().body("Error while sending sms");
-
-     //// disable block and move to SmsController 23.01.2024 start
-       */
         return new RestTemplate().postForEntity(smsApiUrl, httpEntity, SmsApiResponse.class);
     }
 
@@ -127,7 +92,7 @@ public class SmsService {
                 }
             }
         }
-      //  return ResponseEntity.badRequest().body("Code is not valid");
+
         return new ResponseEntity<>(Map.of("reason", "Code is not valid"), org.springframework.http.HttpStatus.NOT_FOUND);
     }
 
@@ -145,7 +110,7 @@ public class SmsService {
     }
 
     public void saveSmsLog(SmsCodeLog smsCodeLog) {
-        //  SmsCodeLog smsCodeLog = new SmsCodeLog(phone, result.getCode(), result.getMessageId(), operation);
+
         smsCodeLogsRepository.save(smsCodeLog);
     }
 
