@@ -1,14 +1,15 @@
 package md.akdev.loyality_cms.service;
 
 
+import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.dto.RewardUsedDTO;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.ClientsRepository;
+import md.akdev.loyality_cms.repository.RewardDetailsRepository;
 import md.akdev.loyality_cms.repository.RewardUsedRepository;
 import md.akdev.loyality_cms.repository.RewardUsedLogRepository;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.exception.RewardAlreadyUsedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -18,21 +19,14 @@ import java.util.UUID;
 import static java.time.LocalDate.now;
 
 @Service
+@RequiredArgsConstructor
 public class RewardUsedService {
     private final RewardUsedRepository rewardUsedRepository;
     private final RewardService rewardService;
     private final ClientsRepository clientsRepository;
     private final RewardUsedLogRepository rewardUsedLogRepository;
+    private final RewardDetailsRepository rewardsDetailsRepository;
 
-
-    @Autowired
-    public RewardUsedService(RewardUsedRepository rewardUsedRepository, RewardService rewardService, ClientsRepository clientsRepository,  RewardUsedLogRepository rewardUsedLogRepository) {
-        this.rewardUsedRepository = rewardUsedRepository;
-        this.rewardService = rewardService;
-        this.clientsRepository = clientsRepository;
-        this.rewardUsedLogRepository = rewardUsedLogRepository;
-
-    }
 
 
     public void saveRewardUsed(RewardUsedDTO rewardUsed){
@@ -43,8 +37,21 @@ public class RewardUsedService {
             saveQrRewardUsed(rewardUsed);
         else if (rewardType.getRewardMethod() == 2)
             saveGiftRewardUser(rewardUsed);
-        else
+        else if (rewardType.getRewardMethod() == 3 ){
+                saveFortuneRewardUser(rewardUsed);
+        } else
             throw new NotFoundException("Reward type with id " + rewardType.getId() + " not found");
+
+    }
+
+    private void saveFortuneRewardUser(RewardUsedDTO rewardUsed) {
+
+        verifyRewardUsed(rewardUsed, "FORTUNE REWARD");
+        Reward reward = getReward(rewardUsed);
+
+        RewardDetail rewardDetail = rewardsDetailsRepository.findByRewardAndId(reward, rewardUsed.getRewardDetailId()).orElseThrow(() -> new NotFoundException("Reward detail with id " + rewardUsed.getRewardDetailId() + " not found"));
+
+        preSave(rewardUsed, rewardDetail);
 
     }
 
@@ -53,6 +60,12 @@ public class RewardUsedService {
 
         verifyRewardUsed(rewardUsed, "QR REWARD");  // todo: modify this to Dynamic value
 
+        Reward reward = getReward(rewardUsed);
+
+        preSave(rewardUsed, reward);
+    }
+
+    private Reward getReward(RewardUsedDTO rewardUsed) {
         Reward reward = rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found"));
 
         if (now().isAfter(reward.getDateTo()))
@@ -60,8 +73,7 @@ public class RewardUsedService {
 
         if(now().isBefore(reward.getDateFrom()))
             throw new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " is not active or hasn't started yet");
-
-         preSave(rewardUsed, reward);
+        return reward;
     }
 
     //method 2 in table reward_type;
@@ -82,6 +94,21 @@ public class RewardUsedService {
         rewardUsedToSave.setClient(client);
         rewardUsedToSave.setMovedToLoyality(0);
         rewardUsedToSave.setReward(reward);
+
+        rewardUsedRepository.save(rewardUsedToSave);
+    }
+
+    private void preSave(RewardUsedDTO rewardUsed, RewardDetail rewardDetail){
+        ClientsModel client = clientsRepository.findById(rewardUsed.getClientId()).orElseThrow(() -> new NotFoundException("Client with id " + rewardUsed.getClientId() + " not found"));
+
+        if (rewardUsedRepository.findByRewardAndClient(rewardDetail.getReward(), client).isPresent())
+            throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
+
+        RewardUsed rewardUsedToSave = new RewardUsed();
+        rewardUsedToSave.setClient(client);
+        rewardUsedToSave.setMovedToLoyality(0);
+        rewardUsedToSave.setReward(rewardDetail.getReward());
+        rewardUsedToSave.setRewardDetail(rewardDetail);
 
         rewardUsedRepository.save(rewardUsedToSave);
     }
@@ -107,6 +134,7 @@ public class RewardUsedService {
 
             rewardUsed.setClientId(clientId);
         }
+
 
         if (rewardUsed.getClientId() == null)
             throw new NotFoundException("Client object (id key)  is required");

@@ -26,6 +26,10 @@ public class RewardUsed {
     @JoinColumn(name = "reward_id")
     private Reward reward;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_detail_id")
+    private RewardDetail rewardDetail;
+
     @Column(name = "moved_to_loyality")
     private Integer movedToLoyality;
 

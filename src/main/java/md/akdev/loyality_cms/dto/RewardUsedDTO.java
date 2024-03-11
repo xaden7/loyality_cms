@@ -9,5 +9,6 @@ import java.util.UUID;
 @Setter
 public class RewardUsedDTO {
     private Integer rewardId;
+    private Integer rewardDetailId;
     private UUID clientId;
 }
