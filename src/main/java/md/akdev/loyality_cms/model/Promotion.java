@@ -79,4 +79,21 @@ public class Promotion {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @Override
+    public String toString() {
+        return "Promotion{" +
+                "id=" + id +
+                ", priority=" + priority +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", upToDiscount=" + upToDiscount +
+                ", upToBonus=" + upToBonus +
+                ", image='" + image + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", imageType='" + imageType + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

@@ -31,4 +31,17 @@ public class BonusModel {
     @Column(name = "date_accured")
     private LocalDateTime dateAccured;
 
+
+    @Override
+    public String toString() {
+        return "BonusModel{" +
+                "id=" + id +
+                ", clientUid='" + clientUid + '\'' +
+                ", typeBonus=" + typeBonus +
+                ", bonus=" + bonus +
+                ", dateInsert=" + dateInsert +
+                ", accured=" + accured +
+                ", dateAccured=" + dateAccured +
+                '}';
+    }
 }

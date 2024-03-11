@@ -30,4 +30,16 @@ public class ClientsModel {
     private Double bonus;
     @Column
     private String uuid1c;
+
+    @Override
+    public String toString() {
+        return "ClientsModel{" +
+                "id=" + id.toString() +
+                ", clientName='" + clientName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", codeCard='" + codeCard + '\'' +
+                ", bonus=" + bonus +
+                ", uuid1c='" + uuid1c + '\'' +
+                '}';
+    }
 }

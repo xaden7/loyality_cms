@@ -8,4 +8,12 @@ import lombok.Setter;
 public class GetBarcodeModel {
     private Integer qtyBarcode;
     private String lastBarcode;
+
+    @Override
+    public String toString() {
+        return "GetBarcodeModel{" +
+                "qtyBarcode=" + qtyBarcode +
+                ", lastBarcode='" + lastBarcode + '\'' +
+                '}';
+    }
 }

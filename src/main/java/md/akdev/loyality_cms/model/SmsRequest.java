@@ -1,10 +1,7 @@
 package md.akdev.loyality_cms.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SmsRequest {
     @JsonProperty("messages")
+    @ToString.Exclude
     private List<Message> messages;
 
     @Setter
@@ -31,4 +29,6 @@ public class SmsRequest {
         @JsonProperty("priority")
         private String priority;
     }
+
+
 }

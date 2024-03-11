@@ -30,4 +30,15 @@ public class RewardsType {
         @NotNull(message = "description must be not empty")
         @Column(name = "description")
         private String description;
+
+
+        @Override
+        public String toString() {
+                return "RewardsType{" +
+                        "id=" + id +
+                        ", rewardType='" + rewardType + '\'' +
+                        ", rewardMethod=" + rewardMethod +
+                        ", description='" + description + '\'' +
+                        '}';
+        }
 }

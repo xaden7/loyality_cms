@@ -20,4 +20,17 @@ public class TransactionModel implements Serializable {
     private boolean additionalBonus;
     private List<TransactionProductsModel> products;
 
+
+    @Override
+    public String toString() {
+        return "TransactionModel{" +
+                "pharmCode='" + pharmCode + '\'' +
+                ", address='" + address + '\'' +
+                ", docDate='" + docDate + '\'' +
+                ", docSum=" + docSum +
+                ", bonusReceived=" + bonusReceived +
+                ", bonusUsed=" + bonusUsed +
+                ", additionalBonus=" + additionalBonus +
+                '}';
+    }
 }

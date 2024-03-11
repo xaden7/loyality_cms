@@ -32,4 +32,12 @@ public class Tag {
     @Column(name = "created_at")
     private Instant createdAt;
 
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

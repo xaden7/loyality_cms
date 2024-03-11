@@ -37,4 +37,13 @@ public class RewardUsed {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Override
+    public String toString() {
+        return "RewardUsed{" +
+                "id=" + id +
+                ", client=" +  client.getId() +
+                ", reward=" +  reward.getId() +
+                ", movedToLoyality=" + movedToLoyality +
+                '}';
+    }
 }

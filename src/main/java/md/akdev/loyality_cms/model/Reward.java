@@ -54,4 +54,20 @@ public class Reward {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     private List<RewardDetail> rewardDetails;
+
+
+    @Override
+    public String toString() {
+        return "Reward{" +
+                "id=" + id +
+                ", priority=" + priority +
+                ", reward_type=" + rewardType.getId() +
+                ", dateFrom=" + dateFrom +
+                ", dateTo=" + dateTo +
+                ", image='" + image + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", imageType='" + imageType + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

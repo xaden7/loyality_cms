@@ -41,5 +41,18 @@ public class DevicesModel {
   @Column
   private LocalDateTime lastConnect;
 
-
+  @Override
+  public String toString() {
+    return "DevicesModel{" +
+            "clientId=" + clientId.toString() +
+            ", deviceId='" + deviceId + '\'' +
+            ", deviceName='" + deviceName + '\'' +
+            ", os='" + os + '\'' +
+            ", osVersion='" + osVersion + '\'' +
+            ", appVersion='" + appVersion + '\'' +
+            ", appBuild='" + appBuild + '\'' +
+            ", appPackage='" + appPackage + '\'' +
+            ", fcmToken='" + fcmToken + '\'' +
+            '}';
+  }
 }

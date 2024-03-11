@@ -12,4 +12,12 @@ import java.io.Serializable;
 public class TemporaryCodeModel implements Serializable {
     private Integer code;
     private Integer lifeTimeInMinutes;
+
+    @Override
+    public String toString() {
+        return "TemporaryCodeModel{" +
+                "code=" + code +
+                ", lifeTimeInMinutes=" + lifeTimeInMinutes +
+                '}';
+    }
 }

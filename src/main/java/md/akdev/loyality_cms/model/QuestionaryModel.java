@@ -44,4 +44,21 @@ public class QuestionaryModel implements Serializable{
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+
+    @Override
+    public String toString() {
+        return "QuestionaryModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", barcode='" + barcode + '\'' +
+                ", language='" + language + '\'' +
+                ", birthday=" + birthday +
+                ", clientId=" + clientId +
+                ", sex='" + sex + '\'' +
+                '}';
+    }
 }

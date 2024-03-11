@@ -14,4 +14,12 @@ public class TransactionProductsModel implements Serializable {
     private Double qty;
     private Double price;
 
+    @Override
+    public String toString() {
+        return "TransactionProductsModel{" +
+                "prodName='" + prodName + '\'' +
+                ", qty=" + qty +
+                ", price=" + price +
+                '}';
+    }
 }

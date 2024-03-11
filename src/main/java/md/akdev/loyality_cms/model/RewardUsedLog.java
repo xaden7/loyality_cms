@@ -33,4 +33,12 @@ public class RewardUsedLog {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Override
+    public String toString() {
+        return "RewardUsedLog{" +
+                "id=" + id +
+                ", rewardId=" + rewardId +
+                ", clientId=" + clientId +
+                '}';
+    }
 }

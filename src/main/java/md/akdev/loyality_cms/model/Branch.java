@@ -77,4 +77,25 @@ public class Branch {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @Override
+    public String toString() {
+        return "Branch{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", city='" + city + '\'' +
+                ", region='" + region + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", workingHours='" + workingHours + '\'' +
+                ", workingSaturdayHours='" + workingSaturdayHours + '\'' +
+                ", workingSundayHours='" + workingSundayHours + '\'' +
+                ", optics=" + optics +
+                ", opticsPhone='" + opticsPhone + '\'' +
+                ", opticsWorkingHours='" + opticsWorkingHours + '\'' +
+                ", opticsWorkingSaturdayHours='" + opticsWorkingSaturdayHours + '\'' +
+                ", opticsWorkingSundayHours='" + opticsWorkingSundayHours + '\'' +
+                '}';
+    }
 }

@@ -35,4 +35,13 @@ public class RewardDetail {
     @Column(name = "description")
     private String description;
 
+    @Override
+    public String toString() {
+        return "RewardDetail{" +
+                "id=" + id +
+                ", qrCode='" + qrCode + '\'' +
+                ", bonusQty=" + bonusQty +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
