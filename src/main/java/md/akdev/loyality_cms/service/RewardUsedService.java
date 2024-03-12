@@ -31,7 +31,7 @@ public class RewardUsedService {
     private final RewardUsedLogRepository rewardUsedLogRepository;
     private final RewardDetailsRepository rewardsDetailsRepository;
 
-@Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void saveRewardUsed(RewardUsedDTO rewardUsed){
         RewardsType rewardType =
                 rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
@@ -49,8 +49,8 @@ public class RewardUsedService {
             throw new NotFoundException("Reward type with id " + rewardType.getId() + " not found");
 
     }
-
-    private void saveFortuneRewardUser(RewardUsedDTO rewardUsed) {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    protected void saveFortuneRewardUser(RewardUsedDTO rewardUsed) {
 
         verifyRewardUsed(rewardUsed, "FORTUNE REWARD");
         Reward reward = getReward(rewardUsed);
@@ -62,7 +62,7 @@ public class RewardUsedService {
     }
 
     //method 2 in table reward_type;
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void saveQrRewardUsed(RewardUsedDTO rewardUsed){
 
         verifyRewardUsed(rewardUsed, "QR REWARD");  // todo: modify this to Dynamic value
@@ -71,7 +71,7 @@ public class RewardUsedService {
 
         preSave(rewardUsed, reward);
     }
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     protected Reward getReward(RewardUsedDTO rewardUsed) {
         Reward reward = rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found"));
 
@@ -84,6 +84,7 @@ public class RewardUsedService {
     }
 
     //method 2 in table reward_type;
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void saveGiftRewardUser(RewardUsedDTO rewardUsed){
        verifyRewardUsed(rewardUsed, "GIFT REWARD");// todo: modify this to Dynamic value
 
@@ -91,7 +92,7 @@ public class RewardUsedService {
         preSave(rewardUsed, reward);
 
     }
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     protected void preSave(RewardUsedDTO rewardUsed, Reward reward) {
         ClientsModel client = clientsRepository.findById(rewardUsed.getClientId()).orElseThrow(() -> new NotFoundException("Client with id " + rewardUsed.getClientId() + " not found"));
 
@@ -107,7 +108,7 @@ public class RewardUsedService {
 
 
     }
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     protected void preSave(RewardUsedDTO rewardUsed, RewardDetail rewardDetail){
         ClientsModel client = clientsRepository.findById(rewardUsed.getClientId()).orElseThrow(() -> new NotFoundException("Client with id " + rewardUsed.getClientId() + " not found"));
 
@@ -123,9 +124,8 @@ public class RewardUsedService {
             throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
 
     }
-
-
-    private void verifyRewardUsed(RewardUsedDTO rewardUsed, String operation){
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    protected void verifyRewardUsed(RewardUsedDTO rewardUsed, String operation){
 
         UUID clientId;
 
