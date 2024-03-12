@@ -30,10 +30,12 @@ public class RewardUsedService {
     private final RewardDetailsRepository rewardsDetailsRepository;
 
 @Transactional
-
     public void saveRewardUsed(RewardUsedDTO rewardUsed){
         RewardsType rewardType =
                 rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
+
+        if (rewardUsedRepository.findByRewardAndClient(rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")), clientsRepository.findById(rewardUsed.getClientId()).orElseThrow(() -> new NotFoundException("Client with id " + rewardUsed.getClientId() + " not found"))).isPresent())
+            throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
 
         if (rewardType.getRewardMethod() == 1)
             saveQrRewardUsed(rewardUsed);
