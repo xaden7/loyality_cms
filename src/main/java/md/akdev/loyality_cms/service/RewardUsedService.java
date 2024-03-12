@@ -1,7 +1,7 @@
 package md.akdev.loyality_cms.service;
 
 
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.dto.RewardUsedDTO;
 import md.akdev.loyality_cms.model.*;
@@ -13,6 +13,8 @@ import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.exception.RewardAlreadyUsedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Objects;
@@ -29,7 +31,7 @@ public class RewardUsedService {
     private final RewardUsedLogRepository rewardUsedLogRepository;
     private final RewardDetailsRepository rewardsDetailsRepository;
 
-@Transactional
+@Transactional(isolation = Isolation.SERIALIZABLE)
     public void saveRewardUsed(RewardUsedDTO rewardUsed){
         RewardsType rewardType =
                 rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
