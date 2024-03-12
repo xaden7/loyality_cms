@@ -11,6 +11,8 @@ import md.akdev.loyality_cms.repository.RewardUsedRepository;
 import md.akdev.loyality_cms.repository.RewardUsedLogRepository;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.exception.RewardAlreadyUsedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -31,13 +33,22 @@ public class RewardUsedService {
     private final RewardUsedLogRepository rewardUsedLogRepository;
     private final RewardDetailsRepository rewardsDetailsRepository;
 
+    Logger logger = LoggerFactory.getLogger(RewardUsedService.class);
+
+    String message;
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void saveRewardUsed(RewardUsedDTO rewardUsed){
         RewardsType rewardType =
-                rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
+                rewardService.findById(rewardUsed.getRewardId()).orElseThrow(
+                        () -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
 
-        if (rewardUsedRepository.findByRewardAndClient(rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")), clientsRepository.findById(rewardUsed.getClientId()).orElseThrow(() -> new NotFoundException("Client with id " + rewardUsed.getClientId() + " not found"))).isPresent())
-            throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id: " + rewardUsed.getClientId());
+        if (rewardUsedRepository.findByRewardAndClient(rewardService.findById(rewardUsed.getRewardId()).orElseThrow(
+                () -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")), clientsRepository.findById(rewardUsed.getClientId()).orElseThrow(
+                        () -> new NotFoundException("Client with id " + rewardUsed.getClientId() + " not found"))).isPresent()){
+            message = "Reward with id " + rewardUsed.getRewardId() + " is already used by client with id: " + rewardUsed.getClientId();
+            logger.error(message);
+            throw new RewardAlreadyUsedException(message);
+        }
 
         if (rewardType.getRewardMethod() == 1)
             saveQrRewardUsed(rewardUsed);
@@ -45,8 +56,11 @@ public class RewardUsedService {
             saveGiftRewardUser(rewardUsed);
         else if (rewardType.getRewardMethod() == 3 ){
                 saveFortuneRewardUser(rewardUsed);
-        } else
-            throw new NotFoundException("Reward type with id " + rewardType.getId() + " not found");
+        } else{
+            message = "Reward type with id " + rewardType.getId() + " not found";
+            logger.error(message);
+            throw new NotFoundException(message);
+        }
 
     }
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -104,7 +118,9 @@ public class RewardUsedService {
 
                 rewardUsedRepository.save(rewardUsedToSave);
         }else{
-            throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
+            message = "Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId();
+            logger.error(message);
+            throw new RewardAlreadyUsedException(message);
         }
 
 
@@ -123,7 +139,9 @@ public class RewardUsedService {
 
             rewardUsedRepository.save(rewardUsedToSave);
         }else{
-            throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
+            message = "Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId();
+            logger.error(message);
+            throw new RewardAlreadyUsedException(message);
         }
 
 

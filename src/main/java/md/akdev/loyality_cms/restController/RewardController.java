@@ -13,6 +13,8 @@ import md.akdev.loyality_cms.exception.CstErrorResponse;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.exception.RewardAlreadyUsedException;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,9 @@ public class RewardController {
     private final RewardService rewardService;
     private final ModelMapper modelMapper;
     private final RewardUsedService rewardUsedService;
+
+    Logger logger = LoggerFactory.getLogger(RewardController.class);
+
 
     @Autowired
     public RewardController(RewardTypeRepository rewardsTypeRepository, RewardService rewardService, ModelMapper modelMapper, RewardUsedService rewardUsedService) {
@@ -108,7 +113,7 @@ public class RewardController {
             case "AccessDeniedException" -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.BAD_REQUEST;
         };
-
+        logger.warn(cstErrorResponse.getMessage());
         return new ResponseEntity<>(cstErrorResponse, status);
     }
 }
