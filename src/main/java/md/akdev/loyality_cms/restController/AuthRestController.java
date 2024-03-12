@@ -30,8 +30,14 @@ public class AuthRestController {
     @GetMapping("phone={phone}&barcode={barcode}")
     public ResponseEntity<?> getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode){
 
+        phone = phoneDefaultIfNull(phone);
+
+        if (phone.length() != 8) {
+            return ResponseEntity.badRequest().body("Phone number is not valid");
+        }
+
         ClientDeviceDto inputClient = new ClientDeviceDto();
-        inputClient.setPhoneNumber(phone.substring(phone.length()-8));
+        inputClient.setPhoneNumber(phone);
         inputClient.setCodeCard(barcode);
 
         ClientsModel clientsModel = clientService.mapToClientsModel(inputClient);
@@ -89,5 +95,10 @@ public class AuthRestController {
         }catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    private static String phoneDefaultIfNull(String phone) {
+        phone = phone != null ? phone : "0";
+        return phone;
     }
 }
