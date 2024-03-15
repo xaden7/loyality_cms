@@ -13,6 +13,7 @@ public class RequestLoggingFilterConfig  {
     @Bean
     public AbstractRequestLoggingFilter logFilter() throws ServletException {
         AbstractRequestLoggingFilter filter = new AbstractRequestLoggingFilter() {
+
             @Override
             protected void beforeRequest(HttpServletRequest request,String message) {
                 logger.info(message);
