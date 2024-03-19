@@ -35,10 +35,13 @@ public class RewardUsedLog {
 
     @Override
     public String toString() {
+
+        String clientIdStr = clientId == null ? "null" : clientId.toString();
+
         return "RewardUsedLog{" +
                 "id=" + id +
                 ", rewardId=" + rewardId +
-                ", clientId=" + clientId +
+                ", clientId=" + clientIdStr +
                 '}';
     }
 }

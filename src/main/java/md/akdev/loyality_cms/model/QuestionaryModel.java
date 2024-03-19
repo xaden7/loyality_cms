@@ -48,6 +48,9 @@ public class QuestionaryModel implements Serializable{
 
     @Override
     public String toString() {
+
+        String clientIdStr = clientId == null ? "null" : clientId.toString();
+
         return "QuestionaryModel{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
@@ -57,7 +60,7 @@ public class QuestionaryModel implements Serializable{
                 ", barcode='" + barcode + '\'' +
                 ", language='" + language + '\'' +
                 ", birthday=" + birthday +
-                ", clientId=" + clientId +
+                ", clientId=" + clientIdStr +
                 ", sex='" + sex + '\'' +
                 '}';
     }

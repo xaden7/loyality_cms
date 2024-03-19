@@ -33,8 +33,10 @@ public class ClientsModel {
 
     @Override
     public String toString() {
+
+        String idStr = id == null ? "null" : id.toString();
         return "ClientsModel{" +
-                "id=" + id.toString() +
+                "id=" + idStr+
                 ", clientName='" + clientName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", codeCard='" + codeCard + '\'' +

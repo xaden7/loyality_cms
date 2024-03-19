@@ -43,10 +43,14 @@ public class RewardUsed {
 
     @Override
     public String toString() {
+
+        String clientIdStr = client == null ? "null" : client.getId().toString();
+        String rewardIdStr = reward == null ? "null" : reward.getId().toString();
+
         return "RewardUsed{" +
                 "id=" + id +
-                ", client=" +  client.getId() +
-                ", reward=" +  reward.getId() +
+                ", client=" +  clientIdStr +
+                ", reward=" +  rewardIdStr +
                 ", movedToLoyality=" + movedToLoyality +
                 '}';
     }

@@ -43,8 +43,11 @@ public class DevicesModel {
 
   @Override
   public String toString() {
+
+    String clientIdStr = this.clientId != null ? this.clientId.toString() : "N/A";
+
     return "DevicesModel{" +
-            "clientId=" + clientId.toString() +
+            "clientId=" + clientIdStr +
             ", deviceId='" + deviceId + '\'' +
             ", deviceName='" + deviceName + '\'' +
             ", os='" + os + '\'' +
