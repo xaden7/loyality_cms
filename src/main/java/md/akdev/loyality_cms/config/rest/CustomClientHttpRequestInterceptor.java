@@ -1,4 +1,4 @@
-package md.akdev.loyality_cms.config;
+package md.akdev.loyality_cms.config.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

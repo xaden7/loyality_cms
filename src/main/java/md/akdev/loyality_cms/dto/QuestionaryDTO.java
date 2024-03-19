@@ -20,4 +20,19 @@ public class QuestionaryDTO implements Serializable {
     private LocalDate birthday;
 
     private String sex;
+
+    @Override
+    public String toString() {
+        return "QuestionaryDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", barcode='" + barcode + '\'' +
+                ", language='" + language + '\'' +
+                ", birthday=" + birthday +
+                ", sex='" + sex + '\'' +
+                '}';
+    }
 }

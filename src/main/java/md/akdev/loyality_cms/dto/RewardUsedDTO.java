@@ -11,4 +11,13 @@ public class RewardUsedDTO {
     private Integer rewardId;
     private Integer rewardDetailId;
     private UUID clientId;
+
+    @Override
+    public String toString() {
+        return "RewardUsedDTO{" +
+                "rewardId=" + rewardId +
+                ", rewardDetailId=" + rewardDetailId +
+                ", clientId=" + clientId +
+                '}';
+    }
 }

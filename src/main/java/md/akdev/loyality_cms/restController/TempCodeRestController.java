@@ -1,5 +1,6 @@
 package md.akdev.loyality_cms.restController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import md.akdev.loyality_cms.model.JwtAuthentication;
 import md.akdev.loyality_cms.model.TemporaryCodeModel;
 import md.akdev.loyality_cms.service.ClientService;
@@ -16,15 +17,18 @@ public class TempCodeRestController {
     private final ClientService clientService;
     private final JwtAuthService jwtAuthService;
 
+    private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TempCodeRestController.class);
+
     public TempCodeRestController(ClientService clientService, JwtAuthService jwtAuthService) {
         this.clientService = clientService;
         this.jwtAuthService = jwtAuthService;
     }
     @GetMapping("/temporaryCode")
-    public ResponseEntity<?> temporaryCodeModel(){
+    public ResponseEntity<?> temporaryCodeModel(HttpServletRequest request){
         try{
             final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
             TemporaryCodeModel newTemporaryCodeModel = clientService.temporaryCode(authentication.getUuid());
+            logger.info("TempCodeRestController | temporaryCodeModel: Token" +  request.getHeader("Authorization") + ", Phone - (" + authentication.getPhoneNumber() +") - " + newTemporaryCodeModel);
             return new ResponseEntity<>(newTemporaryCodeModel, HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

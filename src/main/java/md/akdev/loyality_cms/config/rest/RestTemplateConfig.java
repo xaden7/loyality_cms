@@ -1,5 +1,6 @@
-package md.akdev.loyality_cms.config;
+package md.akdev.loyality_cms.config.rest;
 
+import md.akdev.loyality_cms.config.CustomClientErrorHandler;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ public class RestTemplateConfig {
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor("OnicaIon", "tbND3tkEDVKO"));
         restTemplate.setErrorHandler(new CustomClientErrorHandler());
-        restTemplate.getInterceptors().add(new CustomClientHttpRequestInterceptor());
+      //  restTemplate.getInterceptors().add(new CustomClientHttpRequestInterceptor());
         return restTemplate;
     }
 

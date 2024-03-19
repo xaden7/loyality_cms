@@ -1,4 +1,4 @@
-package md.akdev.loyality_cms.config;
+package md.akdev.loyality_cms.config.rest;
 
 public interface HttpClientConfigConstants {
     // Connection pool

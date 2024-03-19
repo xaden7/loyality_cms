@@ -1,4 +1,4 @@
-package md.akdev.loyality_cms.config;
+package md.akdev.loyality_cms.config.rest;
 
 
 import org.apache.hc.client5.http.ConnectionKeepAliveStrategy;
@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import static md.akdev.loyality_cms.config.HttpClientConfigConstants.*;
+import static md.akdev.loyality_cms.config.rest.HttpClientConfigConstants.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
@@ -70,7 +70,7 @@ public class ApacheHttpClientConfig {
     public Runnable idleConnectionMonitor(PoolingHttpClientConnectionManager pool) {
         return new Runnable() {
             @Override
-            @Scheduled(fixedDelay = 20000)
+            @Scheduled(fixedDelay = 200000)
             public void run() {
 
                 LOG.info(String.valueOf(pool.getTotalStats()));

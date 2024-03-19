@@ -1,6 +1,7 @@
 package md.akdev.loyality_cms.restController;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import md.akdev.loyality_cms.dto.RewardDTO;
 import md.akdev.loyality_cms.dto.RewardUsedDTO;
 import md.akdev.loyality_cms.dto.RewardsTypeDTO;
@@ -47,8 +48,8 @@ public class RewardController {
 
 
     @GetMapping("/get-all-rewards-type")
-    public ResponseEntity<?> getAllRewards(){
-
+    public ResponseEntity<?> getAllRewards(HttpServletRequest request){
+        logger.info("RewardController | getAllRewards: " + request.getHeader("Authorization")  +    " - " + rewardsTypeRepository.findAll().size() + " records");
         return ResponseEntity.ok().body(rewardsTypeRepository.findAll().stream().map((element) ->
                 modelMapper.map(element, RewardsTypeDTO.class)).collect(java.util.stream.Collectors.toList()));
     }
@@ -93,7 +94,8 @@ public class RewardController {
     }
 
     @PostMapping("/new-reward-to-use")
-    public ResponseEntity<?> newUsedReward(@RequestBody RewardUsedDTO rewardUsed){
+    public ResponseEntity<?> newUsedReward(@RequestBody RewardUsedDTO rewardUsed, HttpServletRequest request){
+        logger.info("RewardController | newUsedReward: " + request.getHeader("Authorization") + " " + rewardUsed);
         rewardUsedService.saveRewardUsed(rewardUsed);
         return ResponseEntity.ok("Reward used successfully");
     }
