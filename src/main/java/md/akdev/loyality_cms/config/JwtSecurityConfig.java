@@ -33,7 +33,6 @@ public class JwtSecurityConfig {
                                 .requestMatchers( new AntPathRequestMatcher("/auth/token/**")).permitAll()
                                 .requestMatchers( new AntPathRequestMatcher("/auth/login/**")).permitAll()
                                 .requestMatchers( new AntPathRequestMatcher("/api/sms/**")).permitAll()
-                                .requestMatchers( new AntPathRequestMatcher("/actuator/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/promotions/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/branches/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/rewards/**")).permitAll()
