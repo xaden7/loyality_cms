@@ -1,5 +1,6 @@
 package md.akdev.loyality_cms.service;
 
+import jakarta.transaction.Transactional;
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.exception.CustomException;
 import md.akdev.loyality_cms.exception.NotFoundException;
@@ -45,6 +46,7 @@ public class ClientService {
         return mappingUtils.mapQuestionaryToClientsModel(questionaryModel);
     }
 
+    @Transactional
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String phone = inputClient.getPhoneNumber();
@@ -72,7 +74,10 @@ public class ClientService {
                 }else {
                     getClientLoyality.setPhoneNumber(phone);
                     getClientLoyality.setCodeCard(barcode);
-                    return addClient(getClientLoyality);
+
+                   //  addClient(getClientLoyality);
+                    clientsRepository.save(getClientLoyality);
+                    return getClientLoyality;
                 }
 
 
@@ -132,6 +137,7 @@ public class ClientService {
         return clientsRepository.getClientByPhoneNumber(phoneNumber);
     }
 
+    @Transactional
     public ClientsModel addClient (ClientsModel inputClient){
         return clientsRepository.save(inputClient);
     }
