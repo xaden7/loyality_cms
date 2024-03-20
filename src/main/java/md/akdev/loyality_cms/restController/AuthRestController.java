@@ -1,7 +1,8 @@
 package md.akdev.loyality_cms.restController;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
-import md.akdev.loyality_cms.exception.CustomException;
+
+import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.model.JwtRefreshRequest;
 import md.akdev.loyality_cms.model.JwtResponse;
@@ -63,7 +64,7 @@ public class AuthRestController {
             return ResponseEntity.ok()
                     .headers(responseHeaders)
                     .body(inputClient);
-        } catch (CustomException e) {
+        } catch (NotFoundException e) {
             Map<String, String> errorMessage = new HashMap<>();
             errorMessage.put("reason", e.getMessage());
             logger.error("AuthRestController | getClientDeviceDto: " + e.getMessage());

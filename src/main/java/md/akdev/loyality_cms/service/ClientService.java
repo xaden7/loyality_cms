@@ -2,12 +2,14 @@ package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.exception.CustomException;
+import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.BonusRepository;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.utils.MappingUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,6 +51,54 @@ public class ClientService {
         phone = phone.substring(phone.length()-8);
         String barcode = inputClient.getCodeCard();
 
+        Optional<ClientsModel> getClient = getClientByPhoneNumber(phone);
+
+        if (getClient.isPresent()) {
+            if(!Objects.equals(getClient.get().getCodeCard(), barcode)){
+                throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos! Utilizati optiunea \"Am uitat cardul\"");//: " +getClient.getCodeCard());
+            } else
+                return getClient.get();
+        }
+        else {
+            try {
+                ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phone, barcode);
+
+//                assert getClientLoyality != null;
+
+                Assert.notNull(getClientLoyality, "Client not found on sever 1c");
+
+                if (clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()) != null) {
+                    return clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c());
+                }else {
+                    getClientLoyality.setPhoneNumber(phone);
+                    getClientLoyality.setCodeCard(barcode);
+                    return addClient(getClientLoyality);
+                }
+
+
+
+//                if(clientsRepository.getClientByUuid1c(getClientLoyality != null ? getClientLoyality.getUuid1c() : null) != null)
+//                {
+//                    assert getClientLoyality != null;
+//                    getClientLoyality = clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c());
+//                }
+//                assert getClientLoyality != null;
+//                getClientLoyality.setPhoneNumber(phone);
+//                getClientLoyality.setCodeCard(barcode);
+//
+//                return addClient(getClientLoyality);
+            }
+            catch(NotFoundException e)
+            {
+             //   throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
+                throw new NotFoundException("Client not found");
+            }
+            catch (Exception e){
+               throw  new Exception(e.getMessage());
+            }
+        }
+        /*
+
         ClientsModel getClient = getClientByPhoneNumber(phone).orElse(null);
         if (getClient == null) {
             try {
@@ -74,6 +124,8 @@ public class ClientService {
             throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos! Utilizati optiunea \"Am uitat cardul\"");//: " +getClient.getCodeCard());
         } else
             return getClient;
+
+      */
     }
 
     public Optional<ClientsModel> getClientByPhoneNumber(String phoneNumber){
