@@ -23,7 +23,7 @@ public class DeviceRestController {
     @PostMapping("/addDevice")
     public ResponseEntity<?> addDevice(@RequestBody DevicesModel devicesModel, HttpServletRequest request){
         try{
-           logger.info("DeviceRestController | addDevice: " + request.getHeader("Authorization") + " - " + devicesModel);
+           logger.info("DeviceRestController | addDevice: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " +  request.getHeader("Authorization") + " - " + devicesModel);
             return deviceService.addDevice(devicesModel);
         }catch (Exception e) {
             logger.error("DeviceRestController | addDevice: " + e.getMessage());

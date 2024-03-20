@@ -49,7 +49,7 @@ public class RewardController {
 
     @GetMapping("/get-all-rewards-type")
     public ResponseEntity<?> getAllRewards(HttpServletRequest request){
-        logger.info("RewardController | getAllRewards: " + request.getHeader("Authorization")  +    " - " + rewardsTypeRepository.findAll().size() + " records");
+        logger.info("RewardController | getAllRewards:  Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " +  request.getHeader("Authorization")  +    " - " + rewardsTypeRepository.findAll().size() + " records");
         return ResponseEntity.ok().body(rewardsTypeRepository.findAll().stream().map((element) ->
                 modelMapper.map(element, RewardsTypeDTO.class)).collect(java.util.stream.Collectors.toList()));
     }
@@ -95,7 +95,7 @@ public class RewardController {
 
     @PostMapping("/new-reward-to-use")
     public ResponseEntity<?> newUsedReward(@RequestBody RewardUsedDTO rewardUsed, HttpServletRequest request){
-        logger.info("RewardController | newUsedReward: " + request.getHeader("Authorization") + " " + rewardUsed);
+        logger.info("RewardController | newUsedReward: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " " + rewardUsed);
         rewardUsedService.saveRewardUsed(rewardUsed);
         return ResponseEntity.ok("Reward used successfully");
     }

@@ -28,7 +28,7 @@ public class TempCodeRestController {
         try{
             final JwtAuthentication authentication = jwtAuthService.getAuthInfo();
             TemporaryCodeModel newTemporaryCodeModel = clientService.temporaryCode(authentication.getUuid());
-            logger.info("TempCodeRestController | temporaryCodeModel: Token" +  request.getHeader("Authorization") + ", Phone - (" + authentication.getPhoneNumber() +") - " + newTemporaryCodeModel);
+            logger.info("TempCodeRestController | temporaryCodeModel: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " +  request.getHeader("Authorization") + ", Phone - (" + authentication.getPhoneNumber() +") - " + newTemporaryCodeModel);
             return new ResponseEntity<>(newTemporaryCodeModel, HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

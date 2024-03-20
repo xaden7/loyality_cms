@@ -28,7 +28,7 @@ public class TransactionRestController {
         try{
             List<TransactionModel> transaction = transactionService.getTransaction();
 
-            logger.info("TransactionRestController | getTransaction: " + request.getHeader("Authorization") + " - " + transaction.size() + " records");
+            logger.info("TransactionRestController | getTransaction: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + transaction.size() + " records");
 
             return new ResponseEntity<>(transaction, HttpStatus.OK);
 

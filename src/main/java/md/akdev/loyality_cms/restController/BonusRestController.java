@@ -27,7 +27,7 @@ public class BonusRestController {
     public ResponseEntity<?> getRefreshBonus(HttpServletRequest request) {
         try {
             ClientsModel clientsModel = bonusService.getRefreshBonus();
-            logger.info("BonusRestController | getRefreshBonus: " + request.getHeader("Authorization") + " - " + clientsModel.getBonus() + " bonus");
+            logger.info("BonusRestController | getRefreshBonus: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + clientsModel.getBonus() + " bonus");
             return new ResponseEntity<>(clientsModel, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("BonusRestController | getRefreshBonus: " + e.getMessage());

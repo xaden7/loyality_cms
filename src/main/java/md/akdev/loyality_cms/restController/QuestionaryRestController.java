@@ -24,7 +24,8 @@ public class QuestionaryRestController {
     public ResponseEntity<?> getQuestionary(HttpServletRequest request){
         try {
             QuestionaryDTO questionaryModel = questionaryService.getQuestionary();
-            logger.info("QuestionaryRestController | getQuestionary: " + request.getHeader("Authorization") + " - " + questionaryModel);
+            logger.info("QuestionaryRestController | getQuestionary:  Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + questionaryModel);
+
             return new ResponseEntity<>(questionaryModel, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("QuestionaryRestController | getQuestionary: " + e.getMessage());
@@ -35,7 +36,7 @@ public class QuestionaryRestController {
     @PostMapping ("updateQuestionary")
     public ResponseEntity<?> updateQuestionary(@RequestBody QuestionaryModel questionaryModel, HttpServletRequest request){
         try {
-            logger.info("QuestionaryRestController | updateQuestionary: " + request.getHeader("Authorization") + " - " + questionaryModel);
+            logger.info("QuestionaryRestController | updateQuestionary:  Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + questionaryModel);
 
             QuestionaryModel postQuestionaryModel = questionaryService.updateQuestionary(questionaryModel);
             return new ResponseEntity<>(postQuestionaryModel, HttpStatus.OK);
