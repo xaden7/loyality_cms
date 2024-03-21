@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class BonusService {
@@ -24,9 +25,10 @@ public class BonusService {
         this.restTemplate = restTemplate;
     }
 
-    public ClientsModel getRefreshBonus() {
-        ClientsModel clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return getRefreshBonusFrom1c(clientsModel);
+    public Optional<ClientsModel> getRefreshBonus() {
+        Optional<ClientsModel> clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        return clientsModel.map(this::getRefreshBonusFrom1c);
     }
 
     private ClientsModel getRefreshBonusFrom1c(ClientsModel clientsModel) {

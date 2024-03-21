@@ -1,6 +1,5 @@
 package md.akdev.loyality_cms.service;
 
-import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.model.Reward;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.repository.RewardRepository;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class RewardService {
@@ -38,13 +38,13 @@ public class RewardService {
             return rewardRepository.findAllActiveRewardsNotAuth(LocalDate.now());
         }
 
-        ClientsModel clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        AtomicReference<List<Reward>> rewards = new AtomicReference<>(new ArrayList<>());
 
-        if (clientsModel.getId() != null) {
-        return    rewardRepository.findAllActiveRewards(LocalDate.now(), clientsModel.getId());
-        }
+        clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).ifPresent( cl -> {
+            rewards.set(rewardRepository.findAllActiveRewards(LocalDate.now(), cl.getId()));
+        });
 
-        return new ArrayList<>();
+        return rewards.get();
     }
 
 }

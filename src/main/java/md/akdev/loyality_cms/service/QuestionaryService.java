@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class QuestionaryService {
@@ -35,72 +37,78 @@ public class QuestionaryService {
 
     public QuestionaryDTO getQuestionary() {
 
-        QuestionaryModel questionaryModel = new QuestionaryModel();
+        AtomicReference<QuestionaryModel> questionaryModel = new AtomicReference<>(new QuestionaryModel());
+        clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).ifPresent( clientsModel -> {
 
-        //try to obtain questionary from local db
-        ClientsModel clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
-        if (clientsModel != null) {
-             questionaryModel = questionaryRepository.findByClientId(clientsModel.getId()).orElseGet( () -> getQuestionaryFrom1c(clientsModel.getUuid1c()));
+             questionaryModel.set(questionaryRepository.findByClientId(clientsModel.getId()).orElseGet(() -> getQuestionaryFrom1c(clientsModel.getUuid1c())));
 
             //if questionary is not in local db, save it
-           if (questionaryModel.getId() == null && questionaryModel.getName() != null && questionaryModel.getFirstName() != null){
-               questionaryModel.setClientId(clientsModel.getId());
-               questionaryRepository.save(questionaryModel);
-           }
-        }
+            if (questionaryModel.get().getId() == null && questionaryModel.get().getName() != null && questionaryModel.get().getFirstName() != null){
+                questionaryModel.get().setClientId(clientsModel.getId());
+                questionaryRepository.save(questionaryModel.get());
+            }
+        }) ;
 
-        return mapModels(questionaryModel);
+
+        return mapModels(questionaryModel.get());
     }
 
     public QuestionaryModel updateQuestionary(QuestionaryModel questionaryModel)  {
 
-        ClientsModel clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Optional<ClientsModel> clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         if (NetworkUtils.sourceIsAvailable(ipAddress)) {
-            questionaryRepository.findByClientId(clientsModel.getId()).ifPresent( i -> {
+            clientsModel.ifPresent( cl ->{
+
+                questionaryRepository.findByClientId(cl.getId()).ifPresent( i -> {
 
 
-                if (!Objects.equals(i.getName(), questionaryModel.getName()) && questionaryModel.getName() != null){
-                    i.setName(questionaryModel.getName());
-                }
+                    if (!Objects.equals(i.getName(), questionaryModel.getName()) && questionaryModel.getName() != null){
+                        i.setName(questionaryModel.getName());
+                    }
 
-                if (!Objects.equals(i.getFirstName(), questionaryModel.getFirstName()) && questionaryModel.getFirstName() != null){
-                    i.setFirstName(questionaryModel.getFirstName());
-                }
+                    if (!Objects.equals(i.getFirstName(), questionaryModel.getFirstName()) && questionaryModel.getFirstName() != null){
+                        i.setFirstName(questionaryModel.getFirstName());
+                    }
 
-                if (!Objects.equals(i.getPhoneNumber(), questionaryModel.getPhoneNumber()) && questionaryModel.getPhoneNumber() != null){
-                    i.setPhoneNumber(questionaryModel.getPhoneNumber());
-                }
+                    if (!Objects.equals(i.getPhoneNumber(), questionaryModel.getPhoneNumber()) && questionaryModel.getPhoneNumber() != null){
+                        i.setPhoneNumber(questionaryModel.getPhoneNumber());
+                    }
 
-                if (!Objects.equals(i.getEmail(), questionaryModel.getEmail()) && questionaryModel.getEmail() != null){
-                    i.setEmail(questionaryModel.getEmail());
-                }
+                    if (!Objects.equals(i.getEmail(), questionaryModel.getEmail()) && questionaryModel.getEmail() != null){
+                        i.setEmail(questionaryModel.getEmail());
+                    }
 
-                if (!Objects.equals(i.getLanguage(), questionaryModel.getLanguage()) && questionaryModel.getLanguage() != null){
-                    i.setLanguage(questionaryModel.getLanguage());
-                }
+                    if (!Objects.equals(i.getLanguage(), questionaryModel.getLanguage()) && questionaryModel.getLanguage() != null){
+                        i.setLanguage(questionaryModel.getLanguage());
+                    }
 
-                if (!Objects.equals(i.getSex(), questionaryModel.getSex()) && questionaryModel.getSex() != null){
-                    i.setSex(questionaryModel.getSex());
-                }
+                    if (!Objects.equals(i.getSex(), questionaryModel.getSex()) && questionaryModel.getSex() != null){
+                        i.setSex(questionaryModel.getSex());
+                    }
 
-                if (!Objects.equals(i.getBirthday(), questionaryModel.getBirthday()) && questionaryModel.getBirthday() != null){
-                    i.setBirthday(questionaryModel.getBirthday());
-                }
+                    if (!Objects.equals(i.getBirthday(), questionaryModel.getBirthday()) && questionaryModel.getBirthday() != null){
+                        i.setBirthday(questionaryModel.getBirthday());
+                    }
 
-                questionaryRepository.save(i);
+                    questionaryRepository.save(i);
 
-                restTemplate.postForObject(urlUpdateQuestionary, questionaryModel, QuestionaryModel.class, clientsModel.getUuid1c());
+                    restTemplate.postForObject(urlUpdateQuestionary, questionaryModel, QuestionaryModel.class, cl.getUuid1c());
 
-                clientsModel.setClientName(i.getName() + " " + i.getFirstName());
-                clientsModel.setPhoneNumber(i.getPhoneNumber());
-                clientsRepository.save(clientsModel);
+                    cl.setClientName(i.getName() + " " + i.getFirstName());
+                    cl.setPhoneNumber(i.getPhoneNumber());
+                    clientsRepository.save(cl);
+                });
             });
             return questionaryModel;
         }
 
-        return questionaryRepository.findByClientId(clientsModel.getId()).orElse(new QuestionaryModel());
+
+        AtomicReference<QuestionaryModel> questionary = new AtomicReference<>(new QuestionaryModel());
+
+        clientsModel.flatMap(cl -> questionaryRepository.findByClientId(cl.getId())).ifPresent(questionary::set);
+
+        return questionary.get();
     }
 
 

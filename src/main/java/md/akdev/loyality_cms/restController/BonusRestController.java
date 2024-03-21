@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 @RestController
 @RequestMapping("api/bonus")
 public class BonusRestController {
@@ -26,8 +28,12 @@ public class BonusRestController {
     @GetMapping("/getRefreshBonus")
     public ResponseEntity<?> getRefreshBonus(HttpServletRequest request) {
         try {
-            ClientsModel clientsModel = bonusService.getRefreshBonus();
-            logger.info("BonusRestController | getRefreshBonus: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + clientsModel.getBonus() + " bonus");
+            AtomicReference<ClientsModel> clientsModel = new AtomicReference<>(new ClientsModel());
+
+            bonusService.getRefreshBonus().ifPresent(cl -> {
+                logger.info("BonusRestController | getRefreshBonus: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + cl.getBonus() + " bonus");
+                clientsModel.set(cl);
+            });
             return new ResponseEntity<>(clientsModel, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("BonusRestController | getRefreshBonus: " + e.getMessage());

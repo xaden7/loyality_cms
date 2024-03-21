@@ -34,7 +34,7 @@ public class AuthRestController {
 
     @GetMapping("phone={phone}&barcode={barcode}")
     public ResponseEntity<?> getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode){
-        logger.info("AuthRestController | getClientDeviceDto | inputValues: " + phone + " - " + barcode);
+        logger.info("AuthRestController | getClientDeviceDto | inputValues: \u001B[32m" + phone +  "\u001B[0m - " + barcode);
         phone = phoneDefaultIfNull(phone);
 
         if (phone.length() != 8) {
@@ -60,7 +60,7 @@ public class AuthRestController {
             responseHeaders.set("refreshToken", token.getRefreshToken());
 
 //            clientService.addBonusForFirstLogin(getClient);
-            logger.info("AuthRestController | getClientDeviceDto: " + inputClient.getPhoneNumber() + " - " + inputClient.getCodeCard() + " - " + inputClient.getBonus() + " bonus");
+            logger.info("AuthRestController | getClientDeviceDto: \u001B[32m" + inputClient.getPhoneNumber() + "\u001B[0m - " + inputClient.getCodeCard() + " - " + inputClient.getBonus() + " bonus");
             return ResponseEntity.ok()
                     .headers(responseHeaders)
                     .body(inputClient);

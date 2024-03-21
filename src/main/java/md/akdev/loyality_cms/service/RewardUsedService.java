@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.time.LocalDate.now;
 
@@ -119,7 +120,7 @@ public class RewardUsedService {
 
     private void verifyRewardUsed(RewardUsedDTO rewardUsed, String operation){
 
-        UUID clientId;
+        AtomicReference<UUID> clientId = new AtomicReference<>();
 
         if(rewardUsed == null)
             throw new NotFoundException("RewardUsed object is required");
@@ -133,9 +134,11 @@ public class RewardUsedService {
             if (Objects.equals(clientUuid1c, "anonymousUser"))
                 throw new NotFoundException("Client object (id key)  is required, please login first");
 
-            clientId = clientsRepository.getClientByUuid1c(clientUuid1c).getId();
 
-            rewardUsed.setClientId(clientId);
+            clientsRepository.getClientByUuid1c(clientUuid1c).ifPresent(clientsModel -> clientId.set(clientsModel.getId()));
+
+
+            rewardUsed.setClientId(clientId.get());
         }
 
 
