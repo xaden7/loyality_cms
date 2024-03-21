@@ -50,7 +50,14 @@ public class ClientService {
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String phone = inputClient.getPhoneNumber();
-        phone = phone.substring(phone.length()-8);
+
+        phone = phoneDefaultIfNull(phone);
+
+      if (phone.length() != 8) {
+            throw new CustomException("Numărul de telefon nu este valid");
+       }
+
+       // phone = phone.substring(phone.length()-8);
         String barcode = inputClient.getCodeCard();
 
         Optional<ClientsModel> getClient = getClientByPhoneNumber(phone);
@@ -189,6 +196,11 @@ public class ClientService {
         }catch (Exception e) {
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
         }
+    }
+
+    private static String phoneDefaultIfNull(String phone) {
+        phone = phone != null ? phone : "0";
+        return phone;
     }
 
 }

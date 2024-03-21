@@ -97,7 +97,9 @@ public class AuthRestController {
         try{
             QuestionaryModel postQustionaryModel = clientService.newClient(questionaryModel);
             ClientsModel clientsModel = clientService.mapQuestionaryToClientsModel(postQustionaryModel);
+
             ClientsModel client = clientService.getClientByPhoneNumberAndCodeCard(clientsModel);
+
             final JwtResponse token = jwtAuthService.login(client.getPhoneNumber(), client.getCodeCard());
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("accessToken", token.getAccessToken());
