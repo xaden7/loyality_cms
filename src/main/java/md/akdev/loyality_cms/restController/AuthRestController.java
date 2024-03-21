@@ -36,6 +36,7 @@ public class AuthRestController {
     public ResponseEntity<?> getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode){
 
         phone = phoneDefaultIfNull(phone);
+
         logger.info("AuthRestController | getClientDeviceDto | inputValues: \u001B[32m" + phone +  "\u001B[0m - " + barcode);
         if (phone.length() != 8) {
             return ResponseEntity.badRequest().body("Phone number is not valid");

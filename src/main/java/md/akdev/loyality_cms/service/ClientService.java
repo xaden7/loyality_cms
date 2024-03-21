@@ -10,6 +10,7 @@ import md.akdev.loyality_cms.utils.MappingUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -45,7 +46,7 @@ public class ClientService {
     public ClientsModel mapQuestionaryToClientsModel(QuestionaryModel questionaryModel){
         return mappingUtils.mapQuestionaryToClientsModel(questionaryModel);
     }
-
+    @Transactional(readOnly = true)
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String phone = inputClient.getPhoneNumber();
@@ -77,8 +78,8 @@ public class ClientService {
                 getClientLoyality.setPhoneNumber(phone);
                 getClientLoyality.setCodeCard(barcode);
 
-                clientsRepository.save(getClientLoyality);
 
+                addClient(getClientLoyality);
                 return getClientLoyality;
             }
             catch(NotFoundException e)
@@ -125,8 +126,9 @@ public class ClientService {
         return clientsRepository.getClientByPhoneNumber(phoneNumber);
     }
 
-    public ClientsModel addClient (ClientsModel inputClient){
-        return clientsRepository.save(inputClient);
+    @Transactional
+    public void addClient (ClientsModel inputClient){
+        clientsRepository.save(inputClient);
     }
 
     public QuestionaryModel newClient(QuestionaryModel questionaryModel) throws Exception{
