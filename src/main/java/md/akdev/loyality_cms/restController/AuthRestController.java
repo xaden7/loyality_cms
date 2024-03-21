@@ -54,7 +54,8 @@ public class AuthRestController {
             inputClient.setBonus(getClient.getBonus());
             inputClient.setClientName(getClient.getClientName());
 
-            final JwtResponse token = jwtAuthService.login(inputClient.getPhoneNumber(), inputClient.getCodeCard());
+            //final JwtResponse token = jwtAuthService.login(inputClient.getPhoneNumber(), inputClient.getCodeCard());
+            final JwtResponse token = jwtAuthService.login(getClient);
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("accessToken", token.getAccessToken());
             responseHeaders.set("refreshToken", token.getRefreshToken());

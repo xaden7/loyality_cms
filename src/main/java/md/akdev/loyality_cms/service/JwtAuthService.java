@@ -33,6 +33,13 @@ public class JwtAuthService {
         }
     }
 
+    public JwtResponse login(ClientsModel client) {
+            final String accessToken = jwtProvider.generateAccessToken(client);
+            final String refreshToken = jwtProvider.generateRefreshToken(client);
+            refreshStorage.put(client.getPhoneNumber(), refreshToken);
+            return new JwtResponse(accessToken, refreshToken);
+    }
+
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
