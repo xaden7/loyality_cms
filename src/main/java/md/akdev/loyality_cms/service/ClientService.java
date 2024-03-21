@@ -46,7 +46,7 @@ public class ClientService {
     public ClientsModel mapQuestionaryToClientsModel(QuestionaryModel questionaryModel){
         return mappingUtils.mapQuestionaryToClientsModel(questionaryModel);
     }
-
+@Transactional
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String phone = inputClient.getPhoneNumber();
