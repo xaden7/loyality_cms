@@ -77,7 +77,9 @@ public class ClientService {
                 getClientLoyality.setPhoneNumber(phone);
                 getClientLoyality.setCodeCard(barcode);
 
-                return addClient(getClientLoyality);
+                clientsRepository.save(getClientLoyality);
+
+                return getClientLoyality;
             }
             catch(NotFoundException e)
             {
