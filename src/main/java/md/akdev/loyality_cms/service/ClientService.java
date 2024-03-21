@@ -46,7 +46,7 @@ public class ClientService {
     public ClientsModel mapQuestionaryToClientsModel(QuestionaryModel questionaryModel){
         return mappingUtils.mapQuestionaryToClientsModel(questionaryModel);
     }
-    @Transactional(readOnly = true)
+    @Transactional
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String phone = inputClient.getPhoneNumber();
@@ -80,7 +80,7 @@ public class ClientService {
 
 
                 addClient(getClientLoyality);
-                return getClientLoyality;
+                return clientsRepository.getClientByPhoneNumber(phone).orElseThrow(NotFoundException::new);
             }
             catch(NotFoundException e)
             {
