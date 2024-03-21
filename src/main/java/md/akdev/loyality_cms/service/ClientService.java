@@ -66,14 +66,11 @@ public class ClientService {
 
                 ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phone, barcode);
 
-                if (getClientLoyality != null && getClientLoyality.getUuid1c() != null){
-                    if(clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).isPresent() && Objects.equals(clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).get().getPhoneNumber(), phone))
-                    {
-                        return getClientLoyality ;
-                    }
-                }
+                if (getClientLoyality == null || getClientLoyality.getUuid1c() == null ) throw new NotFoundException("Client not found in 1c");
 
-                assert getClientLoyality != null;
+                if (clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).isPresent() && Objects.equals(clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).get().getPhoneNumber(), phone)) {
+                    return getClientLoyality;
+                }
 
                 getClientLoyality.setPhoneNumber(phone);
                 getClientLoyality.setCodeCard(barcode);
