@@ -46,7 +46,7 @@ public class ClientService {
     public ClientsModel mapQuestionaryToClientsModel(QuestionaryModel questionaryModel){
         return mappingUtils.mapQuestionaryToClientsModel(questionaryModel);
     }
-    @Transactional
+
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String phone = inputClient.getPhoneNumber();
@@ -79,7 +79,7 @@ public class ClientService {
                 getClientLoyality.setCodeCard(barcode);
 
 
-                addClient(getClientLoyality);
+                clientsRepository.save(getClientLoyality);
                 return clientsRepository.getClientByPhoneNumber(phone).orElseThrow(NotFoundException::new);
             }
             catch(NotFoundException e)
@@ -126,7 +126,7 @@ public class ClientService {
         return clientsRepository.getClientByPhoneNumber(phoneNumber);
     }
 
-    @Transactional
+
     public void addClient (ClientsModel inputClient){
         clientsRepository.save(inputClient);
     }
@@ -173,22 +173,22 @@ public class ClientService {
 
     public String getBarcode(String phone) throws Exception {
         try{
-                GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
-                String smsText;
-                switch(Objects.requireNonNull(getBarcodeModel).getQtyBarcode()){
-                    case 1:
-                            smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: \n" + getBarcodeModel.getLastBarcode();
-                        System.out.println(smsText);
-                        return smsText;
-                    case 2:
-                         smsText = "Pe acest numar de telefon sunt inregistrate mai multe carduri. Cel mai recent ai utilizat acest Card Frumos cu codul: " + getBarcodeModel.getLastBarcode() + "\n" +
-                                 "\n" +
-                                 " Conform regulamentului, peste 7 zile, restul cardurilor vor fi dezactivate. Info 022323333\n" +
-                                 "\n";
-                        return smsText;
-                    default:
-                      return "Nu exista carduri legate de acest numar de telefon";
-                }
+            GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
+            String smsText;
+            switch(Objects.requireNonNull(getBarcodeModel).getQtyBarcode()){
+                case 1:
+                    smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: \n" + getBarcodeModel.getLastBarcode();
+                    System.out.println(smsText);
+                    return smsText;
+                case 2:
+                    smsText = "Pe acest numar de telefon sunt inregistrate mai multe carduri. Cel mai recent ai utilizat acest Card Frumos cu codul: " + getBarcodeModel.getLastBarcode() + "\n" +
+                            "\n" +
+                            " Conform regulamentului, peste 7 zile, restul cardurilor vor fi dezactivate. Info 022323333\n" +
+                            "\n";
+                    return smsText;
+                default:
+                    return "Nu exista carduri legate de acest numar de telefon";
+            }
         }catch (Exception e) {
             throw new Exception(((HttpClientErrorException.NotFound) e).getResponseBodyAsString());
         }
