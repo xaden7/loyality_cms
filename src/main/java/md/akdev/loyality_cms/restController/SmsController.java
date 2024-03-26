@@ -1,10 +1,8 @@
 package md.akdev.loyality_cms.restController;
 
 import jakarta.validation.constraints.NotNull;
-import md.akdev.loyality_cms.model.SmsApiResponse;
-import md.akdev.loyality_cms.model.SmsCodeLog;
-import md.akdev.loyality_cms.repository.SmsCodeLogsRepository;
-import md.akdev.loyality_cms.repository.SmsCodeStorageRepository;
+import md.akdev.loyality_cms.model.sms.SmsApiResponse;
+import md.akdev.loyality_cms.model.sms.SmsCodeLog;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.SmsService;
 import org.slf4j.Logger;
@@ -13,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @CrossOrigin

@@ -3,10 +3,7 @@ package md.akdev.loyality_cms.utils;
 import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import md.akdev.loyality_cms.model.JwtAuthentication;
-
-import java.util.Set;
-import java.util.stream.Collectors;
+import md.akdev.loyality_cms.model.jwt.JwtAuthentication;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtils {

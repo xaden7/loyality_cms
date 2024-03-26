@@ -5,8 +5,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.exception.JwtAuthException;
 import md.akdev.loyality_cms.model.ClientsModel;
-import md.akdev.loyality_cms.model.JwtAuthentication;
-import md.akdev.loyality_cms.model.JwtResponse;
+import md.akdev.loyality_cms.model.jwt.JwtAuthentication;
+import md.akdev.loyality_cms.model.jwt.JwtResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 

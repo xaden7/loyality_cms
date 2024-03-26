@@ -2,7 +2,7 @@ package md.akdev.loyality_cms.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import md.akdev.loyality_cms.model.Branch;
-import md.akdev.loyality_cms.model.TransactionModel;
+import md.akdev.loyality_cms.model.transaction.TransactionModel;
 import md.akdev.loyality_cms.repository.BranchRepository;
 import md.akdev.loyality_cms.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Value;

@@ -2,7 +2,6 @@ package md.akdev.loyality_cms.utils;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.model.ClientsModel;
-import md.akdev.loyality_cms.model.DevicesModel;
 import md.akdev.loyality_cms.model.QuestionaryModel;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +15,6 @@ public class MappingUtils {
         return clientsModel;
     }
 
-    public DevicesModel mapToDeviceModel(ClientDeviceDto dto){
-        DevicesModel devicesModel = new DevicesModel();
-        devicesModel.setDeviceId(dto.getDeviceId());
-        devicesModel.setClientId(dto.getId());
-        return devicesModel;
-    }
 
     public ClientsModel mapQuestionaryToClientsModel(QuestionaryModel questionaryModel){
         ClientsModel clientsModel = new ClientsModel();

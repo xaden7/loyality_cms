@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import md.akdev.loyality_cms.model.JwtAuthentication;
+import md.akdev.loyality_cms.model.jwt.JwtAuthentication;
 import md.akdev.loyality_cms.service.DeviceService;
 import md.akdev.loyality_cms.service.JwtProvider;
 import md.akdev.loyality_cms.utils.JwtUtils;

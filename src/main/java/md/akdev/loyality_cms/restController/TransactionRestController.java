@@ -1,7 +1,7 @@
 package md.akdev.loyality_cms.restController;
 
 import jakarta.servlet.http.HttpServletRequest;
-import md.akdev.loyality_cms.model.TransactionModel;
+import md.akdev.loyality_cms.model.transaction.TransactionModel;
 import md.akdev.loyality_cms.service.TransactionService;
 import org.slf4j.Logger;
 

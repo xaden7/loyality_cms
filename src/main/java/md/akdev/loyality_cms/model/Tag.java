@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import md.akdev.loyality_cms.model.promotion.Promotion;
 
 import java.time.Instant;
 import java.util.List;

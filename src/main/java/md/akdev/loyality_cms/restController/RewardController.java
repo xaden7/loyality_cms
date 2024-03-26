@@ -2,12 +2,12 @@ package md.akdev.loyality_cms.restController;
 
 
 import jakarta.servlet.http.HttpServletRequest;
-import md.akdev.loyality_cms.dto.RewardDTO;
-import md.akdev.loyality_cms.dto.RewardUsedDTO;
-import md.akdev.loyality_cms.dto.RewardsTypeDTO;
-import md.akdev.loyality_cms.model.Reward;
-import md.akdev.loyality_cms.model.RewardsType;
-import md.akdev.loyality_cms.repository.RewardTypeRepository;
+import md.akdev.loyality_cms.dto.reward.RewardDTO;
+import md.akdev.loyality_cms.dto.reward.RewardUsedDTO;
+import md.akdev.loyality_cms.dto.reward.RewardsTypeDTO;
+import md.akdev.loyality_cms.model.reward.Reward;
+import md.akdev.loyality_cms.model.reward.RewardsType;
+import md.akdev.loyality_cms.repository.reward.RewardTypeRepository;
 import md.akdev.loyality_cms.service.RewardService;
 import md.akdev.loyality_cms.service.RewardUsedService;
 import md.akdev.loyality_cms.exception.CstErrorResponse;

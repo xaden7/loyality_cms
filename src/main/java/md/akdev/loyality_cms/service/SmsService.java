@@ -2,12 +2,12 @@ package md.akdev.loyality_cms.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import md.akdev.loyality_cms.model.SmsApiResponse;
-import md.akdev.loyality_cms.model.SmsCodeLog;
-import md.akdev.loyality_cms.model.SmsCodeStorage;
-import md.akdev.loyality_cms.model.SmsRequest;
-import md.akdev.loyality_cms.repository.SmsCodeLogsRepository;
-import md.akdev.loyality_cms.repository.SmsCodeStorageRepository;
+import md.akdev.loyality_cms.model.sms.SmsApiResponse;
+import md.akdev.loyality_cms.model.sms.SmsCodeLog;
+import md.akdev.loyality_cms.model.sms.SmsCodeStorage;
+import md.akdev.loyality_cms.model.sms.SmsRequest;
+import md.akdev.loyality_cms.repository.sms.SmsCodeLogsRepository;
+import md.akdev.loyality_cms.repository.sms.SmsCodeStorageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

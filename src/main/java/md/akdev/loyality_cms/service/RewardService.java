@@ -1,8 +1,8 @@
 package md.akdev.loyality_cms.service;
 
-import md.akdev.loyality_cms.model.Reward;
+import md.akdev.loyality_cms.model.reward.Reward;
 import md.akdev.loyality_cms.repository.ClientsRepository;
-import md.akdev.loyality_cms.repository.RewardRepository;
+import md.akdev.loyality_cms.repository.reward.RewardRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;

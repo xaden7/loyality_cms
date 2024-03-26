@@ -1,12 +1,12 @@
 package md.akdev.loyality_cms.restController;
 
-import md.akdev.loyality_cms.dto.PromotionDTO;
-import md.akdev.loyality_cms.dto.PromotionDetailDTO;
+import md.akdev.loyality_cms.dto.promotion.PromotionDTO;
+import md.akdev.loyality_cms.dto.promotion.PromotionDetailDTO;
 import md.akdev.loyality_cms.dto.TagDTO;
-import md.akdev.loyality_cms.model.Promotion;
-import md.akdev.loyality_cms.model.PromotionDetail;
-import md.akdev.loyality_cms.repository.PromotionDetailsRepository;
-import md.akdev.loyality_cms.repository.PromotionRepository;
+import md.akdev.loyality_cms.model.promotion.Promotion;
+import md.akdev.loyality_cms.model.promotion.PromotionDetail;
+import md.akdev.loyality_cms.repository.promotion.PromotionDetailsRepository;
+import md.akdev.loyality_cms.repository.promotion.PromotionRepository;
 import md.akdev.loyality_cms.repository.TagRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

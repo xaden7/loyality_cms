@@ -4,8 +4,8 @@ import md.akdev.loyality_cms.dto.ClientDeviceDto;
 
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.ClientsModel;
-import md.akdev.loyality_cms.model.JwtRefreshRequest;
-import md.akdev.loyality_cms.model.JwtResponse;
+import md.akdev.loyality_cms.model.jwt.JwtRefreshRequest;
+import md.akdev.loyality_cms.model.jwt.JwtResponse;
 import md.akdev.loyality_cms.model.QuestionaryModel;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.JwtAuthService;

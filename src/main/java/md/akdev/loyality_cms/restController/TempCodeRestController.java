@@ -1,7 +1,7 @@
 package md.akdev.loyality_cms.restController;
 
 import jakarta.servlet.http.HttpServletRequest;
-import md.akdev.loyality_cms.model.JwtAuthentication;
+import md.akdev.loyality_cms.model.jwt.JwtAuthentication;
 import md.akdev.loyality_cms.model.TemporaryCodeModel;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.JwtAuthService;
