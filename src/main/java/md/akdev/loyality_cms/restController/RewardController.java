@@ -25,6 +25,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
@@ -97,6 +98,18 @@ public class RewardController {
     public ResponseEntity<?> newUsedReward(@RequestBody RewardUsedDTO rewardUsed, HttpServletRequest request){
         logger.info("RewardController | newUsedReward: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " " + rewardUsed);
         rewardUsedService.saveRewardUsed(rewardUsed);
+        return ResponseEntity.ok("Reward used successfully");
+    }
+
+    @PostMapping("/new-many-rewards-to-use")
+    public ResponseEntity<?> newManyUsedReward(@RequestBody RewardUsedDTO[] rewardUsed, HttpServletRequest request){
+        logger.info("RewardController | newManyUsedReward: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " " + Arrays.toString(rewardUsed));
+        if (rewardUsed.length == 0) {
+            throw new NotFoundException("No rewards to use");
+        }
+        for (RewardUsedDTO reward : rewardUsed) {
+            rewardUsedService.saveRewardUsed(reward);
+        }
         return ResponseEntity.ok("Reward used successfully");
     }
 
