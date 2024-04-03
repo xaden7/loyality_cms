@@ -16,7 +16,9 @@ public interface RewardRepository extends JpaRepository<Reward,Integer> {
     @Query("select p from Reward p where ?1 between p.dateFrom and p.dateTo and p.rewardType = ?2")
     List<Reward> findActiveRewards(LocalDate now, RewardsType rewardType);
 
-    @Query("select p from Reward p where ?1 between p.dateFrom and p.dateTo and p.id not in (select r.reward.id from RewardUsed r where r.client.id = ?2)")
+    @Query("select p from Reward p where ?1 between p.dateFrom and p.dateTo " +
+            "and p.id not in (select r.reward.id from RewardUsed r where r.client.id = ?2)" +
+            "and p.id not in (select r.rewardId from RewardUsedDetails r where r.clientId = ?2)")
     List<Reward> findAllActiveRewards(LocalDate now, UUID clientId);
 
     @Query("select p from Reward p where ?1 between p.dateFrom and p.dateTo")
