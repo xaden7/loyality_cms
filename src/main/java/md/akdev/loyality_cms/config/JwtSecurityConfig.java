@@ -38,6 +38,7 @@ public class JwtSecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/api/rewards/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/tags/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/device/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/product/**")).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
