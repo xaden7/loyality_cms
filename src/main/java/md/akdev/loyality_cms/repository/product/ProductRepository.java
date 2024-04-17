@@ -1,4 +1,4 @@
-package md.akdev.loyality_cms.repository;
+package md.akdev.loyality_cms.repository.product;
 
 import md.akdev.loyality_cms.model.product.ProductForSite;
 import org.springframework.data.jpa.repository.JpaRepository;

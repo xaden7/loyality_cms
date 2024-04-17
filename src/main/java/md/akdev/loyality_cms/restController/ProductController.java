@@ -2,7 +2,7 @@ package md.akdev.loyality_cms.restController;
 
 import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.dto.product.ProductForSiteDTO;
-import md.akdev.loyality_cms.repository.ProductRepository;
+import md.akdev.loyality_cms.repository.product.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

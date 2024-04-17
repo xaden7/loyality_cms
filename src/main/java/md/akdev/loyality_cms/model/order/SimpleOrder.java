@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 import md.akdev.loyality_cms.model.ClientsModel;
+import md.akdev.loyality_cms.model.product.ProductForSite;
 import org.hibernate.annotations.*;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -43,4 +46,14 @@ public class SimpleOrder {
     @JsonManagedReference
     private List<SimpleOrdersRow> simpleOrdersRows ;
 
+
+    public void addProduct(ProductForSite product, BigDecimal qty, BigDecimal price) {
+        SimpleOrdersRow simpleOrdersRow = new SimpleOrdersRow();
+        simpleOrdersRow.setSimpleOrder(this);
+        simpleOrdersRow.setProd(product);
+        simpleOrdersRow.setQty(qty);
+        simpleOrdersRow.setPrice(price);
+
+        simpleOrdersRows.add(simpleOrdersRow);
+    }
 }
