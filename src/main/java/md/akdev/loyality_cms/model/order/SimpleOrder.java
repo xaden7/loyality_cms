@@ -14,6 +14,7 @@ import org.hibernate.annotations.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -32,6 +33,9 @@ public class SimpleOrder {
     @ColumnDefault("0")
     @Column(name = "moved_to_loyalty")
     private Integer movedToLoyalty;
+
+    @Column(name = "order_uuid")
+    private UUID orderUuid;
 
     @CreationTimestamp
     @Column(name = "created_at")
