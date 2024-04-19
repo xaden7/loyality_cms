@@ -31,11 +31,11 @@ public class ImageService {
         } else {
             path = Path.of("images/max/" + imageName);
         }
-        File file;
-        if (!Files.exists(path)) {
-             file =  new ClassPathResource("default_images/No_Image_Available.jpg").getFile();
-            return Files.readAllBytes(file.toPath());
-        }
+  //      File file;
+//        if (!Files.exists(path)) {
+//             file =  new ClassPathResource("default_images/No_Image_Available.jpg").getFile();
+//            return Files.readAllBytes(file.toPath());
+//        }
     return     Files.readAllBytes(path);
 
     }
