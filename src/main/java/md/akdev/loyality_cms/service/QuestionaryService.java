@@ -57,7 +57,7 @@ public class QuestionaryService {
 
         Optional<ClientsModel> clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
-        if (NetworkUtils.sourceIsAvailable(ipAddress)) {
+        if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
             clientsModel.ifPresent( cl ->{
 
                 questionaryRepository.findByClientId(cl.getId()).ifPresent( i -> {
@@ -114,7 +114,7 @@ public class QuestionaryService {
 
     private QuestionaryModel getQuestionaryFrom1c(String uuid) {
 
-        if (NetworkUtils.sourceIsAvailable(ipAddress)) {
+        if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
             return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, uuid);
         } else {
             return new QuestionaryModel();

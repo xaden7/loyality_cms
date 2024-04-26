@@ -32,7 +32,7 @@ public class BonusService {
     }
 
     private ClientsModel getRefreshBonusFrom1c(ClientsModel clientsModel) {
-        if (NetworkUtils.sourceIsAvailable(ipAddress)){
+        if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)){
             clientsModel.setBonus(Objects.requireNonNull(restTemplate.getForObject(urlGetRefreshBonus, ClientsModel.class, clientsModel.getUuid1c())).getBonus());
             clientsRepository.save(clientsModel);
         }

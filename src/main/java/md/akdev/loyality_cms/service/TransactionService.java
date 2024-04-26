@@ -53,7 +53,7 @@ public class TransactionService {
 
     private List<TransactionModel> getTransactionFrom1c() {
 
-        if (NetworkUtils.sourceIsAvailable(ipAddress)) {
+        if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
             restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             ObjectMapper mapper = new ObjectMapper();
