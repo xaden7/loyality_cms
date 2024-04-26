@@ -39,7 +39,7 @@ public class JwtSecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/api/tags/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/device/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/product/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/stock/**")).permitAll()
+//                                .requestMatchers(new AntPathRequestMatcher("/api/stock/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/image/**")).permitAll()
                                 .anyRequest().authenticated()
                 )
