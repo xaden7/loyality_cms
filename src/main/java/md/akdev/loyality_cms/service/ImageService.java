@@ -26,18 +26,16 @@ public class ImageService {
 
     public byte[] getImage(String imageName, boolean isMin) throws IOException {
         Path path;
-        if (isMin) {
-            path = Path.of("images/min/" + imageName);
-        } else {
-            path = Path.of("images/max/" + imageName);
-        }
-    return     Files.readAllBytes(path);
+        String minMaxPath = isMin ? "images/min/" : "images/max/";
+        path = Path.of(minMaxPath + imageName);
+        return     Files.readAllBytes(path).length == 0 ? Files.readAllBytes(Path.of(minMaxPath + "/No_Image_Available.jpg")) : Files.readAllBytes(path);
 
     }
 
 
     public byte[] getImageByArticle(String article, boolean isMIn) throws IOException {
 
+        logger.info("ImageService | getImageByArticle for article: {} isMin: {}", article, isMIn);
         byte[] image;
         String productImage = productRepository.findByArticle(article).map(ProductForSite::getImages).orElse("No_Image_Available.jpg");
 
