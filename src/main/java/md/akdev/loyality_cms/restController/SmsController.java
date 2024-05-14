@@ -66,6 +66,9 @@ public class SmsController {
                 logger.info("Sms - save result to DB: " + "373" + formattedPhone + " with code: " + code);
                 smsService.saveSmsLog(smsCodeLog);
 
+                smsService.saveSmsCode("373" +formattedPhone, code);
+
+
                 return ResponseEntity.ok("Sms sent successfully");
             }
 
