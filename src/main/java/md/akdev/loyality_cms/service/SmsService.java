@@ -46,6 +46,20 @@ public class SmsService {
         this.smsCodeLogsRepository = smsCodeLogsRepository;
     }
 
+
+    public ResponseEntity<?> sendDevinoSms(String phone, String messageToSend) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        httpHeaders.set("Authorization", "Bearer " + smsApiKey);
+
+        smsApiUrl = smsApiUrl + "?sadr=" + smsSender + "&dadr=" + phone + "&text=" + messageToSend + "&translite=1";
+
+        HttpEntity<?> request = new HttpEntity<>(httpHeaders);
+
+        return new RestTemplate().postForEntity(smsApiUrl, request, String.class);
+    }
+
+    @Deprecated
     public ResponseEntity<?> sendSms(String phone, String messageToSend) {
 
 

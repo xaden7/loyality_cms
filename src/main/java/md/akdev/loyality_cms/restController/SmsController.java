@@ -1,7 +1,6 @@
 package md.akdev.loyality_cms.restController;
 
 import jakarta.validation.constraints.NotNull;
-import md.akdev.loyality_cms.model.sms.SmsApiResponse;
 import md.akdev.loyality_cms.model.sms.SmsCodeLog;
 import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.SmsService;
@@ -51,27 +50,23 @@ public class SmsController {
 
         logger.info("Sending sms to phone: " + formattedPhone + " with code: " + code);
 
-        ResponseEntity<?> responseEntity = smsService.sendSms("373" + formattedPhone, message);
+        ResponseEntity<?> responseEntity = smsService.sendDevinoSms("373" + formattedPhone, message);
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            SmsApiResponse smsApiResponse = (SmsApiResponse) responseEntity.getBody();
+            String smsApiResponse = (String) responseEntity.getBody();
 
-            if (smsApiResponse != null && smsApiResponse.getResult() != null && !smsApiResponse.getResult().isEmpty()) {
+            if (smsApiResponse != null && !smsApiResponse.isEmpty()) {
 
-                SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
+//                SmsApiResponse.Result result = smsApiResponse.get(0);
 
                 SmsCodeLog smsCodeLog = new SmsCodeLog("373" + formattedPhone
-                        , result.getCode()
-                        , code.toString(), result.getMessageId(), "SEND SMS");
+                        , smsApiResponse
+                        , code.toString(), smsApiResponse
+                        , "SEND SMS");
                 logger.info("Sms - save result to DB: " + "373" + formattedPhone + " with code: " + code);
                 smsService.saveSmsLog(smsCodeLog);
 
-                if ("OK".equals(result.getCode())) {
-                    smsService.saveSmsCode("373" +formattedPhone, code);
-                    return ResponseEntity.ok("Sms sent successfully");
-                } else {
-                    return ResponseEntity.badRequest().body("Error while sending sms");
-                }
+                return ResponseEntity.ok("Sms sent successfully");
             }
 
         }
@@ -98,28 +93,30 @@ public class SmsController {
 
            logger.info("Sending sms to phone: " + phone + " with message: " + message);
 
-            ResponseEntity<?> responseEntity = smsService.sendSms("373" + formattedPhone, message);
+            ResponseEntity<?> responseEntity = smsService.sendDevinoSms("373" + formattedPhone, message);
 
             if (responseEntity.getStatusCode().is2xxSuccessful()){
 
-                SmsApiResponse smsApiResponse = (SmsApiResponse) responseEntity.getBody();
-
-                if (smsApiResponse != null && smsApiResponse.getResult() != null && !smsApiResponse.getResult().isEmpty()) {
-
-                    SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
+//                SmsApiResponse smsApiResponse = (SmsApiResponse) responseEntity.getBody();
+                String smsApiResponse = (String) responseEntity.getBody();
+//                if (smsApiResponse != null && smsApiResponse.getResult() != null && !smsApiResponse.getResult().isEmpty()) {
+                if (smsApiResponse != null && !smsApiResponse.isEmpty()) {
+//                    SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
 
                     SmsCodeLog smsCodeLog = new SmsCodeLog("373" + phone
-                            , result.getCode()
-                            , message, result.getMessageId(), "SEND SMS");
+                             ,smsApiResponse  //, result.getCode()
+                            , message
+                            , smsApiResponse , "SEND SMS");
 
                     smsService.saveSmsLog(smsCodeLog);
 
-                    if ("OK".equals(result.getCode())) {
+                  //  if ("OK".equals(result.getCode())) {
                         return ResponseEntity.ok("Sms sent successfully");
-                    } else {
+                    }
+                else {
                         return ResponseEntity.badRequest().body("Error while sending sms");
                     }
-                }
+                //}
             }
 
         } catch (Exception e) {
