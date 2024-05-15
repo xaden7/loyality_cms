@@ -9,11 +9,10 @@ import md.akdev.loyality_cms.model.sms.SmsRequest;
 import md.akdev.loyality_cms.repository.sms.SmsCodeLogsRepository;
 import md.akdev.loyality_cms.repository.sms.SmsCodeStorageRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -46,6 +45,7 @@ public class SmsService {
     private final SmsCodeStorageRepository smsCodeStorageRepository;
 
     private final SmsCodeLogsRepository smsCodeLogsRepository;
+    Logger logger = LoggerFactory.getLogger(SmsService.class);
 
     public SmsService(SmsCodeStorageRepository smsCodeStorageRepository, SmsCodeLogsRepository smsCodeLogsRepository) {
         this.smsCodeStorageRepository = smsCodeStorageRepository;
@@ -56,17 +56,25 @@ public class SmsService {
     public ResponseEntity<?> sendDevinoSms(String phone, String messageToSend) {
         HttpHeaders httpHeaders = new HttpHeaders();
 
+        String smsApiUrl = this.smsApiUrl;
+
         httpHeaders.set("Authorization", "Bearer " + smsApiKey);
         smsApiUrl = smsApiUrl + "?sadr=" + smsSender + "&dadr=" + phone + "&text=" + messageToSend + "&translite=1";
 
         HttpEntity<?> request = new HttpEntity<>(httpHeaders);
+        logger.info("Devino send url: {}", smsApiUrl);
 
-        return new RestTemplate().postForEntity(smsApiUrl, request, String.class);
+       return new RestTemplate().exchange(smsApiUrl, HttpMethod.GET, request, String.class);
     }
 
 
     public ResponseEntity<?> sendUnifunSms(String phone, String messageToSend){
+        String smsApiUrlUnifun = this.smsApiUrlUnifun;
+
         smsApiUrlUnifun = smsApiUrlUnifun + "?username="+smsUsernameUnifun+"&password="+smsPasswordUnifun+"&from="+smsSender+"&to="+phone+"&text="+messageToSend;
+
+        logger.info("Unifun send url: {}", smsApiUrlUnifun);
+
         return new RestTemplate().getForEntity(smsApiUrlUnifun, String.class);
     }
 
