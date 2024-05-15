@@ -28,7 +28,7 @@ public class SmsController {
     }
 
     @PostMapping("/send-sms-code")
-    public ResponseEntity<?> sendSms(@NotNull String phone) {
+    public ResponseEntity<?> sendSms(@NotNull String phone, @RequestParam(defaultValue = "devino") String provider) {
 
         logger.info("trying to send sms to phone: " + phone);
 
@@ -50,18 +50,24 @@ public class SmsController {
 
         logger.info("Sending sms to phone: " + formattedPhone + " with code: " + code);
 
-        ResponseEntity<?> responseEntity = smsService.sendDevinoSms("373" + formattedPhone, message);
+        ResponseEntity<?> responseEntity;
+
+        if (provider.equals("devino")) {
+            responseEntity = smsService.sendDevinoSms("373" + formattedPhone, message);
+        } else {
+            responseEntity = smsService.sendUnifunSms("373" + formattedPhone, message);
+        }
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             String smsApiResponse = (String) responseEntity.getBody();
 
             if (smsApiResponse != null && !smsApiResponse.isEmpty()) {
 
-//                SmsApiResponse.Result result = smsApiResponse.get(0);
-
-                SmsCodeLog smsCodeLog = new SmsCodeLog("373" + formattedPhone
+                SmsCodeLog smsCodeLog = new SmsCodeLog(
+                        "373" + formattedPhone
+                        , code.toString()
                         , smsApiResponse
-                        , code.toString(), smsApiResponse
+                        , "CODE"
                         , "SEND SMS");
                 logger.info("Sms - save result to DB: " + "373" + formattedPhone + " with code: " + code);
                 smsService.saveSmsLog(smsCodeLog);
@@ -79,7 +85,7 @@ public class SmsController {
 
 
     @PostMapping("/send-sms-card")
-    public ResponseEntity<?> sendSmsCard(@NotNull String phone) {
+    public ResponseEntity<?> sendSmsCard(@NotNull String phone , @RequestParam(defaultValue = "devino") String provider) {
 
         phone = phoneDefaultIfNull(phone);
 
@@ -96,24 +102,22 @@ public class SmsController {
 
            logger.info("Sending sms to phone: " + phone + " with message: " + message);
 
-            ResponseEntity<?> responseEntity = smsService.sendDevinoSms("373" + formattedPhone, message);
+            ResponseEntity<?> responseEntity = smsService.sendSms("373" + formattedPhone, message, provider);
 
             if (responseEntity.getStatusCode().is2xxSuccessful()){
 
-//                SmsApiResponse smsApiResponse = (SmsApiResponse) responseEntity.getBody();
                 String smsApiResponse = (String) responseEntity.getBody();
-//                if (smsApiResponse != null && smsApiResponse.getResult() != null && !smsApiResponse.getResult().isEmpty()) {
                 if (smsApiResponse != null && !smsApiResponse.isEmpty()) {
-//                    SmsApiResponse.Result result = smsApiResponse.getResult().get(0);
 
-                    SmsCodeLog smsCodeLog = new SmsCodeLog("373" + phone
-                             ,smsApiResponse  //, result.getCode()
+                    SmsCodeLog smsCodeLog = new SmsCodeLog(
+                            "373" + formattedPhone
                             , message
-                            , smsApiResponse , "SEND SMS");
+                            , smsApiResponse
+                            , "CARD"
+                            , "SEND SMS");
 
                     smsService.saveSmsLog(smsCodeLog);
 
-                  //  if ("OK".equals(result.getCode())) {
                         return ResponseEntity.ok("Sms sent successfully");
                     }
                 else {

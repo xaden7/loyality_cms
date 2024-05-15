@@ -8,8 +8,7 @@ import md.akdev.loyality_cms.model.sms.SmsCodeStorage;
 import md.akdev.loyality_cms.model.sms.SmsRequest;
 import md.akdev.loyality_cms.repository.sms.SmsCodeLogsRepository;
 import md.akdev.loyality_cms.repository.sms.SmsCodeStorageRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +26,15 @@ public class SmsService {
     @Value("${devino.sms.url}")
      String smsApiUrl;
 
+    @Value("${unifun.sms.url}")
+    String smsApiUrlUnifun;
+
+    @Value("${unifun.sms.username}")
+    String smsUsernameUnifun;
+
+    @Value("${unifun.sms.password}")
+    String smsPasswordUnifun;
+
     @Value("${devino.sms.api-key}")
      String smsApiKey;
 
@@ -39,8 +47,6 @@ public class SmsService {
 
     private final SmsCodeLogsRepository smsCodeLogsRepository;
 
-    Logger logger = LoggerFactory.getLogger(SmsService.class);
-
     public SmsService(SmsCodeStorageRepository smsCodeStorageRepository, SmsCodeLogsRepository smsCodeLogsRepository) {
         this.smsCodeStorageRepository = smsCodeStorageRepository;
         this.smsCodeLogsRepository = smsCodeLogsRepository;
@@ -51,12 +57,27 @@ public class SmsService {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         httpHeaders.set("Authorization", "Bearer " + smsApiKey);
-
         smsApiUrl = smsApiUrl + "?sadr=" + smsSender + "&dadr=" + phone + "&text=" + messageToSend + "&translite=1";
 
         HttpEntity<?> request = new HttpEntity<>(httpHeaders);
 
         return new RestTemplate().postForEntity(smsApiUrl, request, String.class);
+    }
+
+
+    public ResponseEntity<?> sendUnifunSms(String phone, String messageToSend){
+        smsApiUrlUnifun = smsApiUrlUnifun + "?username="+smsUsernameUnifun+"&password="+smsPasswordUnifun+"&from="+smsSender+"&to="+phone+"&text="+messageToSend;
+        return new RestTemplate().getForEntity(smsApiUrlUnifun, String.class);
+    }
+
+    public ResponseEntity<?> sendSms(String phone, String messageToSend, String smsProvider) {
+        if(smsProvider.equals("devino")) {
+            return sendDevinoSms(phone, messageToSend);
+        } else if(smsProvider.equals("unifun")) {
+            return sendUnifunSms(phone, messageToSend);
+        } else {
+            return ResponseEntity.badRequest().body("Invalid sms provider");
+        }
     }
 
     @Deprecated
