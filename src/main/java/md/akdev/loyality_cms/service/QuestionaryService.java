@@ -37,6 +37,8 @@ public class QuestionaryService {
 
     public QuestionaryDTO getQuestionary() {
 
+
+
         AtomicReference<QuestionaryModel> questionaryModel = new AtomicReference<>(new QuestionaryModel());
         clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).ifPresent( clientsModel -> {
 
@@ -54,6 +56,9 @@ public class QuestionaryService {
     }
 
     public QuestionaryModel updateQuestionary(QuestionaryModel questionaryModel)  {
+
+        String ipAddress = this.ipAddress;
+        String urlUpdateQuestionary = this.urlUpdateQuestionary;
 
         Optional<ClientsModel> clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
@@ -113,6 +118,9 @@ public class QuestionaryService {
 
 
     private QuestionaryModel getQuestionaryFrom1c(String uuid) {
+
+        String ipAddress = this.ipAddress;
+        String urlGetQuestionary = this.urlGetQuestionary;
 
         if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
             return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, uuid);

@@ -33,6 +33,9 @@ public class StockService {
     public <T> T findByNameContaining(String name) {
 
         List<StockDTO> stockDTOList = new ArrayList<>();
+        String url = this.url;
+        String ipAddress = this.ipAddress;
+        int port = this.port;
 
         try {
             if (NetworkUtils.sourceIsAvailable(ipAddress, port)) {
@@ -58,6 +61,8 @@ public class StockService {
     public <T> T findByArticleInBranch(String article) {
 
         List<StockByBranchDTO> stockByBranchDTOS = new ArrayList<>();
+        String url = this.url;
+        String ipAddress = this.ipAddress;
 
         try {
             if (NetworkUtils.sourceIsAvailable(ipAddress, port)) {

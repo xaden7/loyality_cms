@@ -50,6 +50,9 @@ public class ClientService {
 @Transactional
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
+        String urlGetBonus = this.urlGetBonus;
+
+
         String phone = inputClient.getPhoneNumber();
 
         phone = phoneDefaultIfNull(phone);
@@ -137,6 +140,7 @@ public class ClientService {
     }
 
     public QuestionaryModel newClient(QuestionaryModel questionaryModel) throws Exception{
+        String urlNewClient = this.urlNewClient;
         try{
             return restTemplate.postForObject(urlNewClient, questionaryModel, QuestionaryModel.class);
         } catch(Exception e){
@@ -145,6 +149,8 @@ public class ClientService {
     }
 
     public TemporaryCodeModel temporaryCode(String uuid1c) throws Exception{
+        String urlTemporaryCode = this.urlTemporaryCode;
+
         try{
             TemporaryCodeModel newTemporaryCodeModel = new TemporaryCodeModel();
             newTemporaryCodeModel.setCode(getRandomNumber());
@@ -177,6 +183,7 @@ public class ClientService {
     }
 
     public String getBarcode(String phone) throws Exception {
+        String urlGetBarcode = this.urlGetBarcode;
         try{
             GetBarcodeModel getBarcodeModel = restTemplate.getForObject(urlGetBarcode, GetBarcodeModel.class, phone);
             String smsText;

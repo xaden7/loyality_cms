@@ -53,6 +53,11 @@ public class TransactionService {
 
     private List<TransactionModel> getTransactionFrom1c() {
 
+        String ipAddress = this.ipAddress;
+        String userName = this.userName;
+        String password = this.password;
+        String urlGetTransaction = this.urlGetTransaction;
+
         if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
             restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
