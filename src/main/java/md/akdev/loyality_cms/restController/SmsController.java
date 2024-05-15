@@ -111,7 +111,7 @@ public class SmsController {
 
                     SmsCodeLog smsCodeLog = new SmsCodeLog(
                             "373" + formattedPhone
-                            , message
+                            , message.replaceAll("[^0-9]", "")
                             , smsApiResponse
                             , "CARD"
                             , "SEND SMS");
