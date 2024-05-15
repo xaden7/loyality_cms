@@ -28,7 +28,11 @@ public class ImageService {
         Path path;
         String minMaxPath = isMin ? "images/min/" : "images/max/";
         path = Path.of(minMaxPath + imageName);
-        return     Files.readAllBytes(path).length == 0 ? Files.readAllBytes(Path.of(minMaxPath + "/No_Image_Available.jpg")) : Files.readAllBytes(path);
+
+        if (!Files.exists(path)) {
+            path = Path.of(minMaxPath + "No_Image_Available.jpg");
+        }
+        return     Files.readAllBytes(path);
 
     }
 
