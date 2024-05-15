@@ -27,7 +27,6 @@ public class SmsController {
         this.clientService = clientService;
     }
 
-    @GetMapping("/send-sms-code")
     @PostMapping("/send-sms-code")
     public ResponseEntity<?> sendSms(@NotNull String phone, @RequestParam(defaultValue = "devino") String provider) {
 
