@@ -15,12 +15,5 @@ public final class JwtUtils {
         jwtInfoToken.setPhoneNumber(claims.getSubject());
         return jwtInfoToken;
     }
-/*
-    private static Set<Role> getRoles(Claims claims) {
-        final List<String> roles = claims.get("roles", List.class);
-        return roles.stream()
-                .map(Role::valueOf)
-                .collect(Collectors.toSet());
-    }
-*/
+
 }
