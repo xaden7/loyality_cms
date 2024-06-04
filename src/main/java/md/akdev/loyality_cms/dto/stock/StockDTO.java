@@ -10,5 +10,5 @@ import java.math.BigDecimal;
 public class StockDTO {
     private String article;
     private String name;
-    private BigDecimal qty;
+    private Double qty;
 }
