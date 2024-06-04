@@ -10,5 +10,5 @@ import java.math.BigDecimal;
 public class StockByBranchDTO {
     private String article;
     private String branch_code;
-    private BigDecimal qty;
+    private Double qty;
 }
