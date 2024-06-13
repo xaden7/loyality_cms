@@ -50,6 +50,9 @@ public class Reward {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "description_ru", nullable = false)
+    private String descriptionRu;
+
     @OneToMany(mappedBy = "reward", cascade = {CascadeType.ALL},  fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
@@ -68,6 +71,7 @@ public class Reward {
                 ", imageName='" + imageName + '\'' +
                 ", imageType='" + imageType + '\'' +
                 ", description='" + description + '\'' +
+                ", descriptionRu='" + descriptionRu + '\'' +
                 '}';
     }
 }

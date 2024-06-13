@@ -13,7 +13,9 @@ public class PromotionDTO {
     private Integer id;
     private Integer priority;
     private String name;
+    private String nameRu;
     private String description;
+    private String descriptionRu;
     private LocalDate startDate;
     private LocalDate endDate;
     private Double upToDiscount;

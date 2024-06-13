@@ -10,7 +10,9 @@ public interface PromotionImp {
     Integer getId();
     Integer getPriority();
     String getName();
+    String getNameRu();
     String getDescription();
+    String getDescriptionRu();
     LocalDate getStartDate();
     LocalDate getEndDate();
     Double getUpToDiscount();

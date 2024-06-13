@@ -54,6 +54,9 @@ public class RewardsDetailsMultimedia{
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
+    @Column(name = "description_ru", length = Integer.MAX_VALUE)
+    private String descriptionRu;
+
 
 
 }

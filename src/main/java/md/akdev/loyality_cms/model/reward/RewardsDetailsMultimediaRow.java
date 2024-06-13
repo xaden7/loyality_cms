@@ -25,6 +25,9 @@ public class RewardsDetailsMultimediaRow {
     @Column(name = "answer")
     private String answer ;
 
+    @Column(name  = "answer_ru")
+    private String answerRu;
+
     @Column(name = "is_correct")
     private Boolean isCorrect = false;
 

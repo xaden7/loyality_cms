@@ -23,6 +23,10 @@ public class Tag {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "name_ru")
+    private String nameRu;
+
+
     @ManyToMany
     @JoinTable(
             name = "promotions_tags",
@@ -39,6 +43,7 @@ public class Tag {
         return "Tag{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", name_ru='" + nameRu + '\'' +
                 '}';
     }
 }

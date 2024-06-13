@@ -17,5 +17,6 @@ public class RewardDTO {
     private String imageName;
     private String imageType;
     private String description;
+    private String descriptionRu;
     List<RewardDetailDTO> rewardDetails;
 }

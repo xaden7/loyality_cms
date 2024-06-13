@@ -10,5 +10,6 @@ public class RewardsDetailsMultimediaRowDTO {
 
     private Integer id;
     private String answer;
+    private String answerRu;
     private Boolean isCorrect;
 }

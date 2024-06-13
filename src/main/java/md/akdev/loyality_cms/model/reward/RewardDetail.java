@@ -38,6 +38,9 @@ public class RewardDetail {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "description_ru")
+    private String descriptionRu;
+
     @OneToOne(mappedBy = "rewardDetails", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -51,6 +54,7 @@ public class RewardDetail {
                 ", qrCode='" + qrCode + '\'' +
                 ", bonusQty=" + bonusQty +
                 ", description='" + description + '\'' +
+                ", descriptionRu='" + descriptionRu + '\'' +
                 '}';
     }
 }

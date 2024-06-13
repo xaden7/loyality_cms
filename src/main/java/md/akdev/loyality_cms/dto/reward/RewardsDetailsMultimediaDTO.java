@@ -17,5 +17,6 @@ public class RewardsDetailsMultimediaDTO implements Serializable {
     private String imageName;
     private String imageType;
     private String description;
+    private String descriptionRu;
     private List<RewardsDetailsMultimediaRowDTO> rewardsDetailsMultimediaRows;
 }

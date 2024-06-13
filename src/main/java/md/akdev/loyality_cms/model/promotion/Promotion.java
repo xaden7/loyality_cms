@@ -34,9 +34,15 @@ public class Promotion {
     @Column(name = "name", length = 50)
     private String name;
 
+    @Column(name = "name_ru")
+    private String nameRu;
+
     @Size(max = 100)
     @Column(name = "description", length = 100)
     private String description;
+
+    @Column(name = "description_ru")
+    private String descriptionRu;
 
     @Column(name = "start_date")
     private LocalDate startDate;
