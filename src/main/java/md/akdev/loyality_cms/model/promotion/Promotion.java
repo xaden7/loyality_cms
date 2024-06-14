@@ -92,7 +92,9 @@ public class Promotion {
                 "id=" + id +
                 ", priority=" + priority +
                 ", name='" + name + '\'' +
+                ", nameRu='" + nameRu + '\'' +
                 ", description='" + description + '\'' +
+                ", descriptionRu='" + descriptionRu + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", upToDiscount=" + upToDiscount +
