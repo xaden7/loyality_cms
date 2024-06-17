@@ -57,7 +57,6 @@ public class SmsController {
         } else {
             responseEntity = smsService.sendUnifunSms("373" + formattedPhone, message);
         }
-
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             String smsApiResponse = (String) responseEntity.getBody();
 
