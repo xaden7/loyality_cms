@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -73,13 +74,16 @@ public class SmsService {
         HttpEntity<?> request = new HttpEntity<>(httpHeaders);
 
         String smsApiUrlUnifun = this.smsApiUrlUnifun;
-
-        smsApiUrlUnifun = smsApiUrlUnifun + "?username="+smsUsernameUnifun+"&password="+smsPasswordUnifun+"&from="+smsSender+"&to="+phone+"&text="+messageToSend;
-
         logger.info("Unifun send url: {}", smsApiUrlUnifun);
-
-      //  return new RestTemplate().getForEntity(smsApiUrlUnifun, String.class);
-        return new RestTemplate().exchange(smsApiUrlUnifun, HttpMethod.GET, request, String.class);
+       return   new RestTemplate().exchange("https://api.bulksms.md:4432/UnifunBulkSMSAPI.asmx/SendSMSSimple?username={username}&password={password}&from=Card Frumos&to={msisdn}&text={body}"
+                 , HttpMethod.GET
+                 , request
+                 , String.class
+                 , smsUsernameUnifun
+                 , smsPasswordUnifun
+                 , phone
+                 , messageToSend
+                )   ;
     }
 
     public ResponseEntity<?> sendSms(String phone, String messageToSend, String smsProvider) {
