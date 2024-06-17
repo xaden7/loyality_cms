@@ -28,7 +28,7 @@ public class SmsController {
     }
 
     @PostMapping("/send-sms-code")
-    public ResponseEntity<?> sendSms(@NotNull String phone, @RequestParam(defaultValue = "devino") String provider) {
+    public ResponseEntity<?> sendSms(@NotNull String phone, @RequestParam(defaultValue = "unifun") String provider) {
 
         logger.info("trying to send sms to phone: " + phone);
 
