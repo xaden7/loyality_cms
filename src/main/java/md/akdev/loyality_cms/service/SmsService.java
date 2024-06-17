@@ -69,13 +69,17 @@ public class SmsService {
 
 
     public ResponseEntity<?> sendUnifunSms(String phone, String messageToSend){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        HttpEntity<?> request = new HttpEntity<>(httpHeaders);
+
         String smsApiUrlUnifun = this.smsApiUrlUnifun;
 
         smsApiUrlUnifun = smsApiUrlUnifun + "?username="+smsUsernameUnifun+"&password="+smsPasswordUnifun+"&from="+smsSender+"&to="+phone+"&text="+messageToSend;
 
         logger.info("Unifun send url: {}", smsApiUrlUnifun);
 
-        return new RestTemplate().getForEntity(smsApiUrlUnifun, String.class);
+      //  return new RestTemplate().getForEntity(smsApiUrlUnifun, String.class);
+        return new RestTemplate().exchange(smsApiUrlUnifun, HttpMethod.GET, request, String.class);
     }
 
     public ResponseEntity<?> sendSms(String phone, String messageToSend, String smsProvider) {
