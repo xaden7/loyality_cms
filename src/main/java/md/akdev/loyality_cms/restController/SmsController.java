@@ -84,7 +84,7 @@ public class SmsController {
 
 
     @PostMapping("/send-sms-card")
-    public ResponseEntity<?> sendSmsCard(@NotNull String phone , @RequestParam(defaultValue = "devino") String provider) {
+    public ResponseEntity<?> sendSmsCard(@NotNull String phone , @RequestParam(defaultValue = "unifun") String provider) {
 
         phone = phoneDefaultIfNull(phone);
 
