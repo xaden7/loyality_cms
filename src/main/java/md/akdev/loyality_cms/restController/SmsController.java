@@ -144,6 +144,7 @@ public class SmsController {
         return phone;
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/get-all-sms")
     public ResponseEntity<?> getAllSms() {
         return ResponseEntity.ok(smsService.getAllSmsCodeStorage());
