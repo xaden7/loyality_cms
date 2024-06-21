@@ -9,13 +9,21 @@ import md.akdev.loyality_cms.model.sms.SmsRequest;
 import md.akdev.loyality_cms.repository.sms.SmsCodeLogsRepository;
 import md.akdev.loyality_cms.repository.sms.SmsCodeStorageRepository;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+
 import org.springframework.stereotype.Service;
+
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+
+import java.net.URI;
+
+import java.nio.charset.Charset;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,25 +76,29 @@ public class SmsService {
        return new RestTemplate().exchange(smsApiUrl, HttpMethod.GET, request, String.class);
     }
 
-
-    public ResponseEntity<?> sendUnifunSms(String phone, String messageToSend){
+    public ResponseEntity<?> sendUnifunSms(String phone, String messageToSend)  {
         HttpHeaders httpHeaders = new HttpHeaders();
-        HttpEntity<?> request = new HttpEntity<>(httpHeaders);
+        HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
 
-        String smsApiUrlUnifun = this.smsApiUrlUnifun;
-        logger.info("Unifun send url: {}", smsApiUrlUnifun);
-       return   new RestTemplate().exchange("https://api.bulksms.md:4432/UnifunBulkSMSAPI.asmx/SendSMSSimple?username={username}&password={password}&from=Card Frumos&to={msisdn}&text={body}"
-                 , HttpMethod.GET
-                 , request
-                 , String.class
-                 , smsUsernameUnifun
-                 , smsPasswordUnifun
-                 , phone
-                 , messageToSend
-                )   ;
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl( this.smsApiUrlUnifun);
+        builder.queryParam("username", smsUsernameUnifun);
+        builder.queryParam("password", smsPasswordUnifun);
+        builder.queryParam("from", "Card Frumos");
+        builder.queryParam("to", phone);
+        builder.queryParam("text", messageToSend);
+        builder.queryParam("dlrmask", 31);
+        builder.queryParam("dlrurl", "Empty");
+        builder.queryParam("charset", "windows-1251");
+        builder.queryParam("coding", 2);
+
+        URI uri = builder.encode(
+                Charset.forName("windows-1251")
+        ).build().toUri();
+
+        return new RestTemplate().exchange(uri, HttpMethod.GET, entity, String.class);
     }
 
-    public ResponseEntity<?> sendSms(String phone, String messageToSend, String smsProvider) {
+    public ResponseEntity<?> sendSms(String phone, String messageToSend, String smsProvider)  {
         if(smsProvider.equals("devino")) {
             return sendDevinoSms(phone, messageToSend);
         } else if(smsProvider.equals("unifun")) {

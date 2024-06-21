@@ -58,7 +58,7 @@ public class ClientService {
         phone = phoneDefaultIfNull(phone);
 
       if (phone.length() != 8) {
-            throw new CustomException("Numărul de telefon nu este valid");
+            throw new CustomException("Numarul de telefon nu este valid");
        }
 
        // phone = phone.substring(phone.length()-8);
@@ -68,7 +68,7 @@ public class ClientService {
 
         if (getClient.isPresent()) {
             if(!Objects.equals(getClient.get().getCodeCard(), barcode)){
-                throw new CustomException("Ați activat deja aplicația pentru un alt Card Frumos! Utilizati optiunea \"Am uitat cardul\"");//: " +getClient.getCodeCard());
+                throw new CustomException("Ati activat deja aplicația pentru un alt Card Frumos! Utilizati optiunea \"Am uitat cardul\"");//: " +getClient.getCodeCard());
             } else
                 return getClient.get();
         }
@@ -189,14 +189,13 @@ public class ClientService {
             String smsText;
             switch(Objects.requireNonNull(getBarcodeModel).getQtyBarcode()){
                 case 1:
-                    smsText = "Codul tǎu Card Frumos asociat cu acest numǎr de telefon este: \n" + getBarcodeModel.getLastBarcode();
+                    smsText = "Codul tau Card Frumos asociat cu acest numar de telefon este: " + getBarcodeModel.getLastBarcode();
                     System.out.println(smsText);
                     return smsText;
                 case 2:
-                    smsText = "Pe acest numar de telefon sunt inregistrate mai multe carduri. Cel mai recent ai utilizat acest Card Frumos cu codul: " + getBarcodeModel.getLastBarcode() + "\n" +
+                    smsText = "Pe acest numar de telefon sunt inregistrate mai multe carduri. Cel mai recent ai utilizat acest Card Frumos cu codul:  \n" + getBarcodeModel.getLastBarcode() +
                             "\n" +
-                            " Conform regulamentului, peste 7 zile, restul cardurilor vor fi dezactivate. Info 022323333\n" +
-                            "\n";
+                            " Conform regulamentului, peste 7 zile, restul cardurilor vor fi dezactivate. Info 022323333\n";
                     return smsText;
                 default:
                     return "Nu exista carduri legate de acest numar de telefon";
