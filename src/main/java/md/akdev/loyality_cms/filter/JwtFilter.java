@@ -63,6 +63,11 @@ public class JwtFilter extends GenericFilterBean {
                 error.put("Message", "Token expired");
                 error.put("ErrorDetails", expExc.getMessage());
                 mapper.writeValue(httpServletResponse.getOutputStream(), error);
+
+                String[] splitToken = token.split("\\.");
+                String payload = new String(java.util.Base64.getDecoder().decode(splitToken[1]));
+                log.error("Token expired: {}", payload);
+                return;
             } catch (UnsupportedJwtException unExc) {
                 ObjectMapper mapper = new ObjectMapper();
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -72,6 +77,8 @@ public class JwtFilter extends GenericFilterBean {
                 error.put("Message", "Unsupported jwt");
                 error.put("ErrorDetails", unExc.getMessage());
                 mapper.writeValue(httpServletResponse.getOutputStream(), error);
+                log.error("Unsupported  jwt: {}", unExc.getMessage());
+                return;
             } catch (Exception mjEx) {
                 ObjectMapper mapper = new ObjectMapper();
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -81,6 +88,7 @@ public class JwtFilter extends GenericFilterBean {
                 error.put("Message", "Malformed jwt");
                 error.put("ErrorDetails", mjEx.getMessage());
                 mapper.writeValue(httpServletResponse.getOutputStream(), error);
+                return;
             }
         }
         fc.doFilter(request, response);
