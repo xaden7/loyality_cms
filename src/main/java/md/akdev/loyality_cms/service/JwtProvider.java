@@ -47,7 +47,7 @@ public class JwtProvider {
 
     public String generateRefreshToken(ClientsModel user) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
+        final Instant refreshExpirationInstant = now.plusMonths(12).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
                 .setSubject(user.getPhoneNumber())
