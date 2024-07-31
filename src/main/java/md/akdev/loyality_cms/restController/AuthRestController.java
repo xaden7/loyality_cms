@@ -2,6 +2,8 @@ package md.akdev.loyality_cms.restController;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 
+import md.akdev.loyality_cms.exception.CstErrorResponse;
+import md.akdev.loyality_cms.exception.JwtAuthException;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.model.jwt.JwtRefreshRequest;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -85,8 +88,10 @@ public class AuthRestController {
 
     @PostMapping("newRefreshToken")
     public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody JwtRefreshRequest request){
-        final JwtResponse token = jwtAuthService.refresh(request.getRefreshToken());
-        return ResponseEntity.ok(token);
+
+            final JwtResponse token = jwtAuthService.refresh(request.getRefreshToken());
+            return ResponseEntity.ok(token);
+
     }
 
     @PostMapping("newClient")
@@ -119,5 +124,24 @@ public class AuthRestController {
     private static String phoneDefaultIfNull(String phone) {
         phone = phone != null ? phone : "0";
         return phone;
+    }
+
+    @ExceptionHandler({NotFoundException.class, JwtAuthException.class,
+        RuntimeException.class, AccessDeniedException.class})
+    private ResponseEntity<CstErrorResponse> handeException(Exception e){
+
+        CstErrorResponse cstErrorResponse = new CstErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+
+        HttpStatus status = switch (e.getClass().getSimpleName()) {
+            case "NotFoundException" -> HttpStatus.NOT_FOUND;
+            case "RewardAlreadyUsedException", "DataIntegrityViolationException" -> HttpStatus.CONFLICT;
+            case "AccessDeniedException", "JwtAuthException" -> HttpStatus.FORBIDDEN;
+            default -> HttpStatus.BAD_REQUEST;
+        };
+        logger.error(cstErrorResponse.getMessage());
+        return new ResponseEntity<>(cstErrorResponse, status);
     }
 }
