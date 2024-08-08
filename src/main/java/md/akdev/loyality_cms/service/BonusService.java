@@ -6,6 +6,7 @@ import md.akdev.loyality_cms.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
@@ -41,8 +42,20 @@ public class BonusService {
         String ipAddress = this.ipAddress;
         String urlGetRefreshBonus = this.urlGetRefreshBonus;
 
+        Double bonus ;
+
         if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)){
-            clientsModel.setBonus(Objects.requireNonNull(restTemplate.getForObject(urlGetRefreshBonus, ClientsModel.class, clientsModel.getUuid1c())).getBonus());
+
+            try {
+                bonus = Objects.requireNonNull(
+                        restTemplate.getForObject(urlGetRefreshBonus, ClientsModel.class, clientsModel.getUuid1c())).getBonus();
+            } catch (HttpStatusCodeException e) {
+                throw new RuntimeException("Error getting bonus from 1c: " + e.getMessage());
+            }
+
+            clientsModel.setBonus(bonus);
+//            clientsModel.setBonus(Objects.requireNonNull(
+//                    restTemplate.getForObject(urlGetRefreshBonus, ClientsModel.class, clientsModel.getUuid1c())).getBonus());
             clientsRepository.save(clientsModel);
         }
 

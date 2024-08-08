@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
@@ -139,17 +140,24 @@ public class QuestionaryService {
         String ipAddress = this.ipAddress;
         String urlGetQuestionary = this.urlGetQuestionary;
 
+        QuestionaryModel questionaryModel = new QuestionaryModel();
+
         if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, uuid);
-        } else {
-            return new QuestionaryModel();
-        }
 
+            try {
+                questionaryModel = restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, uuid);
+            } catch (HttpStatusCodeException e) {
+                throw new RuntimeException("Error getting ebanii questionary from 1c : " + e.getMessage());
+                }
+        }
+//            return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, uuid);
+
+        return questionaryModel;
     }
 
     private QuestionaryDTO mapModels(QuestionaryModel questionaryModel) {

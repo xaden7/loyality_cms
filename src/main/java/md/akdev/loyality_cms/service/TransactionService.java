@@ -6,7 +6,6 @@ import md.akdev.loyality_cms.model.transaction.TransactionModel;
 import md.akdev.loyality_cms.repository.BranchRepository;
 import md.akdev.loyality_cms.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -54,8 +53,8 @@ public class TransactionService {
     private List<TransactionModel> getTransactionFrom1c() {
 
         String ipAddress = this.ipAddress;
-        String userName = this.userName;
-        String password = this.password;
+//        String userName = this.userName;
+//        String password = this.password;
         String urlGetTransaction = this.urlGetTransaction;
 
         if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
@@ -64,8 +63,14 @@ public class TransactionService {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
-            Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+           // restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
+            Object[] transaction;
+            try {
+                transaction =   restTemplate.getForObject(urlGetTransaction, Object[].class, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            } catch (HttpClientErrorException e) {
+                throw new RuntimeException("Error getting transaction from 1c: " + e.getMessage());
+            }
+        //    Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             ObjectMapper mapper = new ObjectMapper();
             assert transaction != null;
             return Arrays.stream(transaction)
