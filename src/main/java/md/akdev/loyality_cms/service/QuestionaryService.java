@@ -38,18 +38,35 @@ public class QuestionaryService {
     public QuestionaryDTO getQuestionary() {
 
 
-
         AtomicReference<QuestionaryModel> questionaryModel = new AtomicReference<>(new QuestionaryModel());
-        clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).ifPresent( clientsModel -> {
 
-             questionaryModel.set(questionaryRepository.findByClientId(clientsModel.getId()).orElseGet(() -> getQuestionaryFrom1c(clientsModel.getUuid1c())));
+
+        Optional<ClientsModel> clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        clientsModel.ifPresentOrElse( cl -> {
+            questionaryModel.set(questionaryRepository.findByClientId(cl.getId()).orElseGet(() -> getQuestionaryFrom1c(cl.getUuid1c())));
 
             //if questionary is not in local db, save it
             if (questionaryModel.get().getId() == null && questionaryModel.get().getName() != null && questionaryModel.get().getFirstName() != null){
-                questionaryModel.get().setClientId(clientsModel.getId());
+                questionaryModel.get().setClientId(cl.getId());
                 questionaryRepository.save(questionaryModel.get());
             }
-        }) ;
+        }, () -> {
+            throw new RuntimeException("Client " + SecurityContextHolder.getContext().getAuthentication().getPrincipal() +" not found in database " );
+        });
+
+
+
+//        clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).ifPresent( clientsModel -> {
+//
+//             questionaryModel.set(questionaryRepository.findByClientId(clientsModel.getId()).orElseGet(() -> getQuestionaryFrom1c(clientsModel.getUuid1c())));
+//
+//            //if questionary is not in local db, save it
+//            if (questionaryModel.get().getId() == null && questionaryModel.get().getName() != null && questionaryModel.get().getFirstName() != null){
+//                questionaryModel.get().setClientId(clientsModel.getId());
+//                questionaryRepository.save(questionaryModel.get());
+//            }
+//        }) ;
 
 
         return mapModels(questionaryModel.get());
@@ -123,6 +140,11 @@ public class QuestionaryService {
         String urlGetQuestionary = this.urlGetQuestionary;
 
         if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             return restTemplate.getForObject(urlGetQuestionary, QuestionaryModel.class, uuid);
         } else {
             return new QuestionaryModel();

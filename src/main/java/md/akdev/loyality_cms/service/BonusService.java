@@ -25,13 +25,18 @@ public class BonusService {
         this.restTemplate = restTemplate;
     }
 
-    public Optional<ClientsModel> getRefreshBonus() {
+    public Optional<ClientsModel> getRefreshBonus() throws InterruptedException {
         Optional<ClientsModel> clientsModel = clientsRepository.getClientByUuid1c((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Thread.sleep(2000);
+        clientsModel.ifPresentOrElse(this::getRefreshBonusFrom1c, () -> {
+            throw new RuntimeException("Client " + SecurityContextHolder.getContext().getAuthentication().getPrincipal() +" not found in database " );
+        });
 
-        return clientsModel.map(this::getRefreshBonusFrom1c);
+        return clientsModel;
+        //return clientsModel.map(this::getRefreshBonusFrom1c);
     }
 
-    private ClientsModel getRefreshBonusFrom1c(ClientsModel clientsModel) {
+    private void getRefreshBonusFrom1c(ClientsModel clientsModel) {
 
         String ipAddress = this.ipAddress;
         String urlGetRefreshBonus = this.urlGetRefreshBonus;
@@ -40,7 +45,6 @@ public class BonusService {
             clientsModel.setBonus(Objects.requireNonNull(restTemplate.getForObject(urlGetRefreshBonus, ClientsModel.class, clientsModel.getUuid1c())).getBonus());
             clientsRepository.save(clientsModel);
         }
-        return clientsModel;
 
     }
 

@@ -30,10 +30,16 @@ public class BonusRestController {
         try {
             AtomicReference<ClientsModel> clientsModel = new AtomicReference<>(new ClientsModel());
 
-            bonusService.getRefreshBonus().ifPresent(cl -> {
-                logger.info("BonusRestController | getRefreshBonus: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + cl.getBonus() + " bonus");
-                clientsModel.set(cl);
-            });
+            bonusService.getRefreshBonus().ifPresentOrElse(
+                    cl -> {
+                        logger.info("BonusRestController | getRefreshBonus: Phone - \u001B[32m" + request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + cl.getBonus() + " bonus");
+                        clientsModel.set(cl);
+                    },
+                    () -> {
+                        logger.error("BonusRestController | getRefreshBonus: Client " + request.getUserPrincipal().getName() + " not found in database ");
+                        throw new RuntimeException("Client " + request.getUserPrincipal().getName() + " not found in database ");
+                    }
+            );
             return new ResponseEntity<>(clientsModel, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("BonusRestController | getRefreshBonus: " + e.getMessage());

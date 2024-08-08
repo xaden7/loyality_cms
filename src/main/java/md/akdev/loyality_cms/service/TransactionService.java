@@ -59,6 +59,11 @@ public class TransactionService {
         String urlGetTransaction = this.urlGetTransaction;
 
         if (NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userName, password));
             Object[] transaction = restTemplate.getForObject(urlGetTransaction, Object[].class, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             ObjectMapper mapper = new ObjectMapper();
