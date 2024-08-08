@@ -12,6 +12,7 @@ public class RestTemplateConfig {
     RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder){
         return restTemplateBuilder
                 .basicAuthentication("OnicaIon", "tbND3tkEDVKO")
+                .errorHandler(new RestTemplateResponseErrorHandler())
                 .build();
     }
 
