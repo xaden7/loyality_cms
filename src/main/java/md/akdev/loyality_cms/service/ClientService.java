@@ -9,10 +9,14 @@ import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.utils.MappingUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+
 
 
 import java.util.Objects;
@@ -51,7 +55,6 @@ public class ClientService {
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
         String urlGetBonus = this.urlGetBonus;
-
 
         String phone = inputClient.getPhoneNumber();
 
@@ -94,6 +97,10 @@ public class ClientService {
             {
                 logger.warn("Client not found in 1c");
                 throw new NotFoundException(e.getMessage());
+            }
+            catch (DataIntegrityViolationException e) {
+                logger.error(e.getMessage());
+                throw new DataIntegrityViolationException("Acest card este deja activat pe alt numar de telefon");
             }
             catch (Exception e) {
                 logger.error(e.getMessage());

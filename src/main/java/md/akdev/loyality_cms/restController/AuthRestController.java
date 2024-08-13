@@ -13,6 +13,9 @@ import md.akdev.loyality_cms.service.ClientService;
 import md.akdev.loyality_cms.service.JwtAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("auth/login")
+
 public class AuthRestController {
     private final ClientService clientService;
     private final JwtAuthService jwtAuthService;
@@ -74,9 +78,10 @@ public class AuthRestController {
             errorMessage.put("reason", e.getMessage());
             logger.error("AuthRestController | getClientDeviceDto: " + e.getMessage());
             return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        } catch (DataIntegrityViolationException e) {
+           throw new DataIntegrityViolationException(e.getMessage());
         } catch (Exception e) {
-            logger.error("AuthRestController | getClientDeviceDto: " + e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            throw new RuntimeException(e);
         }
     }
 
@@ -126,8 +131,8 @@ public class AuthRestController {
         return phone;
     }
 
-    @ExceptionHandler({NotFoundException.class, JwtAuthException.class,
-        RuntimeException.class, AccessDeniedException.class})
+    @ExceptionHandler({NotFoundException.class, JwtAuthException.class, DuplicateKeyException.class,
+        RuntimeException.class, AccessDeniedException.class, DataIntegrityViolationException.class})
     private ResponseEntity<CstErrorResponse> handeException(Exception e){
 
         CstErrorResponse cstErrorResponse = new CstErrorResponse(
@@ -137,8 +142,9 @@ public class AuthRestController {
 
         HttpStatus status = switch (e.getClass().getSimpleName()) {
             case "NotFoundException" -> HttpStatus.NOT_FOUND;
-            case "RewardAlreadyUsedException", "DataIntegrityViolationException" -> HttpStatus.CONFLICT;
-            case "AccessDeniedException", "JwtAuthException" -> HttpStatus.FORBIDDEN;
+            case "RewardAlreadyUsedException" -> HttpStatus.UNPROCESSABLE_ENTITY;
+            case  "DataIntegrityViolationException" -> HttpStatus.CONFLICT;
+            case   "AccessDeniedException", "JwtAuthException" -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.BAD_REQUEST;
         };
         logger.error(cstErrorResponse.getMessage());
