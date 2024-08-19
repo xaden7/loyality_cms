@@ -39,6 +39,41 @@ public class AuthRestController {
         this.jwtAuthService = jwtAuthService;
     }
 
+    @GetMapping("phone={phone}")
+    public ResponseEntity<?> loginByPhone(@PathVariable String phone){
+        phone = phoneDefaultIfNull(phone);
+
+        logger.info("AuthRestController | loginByPhone | inputValues: \u001B[32m" + phone + "\u001B[0m");
+
+        if (phone.length() != 8) {
+            return ResponseEntity.badRequest().body("Phone number is not valid");
+        }
+
+        try {
+            ClientsModel client = clientService.loginByPhoneNumber(phone);
+
+            final JwtResponse token = jwtAuthService.login(client);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("accessToken", token.getAccessToken());
+            responseHeaders.set("refreshToken", token.getRefreshToken());
+
+            return ResponseEntity.ok()
+                    .headers(responseHeaders)
+                    .body(client);
+        } catch (NotFoundException e) {
+            Map<String, String> errorMessage = new HashMap<>();
+            errorMessage.put("reason", e.getMessage());
+            logger.error("AuthRestController | loginByPhone: " + e.getMessage());
+            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
     @GetMapping("phone={phone}&barcode={barcode}")
     public ResponseEntity<?> getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode){
 

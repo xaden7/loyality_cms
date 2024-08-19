@@ -28,6 +28,8 @@ public class ClientService {
     @Value("${spring.datasource1c.username}") String userName;
     @Value("${spring.datasource1c.password}") String password;
     @Value("${spring.datasource1c.url.getBonus}") String urlGetBonus;
+    @Value("${spring.datasource1c.url.getBonusByPhone}")
+    String urlGetBonusByPhone;
     @Value("${spring.datasource1c.url.newClient}") String urlNewClient;
     @Value("${spring.datasource1c.url.temporaryCode}") String urlTemporaryCode;
     @Value("${spring.datasource1c.url.getBarcode}") String urlGetBarcode;
@@ -51,6 +53,45 @@ public class ClientService {
     public ClientsModel mapQuestionaryToClientsModel(QuestionaryModel questionaryModel){
         return mappingUtils.mapQuestionaryToClientsModel(questionaryModel);
     }
+
+   @Transactional
+   public ClientsModel loginByPhoneNumber(String phoneNumber) throws Exception {
+        Optional<ClientsModel> getClient = getClientByPhoneNumber(phoneNumber);
+
+        if (getClient.isPresent()) {
+            return getClient.get();
+        }
+        else {
+            String urlGetBonus = this.urlGetBonusByPhone;
+
+            try {
+                ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
+
+                assert getClientLoyality != null;
+                if (getClientLoyality.getUuid1c() == null ){
+                    throw new NotFoundException("Client not found in 1c");
+                }
+
+                if (clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).isPresent() && Objects.equals(clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).get().getPhoneNumber(), phoneNumber)) {
+                    return getClientLoyality;
+                }
+
+                clientsRepository.save(getClientLoyality);
+                    return clientsRepository.getClientByPhoneNumber(phoneNumber).orElseThrow(NotFoundException::new);
+
+            }catch (NotFoundException e)
+            {
+                logger.warn("Client not found in 1c");
+                throw new NotFoundException(e.getMessage());
+            }
+            catch (Exception e) {
+                logger.error(e.getMessage());
+                throw new Exception(e.getMessage());
+            }
+        }
+
+}
+
 @Transactional
     public ClientsModel getClientByPhoneNumberAndCodeCard(ClientsModel inputClient) throws Exception {
 
