@@ -39,7 +39,7 @@ public class AuthRestController {
         this.jwtAuthService = jwtAuthService;
     }
 
-    @GetMapping("phone={phone}")
+    @GetMapping("by-phone={phone}")
     public ResponseEntity<?> loginByPhone(@PathVariable String phone){
         phone = phoneDefaultIfNull(phone);
 
