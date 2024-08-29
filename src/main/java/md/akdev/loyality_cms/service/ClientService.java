@@ -65,9 +65,15 @@ public class ClientService {
             String urlGetBonus = this.urlGetBonusByPhone;
 
             try {
+                //AK было начало
+                //ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
+                //АК было конец
+                //АК Стало начало
                 ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
-
                 assert getClientLoyality != null;
+                getClientLoyality.setPhoneNumber(phoneNumber);
+                //АК Стало конец
+
                 if (getClientLoyality.getUuid1c() == null ){
                     throw new NotFoundException("Client not found in 1c");
                 }
