@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +47,7 @@ public class RewardUsedService {
             saveQrRewardUsed(rewardUsed);
         else if (rewardType.getRewardMethod() == 2)
             saveGiftRewardUsed(rewardUsed);
-        else if (rewardType.getRewardMethod() == 3 )
+        else if (rewardType.getRewardMethod() == 3 || rewardType.getRewardMethod() == 5 )
                 saveFortuneRewardUsed(rewardUsed);
         else if (rewardType.getRewardMethod() == 4){
                 saveMultimediaRewardUsed(rewardUsed);
@@ -129,9 +130,19 @@ public class RewardUsedService {
 
             List<Integer> OncePerClient = Arrays.asList(1, 2, 3);   // Used only once reward method per client
             List<Integer> OncePerRewardDetail = List.of(4); // Used only once reward method per reward detail
+            List<Integer> OncePerDay = List.of(5); // Used only once reward method per day
 
             if (OncePerClient.contains(present.getRewardType().getRewardMethod())) {
                 if (rewardUsedRepository.findByRewardAndClient(present, client).isPresent()) {
+                    throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
+                }
+
+                allowToSendLoyality.set(1);
+            }
+//            add new type of reward method
+            if (OncePerDay.contains(present.getRewardType().getRewardMethod())) {
+
+                if (rewardUsedRepository.findByRewardAndClientAndCreatedAt(present.getId(), client.getId(), now()).isPresent()) {
                     throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
                 }
 
