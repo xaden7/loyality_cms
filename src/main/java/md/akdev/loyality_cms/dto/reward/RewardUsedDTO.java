@@ -13,6 +13,7 @@ public class RewardUsedDTO {
     private Integer rewardDetailMultimediaId;
     private Integer rewardDetailMultimediaRowId;
     private UUID clientId;
+    private String text;
 
     @Override
     public String toString() {
@@ -22,6 +23,7 @@ public class RewardUsedDTO {
                 ", rewardDetailMultimediaId=" + rewardDetailMultimediaId +
                 ", rewardDetailMultimediaRowId=" + rewardDetailMultimediaRowId +
                 ", clientId=" + clientId +
+                ", text='" + text + '\'' +
                 '}';
     }
 }

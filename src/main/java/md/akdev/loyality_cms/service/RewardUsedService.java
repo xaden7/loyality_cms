@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +35,7 @@ public class RewardUsedService {
     private final RewardRepository rewardRepository;
     private final RewardUsedDetailsRepository rewardUsedDetailsRepository;
     private final RewardDetailMultimediaRowRepository rewardDetailMultimediaRowRepository;
+    private final ReturnsOfLoyalityCardRepository returnsOfLoyalityCardRepository;
 
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -80,10 +80,11 @@ public class RewardUsedService {
 
     //method 2 in table reward_type;
     public void saveQrRewardUsed(RewardUsedDTO rewardUsed){
-
-        verifyRewardUsed(rewardUsed, "QR REWARD");  // todo: modify this to Dynamic value
-
         Reward reward = getReward(rewardUsed);
+
+        String operation = reward.getRewardType().getRewardType().contains("QR") ? "QR REWARD" : "CARD BACK REWARD";
+
+        verifyRewardUsed(rewardUsed, operation);  // todo: modify this to Dynamic value
 
         preSave(rewardUsed, reward);
     }
@@ -112,6 +113,24 @@ public class RewardUsedService {
 
         if (rewardUsedRepository.findByRewardAndClient(reward, client).isPresent())
             throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
+
+        if (rewardUsed.getText().isEmpty()){
+            throw new NotFoundException("Once returned card code is required");
+        }
+
+        if(reward.getRewardType().getRewardType().contains("Returns of Loyality Cards")){
+
+                        returnsOfLoyalityCardRepository.findByClientIdAndPromoCode(UUID.fromString(client.getUuid1c())
+                                , rewardUsed.getText()).ifPresentOrElse(
+                                        i -> {
+                                            i.setPromoCodeUsed(true);
+                                            returnsOfLoyalityCardRepository.save(i);
+                                        },
+                                        () -> {
+                                            throw new NotFoundException("Return of loyality card with promo code " + rewardUsed.getText() + " not found for client " + client.getPhoneNumber());
+                                        }
+                        );
+        }
 
         RewardUsed rewardUsedToSave = new RewardUsed();
         rewardUsedToSave.setClient(client);
