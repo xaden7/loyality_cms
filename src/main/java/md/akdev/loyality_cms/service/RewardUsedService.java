@@ -114,13 +114,15 @@ public class RewardUsedService {
         if (rewardUsedRepository.findByRewardAndClient(reward, client).isPresent())
             throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
 
-        if (rewardUsed.getText().isEmpty()){
-            throw new NotFoundException("Once returned card code is required");
-        }
 
         if(reward.getRewardType().getRewardType().contains("Returns of Loyality Cards")){
 
-                        returnsOfLoyalityCardRepository.findByClientIdAndPromoCode(UUID.fromString(client.getUuid1c())
+            if (rewardUsed.getText().isEmpty()){
+                throw new NotFoundException("Once returned card code is required");
+            }
+
+
+            returnsOfLoyalityCardRepository.findByClientIdAndPromoCode(UUID.fromString(client.getUuid1c())
                                 , rewardUsed.getText()).ifPresentOrElse(
                                         i -> {
                                             i.setPromoCodeUsed(true);
