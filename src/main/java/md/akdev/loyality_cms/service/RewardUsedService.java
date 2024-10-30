@@ -43,7 +43,7 @@ public class RewardUsedService {
         RewardsType rewardType =
                 rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
 
-        if (rewardType.getRewardMethod() == 1)
+        if (rewardType.getRewardMethod() == 1 || rewardType.getRewardMethod() == 6 || rewardType.getRewardMethod() == 7)
             saveQrRewardUsed(rewardUsed);
         else if (rewardType.getRewardMethod() == 2)
             saveGiftRewardUsed(rewardUsed);
@@ -82,7 +82,14 @@ public class RewardUsedService {
     public void saveQrRewardUsed(RewardUsedDTO rewardUsed){
         Reward reward = getReward(rewardUsed);
 
-        String operation = reward.getRewardType().getRewardType().contains("QR") ? "QR REWARD" : "CARD BACK REWARD";
+        String operation = switch (reward.getRewardType().getRewardMethod()) {
+            case 1 -> "QR REWARD";
+            case 2 -> "CARD BACK REWARD";
+            case 6 -> "RETURN OF CARD REWARD";
+            case 7 -> "PROMO CODE REWARD";
+            default ->
+                    throw new NotFoundException("Reward method with id " + reward.getRewardType().getRewardMethod() + " not found");
+        };
 
         verifyRewardUsed(rewardUsed, operation);  // todo: modify this to Dynamic value
 
@@ -114,8 +121,7 @@ public class RewardUsedService {
         if (rewardUsedRepository.findByRewardAndClient(reward, client).isPresent())
             throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
 
-
-        if(reward.getRewardType().getRewardType().contains("Returns of Loyality Cards")){
+        if (reward.getRewardType().getRewardMethod() == 6){
 
             if (rewardUsed.getText().isEmpty()){
                 throw new NotFoundException("Once returned card code is required");
