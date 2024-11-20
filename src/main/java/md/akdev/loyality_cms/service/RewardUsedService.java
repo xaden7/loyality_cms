@@ -35,6 +35,7 @@ public class RewardUsedService {
     private final RewardRepository rewardRepository;
     private final RewardUsedDetailsRepository rewardUsedDetailsRepository;
     private final RewardDetailMultimediaRowRepository rewardDetailMultimediaRowRepository;
+    private final ReturnsOfLoyalityCardRepository returnsOfLoyalityCardRepository;
 
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -42,11 +43,11 @@ public class RewardUsedService {
         RewardsType rewardType =
                 rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
 
-        if (rewardType.getRewardMethod() == 1)
+        if (rewardType.getRewardMethod() == 1 || rewardType.getRewardMethod() == 6 || rewardType.getRewardMethod() == 7)
             saveQrRewardUsed(rewardUsed);
         else if (rewardType.getRewardMethod() == 2)
             saveGiftRewardUsed(rewardUsed);
-        else if (rewardType.getRewardMethod() == 3 )
+        else if (rewardType.getRewardMethod() == 3 || rewardType.getRewardMethod() == 5 )
                 saveFortuneRewardUsed(rewardUsed);
         else if (rewardType.getRewardMethod() == 4){
                 saveMultimediaRewardUsed(rewardUsed);
@@ -79,10 +80,18 @@ public class RewardUsedService {
 
     //method 2 in table reward_type;
     public void saveQrRewardUsed(RewardUsedDTO rewardUsed){
-
-        verifyRewardUsed(rewardUsed, "QR REWARD");  // todo: modify this to Dynamic value
-
         Reward reward = getReward(rewardUsed);
+
+        String operation = switch (reward.getRewardType().getRewardMethod()) {
+            case 1 -> "QR REWARD";
+            case 2 -> "CARD BACK REWARD";
+            case 6 -> "RETURN OF CARD REWARD";
+            case 7 -> "PROMO CODE REWARD";
+            default ->
+                    throw new NotFoundException("Reward method with id " + reward.getRewardType().getRewardMethod() + " not found");
+        };
+
+        verifyRewardUsed(rewardUsed, operation);  // todo: modify this to Dynamic value
 
         preSave(rewardUsed, reward);
     }
@@ -112,6 +121,25 @@ public class RewardUsedService {
         if (rewardUsedRepository.findByRewardAndClient(reward, client).isPresent())
             throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
 
+        if (reward.getRewardType().getRewardMethod() == 6){
+
+            if (rewardUsed.getText().isEmpty()){
+                throw new NotFoundException("Once returned card code is required");
+            }
+
+
+            returnsOfLoyalityCardRepository.findByClientIdAndPromoCode(UUID.fromString(client.getUuid1c())
+                                , rewardUsed.getText()).ifPresentOrElse(
+                                        i -> {
+                                            i.setPromoCodeUsed(true);
+                                            returnsOfLoyalityCardRepository.save(i);
+                                        },
+                                        () -> {
+                                            throw new NotFoundException("Return of loyality card with promo code " + rewardUsed.getText() + " not found for client " + client.getPhoneNumber());
+                                        }
+                        );
+        }
+
         RewardUsed rewardUsedToSave = new RewardUsed();
         rewardUsedToSave.setClient(client);
         rewardUsedToSave.setMovedToLoyality(0);
@@ -129,9 +157,19 @@ public class RewardUsedService {
 
             List<Integer> OncePerClient = Arrays.asList(1, 2, 3);   // Used only once reward method per client
             List<Integer> OncePerRewardDetail = List.of(4); // Used only once reward method per reward detail
+            List<Integer> OncePerDay = List.of(5); // Used only once reward method per day
 
             if (OncePerClient.contains(present.getRewardType().getRewardMethod())) {
                 if (rewardUsedRepository.findByRewardAndClient(present, client).isPresent()) {
+                    throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
+                }
+
+                allowToSendLoyality.set(1);
+            }
+//            add new type of reward method
+            if (OncePerDay.contains(present.getRewardType().getRewardMethod())) {
+
+                if (rewardUsedRepository.findByRewardAndClientAndCreatedAt(present.getId(), client.getId(), now()).isPresent()) {
                     throw new RewardAlreadyUsedException("Reward with id " + rewardUsed.getRewardId() + " is already used by client with id " + rewardUsed.getClientId());
                 }
 
