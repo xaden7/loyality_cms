@@ -19,6 +19,7 @@ public class PartnerImage {
     private UUID id;
     private String name;
     private ImageType type;
+    private String body;
 
     @ManyToOne
     @JoinColumn(name = "partner_id", referencedColumnName = "id")
