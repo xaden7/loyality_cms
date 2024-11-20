@@ -39,8 +39,7 @@ public class PartnerController {
             return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/jpeg")).body(new byte[0]);
         }
 
-        String base64Image = data.split(",")[1];
-        byte[] imageBytes = java.util.Base64.getDecoder().decode(base64Image);
+        byte[] imageBytes = java.util.Base64.getDecoder().decode(data);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(imageBytes);
