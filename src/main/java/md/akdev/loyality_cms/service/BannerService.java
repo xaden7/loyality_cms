@@ -2,12 +2,9 @@ package md.akdev.loyality_cms.service;
 
 import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.dto.BannerFullDTO;
-import md.akdev.loyality_cms.dto.TagDTO;
 import md.akdev.loyality_cms.dto.promotion.PromotionDTO;
 import md.akdev.loyality_cms.dto.promotion.PromotionDetailDTO;
-import md.akdev.loyality_cms.dto.promotion.PromotionImp;
 import md.akdev.loyality_cms.model.Banner;
-import md.akdev.loyality_cms.model.promotion.Promotion;
 import md.akdev.loyality_cms.repository.BannerRepository;
 import md.akdev.loyality_cms.repository.promotion.PromotionDetailsRepository;
 import md.akdev.loyality_cms.repository.promotion.PromotionRepository;
@@ -18,7 +15,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
