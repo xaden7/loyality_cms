@@ -15,6 +15,7 @@ public class Banner {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String title;
+    private String titleRo;
+    private String titleRu;
     private String image;
 }

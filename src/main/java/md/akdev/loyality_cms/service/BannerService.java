@@ -36,7 +36,8 @@ public class BannerService {
     public BannerFullDTO getBannerFullDTO() {
         Banner banner = getAllBanners().get(0);
         BannerFullDTO bannerFullDTO = new BannerFullDTO();
-        bannerFullDTO.setTitle(banner.getTitle());
+        bannerFullDTO.setTitle(banner.getTitleRu());
+        bannerFullDTO.setTitle(banner.getTitleRo());
         bannerFullDTO.setImage(banner.getImage());
 
         List<PromotionDTO> promotions = promotionRepository.findAllActive(LocalDate.now()).stream().map((element) ->

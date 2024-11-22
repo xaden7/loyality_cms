@@ -194,6 +194,8 @@ public class ClientService {
     }
 
     public QuestionaryModel newClient(QuestionaryModel questionaryModel) throws Exception{
+        System.out.println("newClient" + questionaryModel.toString());
+
         String urlNewClient = this.urlNewClient;
         try{
             return restTemplate.postForObject(urlNewClient, questionaryModel, QuestionaryModel.class);
