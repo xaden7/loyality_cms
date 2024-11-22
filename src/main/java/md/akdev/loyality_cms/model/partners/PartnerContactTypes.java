@@ -5,5 +5,5 @@ public enum PartnerContactTypes {
     EMAIL,
     ADDRESS,
     WEBSITE,
-    MESSENGER_URL
+    CHAT_URL
 }
