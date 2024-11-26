@@ -10,8 +10,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name="partner_details")
-public class PartnerDetails {
+@Table(name="partner_details_ru")
+public class PartnerDetailsRu {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

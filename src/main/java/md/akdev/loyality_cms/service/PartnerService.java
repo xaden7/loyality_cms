@@ -19,7 +19,7 @@ public class PartnerService {
     private final PartnerImageRepository partnerImageRepository;
 
     public List<Partner> getAllPartners() {
-        return partnerRepository.findAll();
+        return partnerRepository.findAllByActive(true);
     }
 
 

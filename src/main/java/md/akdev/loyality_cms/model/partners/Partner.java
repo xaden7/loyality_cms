@@ -37,7 +37,10 @@ public class Partner {
     private List<PartnerImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<PartnerDetails> details = new ArrayList<>();
+    private List<PartnerDetailsRu> detailsRu = new ArrayList<>();
+
+    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<PartnerDetailsRo> detailsRo = new ArrayList<>();
 
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<PartnerContacts> contacts = new ArrayList<>();
@@ -48,9 +51,14 @@ public class Partner {
             images.stream().peek(image -> image.setPartner(this)).toList();
     }
 
-    public void setDetails(List<PartnerDetails> details) {
-        this.details =
-            details.stream().peek(detail -> detail.setPartner(this)).toList();
+    public void setDetailsRu(List<PartnerDetailsRu> details) {
+        this.detailsRu =
+                details.stream().peek(detail -> detail.setPartner(this)).toList();
+    }
+
+    public void setDetailsRo(List<PartnerDetailsRo> details) {
+        this.detailsRo =
+                details.stream().peek(detail -> detail.setPartner(this)).toList();
     }
 
     public void setContacts(List<PartnerContacts> contacts) {

@@ -28,6 +28,8 @@ public class PartnerController {
         return ResponseEntity.ok(partners);
     }
 
+
+
     @GetMapping("/get-image")
     public ResponseEntity<?> getImage(UUID id) {
 
