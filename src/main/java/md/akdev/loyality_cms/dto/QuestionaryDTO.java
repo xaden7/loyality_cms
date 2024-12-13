@@ -17,6 +17,7 @@ public class QuestionaryDTO implements Serializable {
     private String email;
     private String barcode;
     private String language;
+    private String clientCode;
     private LocalDate birthday;
 
     private String sex;

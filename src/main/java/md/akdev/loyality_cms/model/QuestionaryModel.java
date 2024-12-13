@@ -38,6 +38,8 @@ public class QuestionaryModel implements Serializable{
     private UUID clientId;
     @Column(name = "sex")
     private String sex;
+    @Column(name = "client_code")
+    private String clientCode;
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;

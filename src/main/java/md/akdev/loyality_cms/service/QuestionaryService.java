@@ -167,7 +167,7 @@ public class QuestionaryService {
         questionaryDTO.setFirstName(questionaryModel.getFirstName());
         questionaryDTO.setPhoneNumber(questionaryModel.getPhoneNumber());
         questionaryDTO.setBarcode(questionaryModel.getBarcode());
-
+        questionaryDTO.setClientCode(questionaryModel.getClientCode());
         questionaryDTO.setEmail(questionaryModel.getEmail());
         questionaryDTO.setLanguage(questionaryModel.getLanguage());
         questionaryDTO.setBirthday(questionaryModel.getBirthday());
