@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import md.akdev.loyality_cms.model.ClientsModel;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -34,11 +32,9 @@ public class RewardUsed {
     @Column(name = "moved_to_loyality")
     private Integer movedToLoyality;
 
-    @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -54,5 +50,15 @@ public class RewardUsed {
                 ", reward=" +  rewardIdStr +
                 ", movedToLoyality=" + movedToLoyality +
                 '}';
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 }

@@ -12,7 +12,8 @@ import md.akdev.loyality_cms.model.product.ProductForSite;
 import org.hibernate.annotations.*;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,13 +38,12 @@ public class SimpleOrder {
     @Column(name = "order_uuid")
     private UUID orderUuid;
 
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private Instant createdAt;
 
-    @UpdateTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
     @Column(name = "changed_at")
-    private Instant changedAt;
+    private LocalDateTime changedAt;
 
     @OneToMany(mappedBy = "simpleOrder", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -59,5 +59,15 @@ public class SimpleOrder {
         simpleOrdersRow.setPrice(price);
 
         simpleOrdersRows.add(simpleOrdersRow);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        changedAt = LocalDateTime.now();
     }
 }
