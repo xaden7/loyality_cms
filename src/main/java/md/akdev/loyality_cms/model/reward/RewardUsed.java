@@ -52,6 +52,7 @@ public class RewardUsed {
                 '}';
     }
 
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
