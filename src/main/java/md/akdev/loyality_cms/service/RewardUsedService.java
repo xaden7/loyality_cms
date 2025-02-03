@@ -43,18 +43,63 @@ public class RewardUsedService {
         RewardsType rewardType =
                 rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
 
-        if (rewardType.getRewardMethod() == 1 || rewardType.getRewardMethod() == 6 || rewardType.getRewardMethod() == 7)
+        if (rewardType.getRewardMethod() == 1 || rewardType.getRewardMethod() == 6 || rewardType.getRewardMethod() == 7){
             saveQrRewardUsed(rewardUsed);
-        else if (rewardType.getRewardMethod() == 2)
+        }
+        else if (rewardType.getRewardMethod() == 2) {
             saveGiftRewardUsed(rewardUsed);
-        else if (rewardType.getRewardMethod() == 3 || rewardType.getRewardMethod() == 5 )
+        }
+        else if (rewardType.getRewardMethod() == 3 || rewardType.getRewardMethod() == 5 ){
                 saveFortuneRewardUsed(rewardUsed);
-        else if (rewardType.getRewardMethod() == 4){
-                saveMultimediaRewardUsed(rewardUsed);
-        } else
+        }
+        else if (rewardType.getRewardMethod() == 4) {
+            saveMultimediaRewardUsed(rewardUsed);
+        }
+        else if (rewardType.getRewardMethod() == 8){
+            saveQrMultiReward(rewardUsed);
+        }
+
+        else
             throw new NotFoundException("Reward type with id " + rewardType.getId() + " not found");
 
     }
+
+    private void saveQrMultiReward(RewardUsedDTO rewardUsed) {
+        verifyRewardUsed(rewardUsed, "PROMO CODE REWARD(MULTI)");
+
+        Reward reward = getReward(rewardUsed);
+
+        if (rewardUsed.getText() == null || rewardUsed.getText().isEmpty()) {
+            throw new NotFoundException("Code(text) is required");
+        }
+
+        if(rewardUsed.getClientId() == null ){
+            throw new NotFoundException("Client id is required");
+        }
+
+
+        rewardsDetailsRepository.findRewardDetailByRewardAndQrCodeIgnoreCase(reward, rewardUsed.getText()).ifPresentOrElse(
+                rewardDetail -> {
+                    if(rewardUsedRepository.findByRewardDetail(rewardDetail).isPresent()){
+                        throw new RewardAlreadyUsedException("This text(code) already used");
+                    }
+                    RewardUsed rewardUsedToSave = new RewardUsed();
+
+                    ClientsModel client = clientsRepository.findById(rewardUsed.getClientId()).orElseThrow(() -> new NotFoundException("Client with id " + rewardUsed.getClientId() + " not found"));
+
+                    rewardUsedToSave.setClient(client);
+                    rewardUsedToSave.setMovedToLoyality(0);
+                    rewardUsedToSave.setReward(reward);
+                    rewardUsedToSave.setRewardDetail(rewardDetail);
+
+                    rewardUsedRepository.save(rewardUsedToSave);
+                },
+                () -> {
+                    throw new NotFoundException("That code  " + rewardUsed.getText() + " not found");
+                }
+        );
+    }
+
 
     //method 4 in table reward_type;
     private void saveMultimediaRewardUsed(RewardUsedDTO rewardUsed) {

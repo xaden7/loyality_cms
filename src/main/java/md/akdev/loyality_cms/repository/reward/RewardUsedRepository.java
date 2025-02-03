@@ -24,4 +24,6 @@ public interface RewardUsedRepository extends JpaRepository<RewardUsed, Integer>
             select * from reward_used where reward_id = :rewardId and client_id = :clientId and cast(created_at as date) = cast(:now as date)
             """, nativeQuery = true)
     Optional<RewardUsed> findByRewardAndClientAndCreatedAt(@Param("rewardId") Integer rewardId, @Param("clientId") UUID clientId, @Param("now") LocalDate now);
+
+    Optional<RewardUsed> findByRewardDetail(RewardDetail rewardDetail);
 }
