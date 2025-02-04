@@ -26,11 +26,11 @@ public interface RewardRepository extends JpaRepository<Reward,Integer> {
     select r.* from rewards r where cast(:now as date) between r.date_from and r.date_to
         and r.id not in (select reward_id from reward_used where client_id = :clientId)
         and r.id not in (select reward_id from reward_used_details where client_id = :clientId)
-                     and r.reward_type != 8
+                     and r.reward_type not in (select id from rewards_type where reward_method in (5, 8))
             union
         select r.* from rewards r where cast(:now as date) between r.date_from and r.date_to
         and r.id not in (select reward_id from reward_used where client_id = :clientId and cast(:now as date ) = cast(created_at as date))
-            and r.reward_type = 8
+            and r.reward_type in (select id from rewards_type where reward_method in (5))
     """, nativeQuery = true)
     List<Reward> findAllActiveRewards(@Param("now") LocalDate now, @Param("clientId") UUID clientId);
 
