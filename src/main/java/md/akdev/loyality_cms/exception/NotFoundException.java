@@ -8,5 +8,5 @@ import lombok.*;
 @Setter
 @Getter
 public class NotFoundException  extends RuntimeException{
-    private String message = "no data found";
+    private String message = "no_data_found";
 }
