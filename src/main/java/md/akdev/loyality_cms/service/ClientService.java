@@ -70,7 +70,18 @@ public class ClientService {
                 //ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
                 //АК было конец
                 //АК Стало начало
-                ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
+                ClientsModel getClientLoyality ;
+
+                try {
+                    getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
+                } catch (HttpClientErrorException e) {
+                    if (e.getStatusCode().value() == 404) {
+                        throw new GoneException("Client not found in 1c");
+                    } else {
+                        throw e;
+                    }
+                }
+//                restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
                 assert getClientLoyality != null;
                 getClientLoyality.setPhoneNumber(phoneNumber);
                 //АК Стало конец
