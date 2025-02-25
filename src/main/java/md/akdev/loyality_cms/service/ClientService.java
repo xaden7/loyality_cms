@@ -2,7 +2,6 @@ package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.exception.CustomException;
-import md.akdev.loyality_cms.exception.GoneException;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.BonusRepository;
@@ -70,24 +69,13 @@ public class ClientService {
                 //ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
                 //АК было конец
                 //АК Стало начало
-                ClientsModel getClientLoyality ;
-
-                try {
-                    getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
-                } catch (HttpClientErrorException e) {
-                    if (e.getStatusCode().value() == 404) {
-                        throw new GoneException("Client not found in 1c");
-                    } else {
-                        throw e;
-                    }
-                }
-//                restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
+                ClientsModel getClientLoyality = restTemplate.getForObject(urlGetBonus, ClientsModel.class, phoneNumber);
                 assert getClientLoyality != null;
                 getClientLoyality.setPhoneNumber(phoneNumber);
                 //АК Стало конец
 
                 if (getClientLoyality.getUuid1c() == null ){
-                    throw new GoneException("Client not found in 1c");
+                    throw new NotFoundException("Client not found in 1c");
                 }
 
                 if (clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).isPresent() && Objects.equals(clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).get().getPhoneNumber(), phoneNumber)) {
@@ -95,12 +83,12 @@ public class ClientService {
                 }
 
                 clientsRepository.save(getClientLoyality);
-                    return clientsRepository.getClientByPhoneNumber(phoneNumber).orElseThrow(GoneException::new);
+                    return clientsRepository.getClientByPhoneNumber(phoneNumber).orElseThrow(NotFoundException::new);
 
-            }catch (GoneException e)
+            }catch (NotFoundException e)
             {
                 logger.warn("Client not found in 1c");
-                throw new GoneException(e.getMessage());
+                throw new NotFoundException(e.getMessage());
             }
             catch (Exception e) {
                 logger.error(e.getMessage());
