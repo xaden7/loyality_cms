@@ -2,6 +2,7 @@ package md.akdev.loyality_cms.service;
 
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 import md.akdev.loyality_cms.exception.CustomException;
+import md.akdev.loyality_cms.exception.GoneException;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.BonusRepository;
@@ -75,7 +76,7 @@ public class ClientService {
                 //АК Стало конец
 
                 if (getClientLoyality.getUuid1c() == null ){
-                    throw new NotFoundException("Client not found in 1c");
+                    throw new GoneException("Client not found in 1c");
                 }
 
                 if (clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).isPresent() && Objects.equals(clientsRepository.getClientByUuid1c(getClientLoyality.getUuid1c()).get().getPhoneNumber(), phoneNumber)) {
@@ -83,12 +84,12 @@ public class ClientService {
                 }
 
                 clientsRepository.save(getClientLoyality);
-                    return clientsRepository.getClientByPhoneNumber(phoneNumber).orElseThrow(NotFoundException::new);
+                    return clientsRepository.getClientByPhoneNumber(phoneNumber).orElseThrow(GoneException::new);
 
-            }catch (NotFoundException e)
+            }catch (GoneException e)
             {
                 logger.warn("Client not found in 1c");
-                throw new NotFoundException(e.getMessage());
+                throw new GoneException(e.getMessage());
             }
             catch (Exception e) {
                 logger.error(e.getMessage());

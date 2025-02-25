@@ -3,6 +3,7 @@ package md.akdev.loyality_cms.restController;
 import md.akdev.loyality_cms.dto.ClientDeviceDto;
 
 import md.akdev.loyality_cms.exception.CstErrorResponse;
+import md.akdev.loyality_cms.exception.GoneException;
 import md.akdev.loyality_cms.exception.JwtAuthException;
 import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.ClientsModel;
@@ -60,7 +61,7 @@ public class AuthRestController {
             return ResponseEntity.ok()
                     .headers(responseHeaders)
                     .body(client);
-        } catch (NotFoundException e) {
+        } catch (GoneException e) {
             Map<String, String> errorMessage = new HashMap<>();
             errorMessage.put("reason", e.getMessage());
             logger.error("AuthRestController | loginByPhone: " + e.getMessage());
@@ -167,7 +168,7 @@ public class AuthRestController {
     }
 
     @ExceptionHandler({NotFoundException.class, JwtAuthException.class, DuplicateKeyException.class,
-        RuntimeException.class, AccessDeniedException.class, DataIntegrityViolationException.class})
+        RuntimeException.class, AccessDeniedException.class, DataIntegrityViolationException.class, GoneException.class})
     private ResponseEntity<CstErrorResponse> handeException(Exception e){
 
         CstErrorResponse cstErrorResponse = new CstErrorResponse(
@@ -176,6 +177,7 @@ public class AuthRestController {
         );
 
         HttpStatus status = switch (e.getClass().getSimpleName()) {
+            case "GoneException" -> HttpStatus.GONE;
             case "NotFoundException" -> HttpStatus.NOT_FOUND;
             case "RewardAlreadyUsedException" -> HttpStatus.UNPROCESSABLE_ENTITY;
             case  "DataIntegrityViolationException" -> HttpStatus.CONFLICT;
