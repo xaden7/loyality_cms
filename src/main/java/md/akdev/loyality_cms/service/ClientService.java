@@ -7,6 +7,7 @@ import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.*;
 import md.akdev.loyality_cms.repository.BonusRepository;
 import md.akdev.loyality_cms.repository.ClientsRepository;
+import md.akdev.loyality_cms.repository.DeleteRequestRepository;
 import md.akdev.loyality_cms.utils.MappingUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,11 +42,15 @@ public class ClientService {
     private final RestTemplate restTemplate;
 
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(ClientService.class);
-    public ClientService(ClientsRepository clientsRepository, MappingUtils mappingUtils, BonusRepository bonusRepository, RestTemplate restTemplate) {
+    private final DeleteRequestRepository deleteRequestRepository;
+
+    public ClientService(ClientsRepository clientsRepository, MappingUtils mappingUtils, BonusRepository bonusRepository, RestTemplate restTemplate,
+                         DeleteRequestRepository deleteRequestRepository) {
         this.clientsRepository = clientsRepository;
         this.mappingUtils = mappingUtils;
         this.bonusRepository = bonusRepository;
         this.restTemplate = restTemplate;
+        this.deleteRequestRepository = deleteRequestRepository;
     }
 
     public ClientsModel mapToClientsModel(ClientDeviceDto dto) {
@@ -267,4 +272,9 @@ public class ClientService {
         return phone;
     }
 
+    public void deleteRequest(ClientDeviceDto clientDeviceDto) {
+        DeleteRequest deleteRequest = new DeleteRequest();
+        deleteRequest.setClientId(clientDeviceDto.getId());
+        deleteRequestRepository.save(deleteRequest);
+    }
 }

@@ -74,6 +74,18 @@ public class AuthRestController {
 
     }
 
+    @PostMapping("delete-request")
+    public ResponseEntity<?> deleteRequest(@RequestBody ClientDeviceDto clientDeviceDto){
+        logger.info("AuthRestController | deleteRequest | inputValues: " + clientDeviceDto);
+        try {
+            clientService.deleteRequest(clientDeviceDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("AuthRestController | deleteRequest: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("phone={phone}&barcode={barcode}")
     public ResponseEntity<?> getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode){
