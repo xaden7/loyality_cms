@@ -272,9 +272,9 @@ public class ClientService {
         return phone;
     }
 
-    public void deleteRequest(String clientID) {
+    public void deleteRequest(UUID clientID) {
         DeleteRequest deleteRequest = new DeleteRequest();
-        deleteRequest.setClientId(UUID.fromString(clientID));
+        deleteRequest.setClientId(clientID);
         deleteRequestRepository.save(deleteRequest);
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("auth/login")
@@ -74,13 +75,13 @@ public class AuthRestController {
     }
 
     @PostMapping("delete-request")
-    public ResponseEntity<?> deleteRequest(@RequestParam String clientId) {
-        logger.info("AuthRestController | deleteRequest | inputValues: " + clientId);
+    public ResponseEntity<?> deleteRequest(@RequestParam UUID clientId) {
+        logger.info("AuthRestController | deleteRequest | inputValues: {}", clientId);
         try {
             clientService.deleteRequest(clientId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            logger.error("AuthRestController | deleteRequest: " + e.getMessage());
+            logger.error("AuthRestController | deleteRequest: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
