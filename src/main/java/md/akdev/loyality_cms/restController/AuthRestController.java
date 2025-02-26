@@ -74,10 +74,10 @@ public class AuthRestController {
     }
 
     @PostMapping("delete-request")
-    public ResponseEntity<?> deleteRequest(@RequestBody ClientDeviceDto clientDeviceDto){
-        logger.info("AuthRestController | deleteRequest | inputValues: " + clientDeviceDto);
+    public ResponseEntity<?> deleteRequest(@RequestParam String clientId) {
+        logger.info("AuthRestController | deleteRequest | inputValues: " + clientId);
         try {
-            clientService.deleteRequest(clientDeviceDto);
+            clientService.deleteRequest(clientId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             logger.error("AuthRestController | deleteRequest: " + e.getMessage());

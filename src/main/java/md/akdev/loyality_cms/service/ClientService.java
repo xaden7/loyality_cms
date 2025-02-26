@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ClientService {
@@ -271,9 +272,9 @@ public class ClientService {
         return phone;
     }
 
-    public void deleteRequest(ClientDeviceDto clientDeviceDto) {
+    public void deleteRequest(String clientID) {
         DeleteRequest deleteRequest = new DeleteRequest();
-        deleteRequest.setClientId(clientDeviceDto.getId());
+        deleteRequest.setClientId(UUID.fromString(clientID));
         deleteRequestRepository.save(deleteRequest);
     }
 }
