@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -174,7 +171,7 @@ public class RewardUsedService {
 
 
             returnsOfLoyalityCardRepository.findByClientIdAndPromoCode(UUID.fromString(client.getUuid1c())
-                                , rewardUsed.getText()).ifPresentOrElse(
+                                , rewardUsed.getText().trim().toUpperCase(Locale.ROOT)).ifPresentOrElse(
                                         i -> {
                                             i.setPromoCodeUsed(true);
                                             returnsOfLoyalityCardRepository.save(i);
