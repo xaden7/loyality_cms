@@ -27,7 +27,7 @@ public class ObjectMapperConfig {
         return new ObjectMapper()
                 .setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY))
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-//                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .findAndRegisterModules()
                 .setSerializerProvider(sp
                 )
