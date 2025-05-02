@@ -48,7 +48,6 @@ public class NotificationUser {
 
 
     @Column(name = "created_at", updatable = false)
-    @JsonIgnore
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
