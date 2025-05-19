@@ -21,6 +21,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/de.brendamour/jpasskit -->
+		<dependency>
+			<groupId>de.brendamour</groupId>
+			<artifactId>jpasskit</artifactId>
+			<version>0.4.2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
