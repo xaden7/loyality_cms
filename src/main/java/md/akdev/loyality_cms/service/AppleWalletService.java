@@ -19,6 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 
 @Service
@@ -88,12 +91,28 @@ public class AppleWalletService {
 
                 .build();
 
-        String cert =  new ClassPathResource("/cert/CardfrumosPass.p12").getPath();
-        String wwdr = new ClassPathResource("/cert/WWDR.pem").getPath();
+//        String cert =  new ClassPathResource("cert/CardfrumosPass.p12").getPath();
+//        String wwdr = new ClassPathResource("cert/WWDR.pem").getPath();
+        ClassPathResource certResource = new ClassPathResource("cert/CardfrumosPass.p12");
+        ClassPathResource wwdrResource = new ClassPathResource("cert/WWDR.pem");
+
+        File tempCertFile = File.createTempFile("signing-cert", ".p12");
+        try (InputStream in = certResource.getInputStream();
+             OutputStream out = new FileOutputStream(tempCertFile)) {
+            in.transferTo(out);
+        }
+
+        File tempWWDRFile = File.createTempFile("ww-dr", ".p12");
+        try(InputStream in = wwdrResource.getInputStream();
+            OutputStream out = new FileOutputStream(tempWWDRFile)){
+                in.transferTo(out);
+            }
+
+
 
         PKSigningInformation signingInformation = new PKSigningInformationUtil().loadSigningInformation(
-                cert,
-                certPassword, wwdr
+                tempCertFile.getAbsolutePath(),
+                certPassword, tempWWDRFile.getAbsolutePath()
         );
 
 //        String assetsPath = "src/main/resources/assets";
