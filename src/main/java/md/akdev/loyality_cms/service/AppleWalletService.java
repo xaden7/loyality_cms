@@ -14,9 +14,11 @@ import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.*;
 
 @Service
@@ -86,13 +88,16 @@ public class AppleWalletService {
 
                 .build();
 
+        String cert =  new ClassPathResource("/cert/CardfrumosPass.p12").getPath();
+        String wwdr = new ClassPathResource("/cert/WWDR.pem").getPath();
 
         PKSigningInformation signingInformation = new PKSigningInformationUtil().loadSigningInformation(
-                certPath,
-                certPassword, wwdrCertPath
+                cert,
+                certPassword, wwdr
         );
 
-        String assetsPath = "src/main/resources/assets";
+//        String assetsPath = "src/main/resources/assets";
+        String assetsPath = new  ClassPathResource( "/assets").getFile().getAbsolutePath();
 
         PKFileBasedSigningUtil signingUtil = new PKFileBasedSigningUtil();
 
