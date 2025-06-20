@@ -13,6 +13,7 @@ import de.brendamour.jpasskit.signing.PKSigningInformationUtil;
 import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -135,12 +136,18 @@ public class AppleWalletService {
         }
 
         PKFileBasedSigningUtil signingUtil = new PKFileBasedSigningUtil();
+      try {
+          return signingUtil.createSignedAndZippedPkPassArchive(
+                  pkPass,
+                  tempDir.getAbsolutePath(),
+                  signingInformation);
+      }finally {
+          FileUtils.deleteDirectory(tempDir);
+          FileUtils.deleteQuietly(tempCertFile);
+          FileUtils.deleteQuietly(tempWWDRFile);
 
-        return signingUtil.createSignedAndZippedPkPassArchive(
-                pkPass,
-                tempDir.getAbsolutePath(),
-                signingInformation
-        );
+      }
+
 
     }
 
