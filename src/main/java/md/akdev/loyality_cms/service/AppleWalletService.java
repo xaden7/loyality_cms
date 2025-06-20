@@ -15,6 +15,8 @@ import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.*;
 
 @Service
@@ -116,13 +119,26 @@ public class AppleWalletService {
         );
 
 //        String assetsPath = "src/main/resources/assets";
-        String assetsPath = new  ClassPathResource( "/assets").getFile().getAbsolutePath();
+//        String assetsPath = new  ClassPathResource( "/assets").getFile().getAbsolutePath();
+
+        File tempDir = Files.createTempDirectory("pkpass-assets").toFile();
+        Resource[] resources = new PathMatchingResourcePatternResolver()
+                .getResources("classpath:/assets/*");
+        for (Resource resource : resources) {
+            if (resource.exists() && resource.isReadable()) {
+                File targetFile = new File(tempDir, Objects.requireNonNull(resource.getFilename()));
+                try (InputStream in = resource.getInputStream();
+                     OutputStream out = new FileOutputStream(targetFile)) {
+                    in.transferTo(out);
+                }
+            }
+        }
 
         PKFileBasedSigningUtil signingUtil = new PKFileBasedSigningUtil();
 
         return signingUtil.createSignedAndZippedPkPassArchive(
                 pkPass,
-                assetsPath,
+                tempDir.getAbsolutePath(),
                 signingInformation
         );
 
