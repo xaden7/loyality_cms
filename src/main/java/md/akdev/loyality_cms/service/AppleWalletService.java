@@ -57,7 +57,7 @@ public class AppleWalletService {
                 .build();
         PKField secondaryField = PKField.builder()
                 .key("name")
-                .label("Loyalty member")
+                .label("Card Frumos member")
                 .value(clientsModel.getClientName())
                 .build();
 
@@ -74,7 +74,8 @@ public class AppleWalletService {
                 .description("Card Frumos")
                 .organizationName("Felica Healthcare Group")
                 .formatVersion(1)
-                .logoText("Card Frumos")
+//                .logoText("Card Frumos")
+                .logoText("")
 //                .backgroundColor(
 //                        "rgb(2, 154, 168)"
 //                )
