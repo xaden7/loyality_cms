@@ -13,10 +13,19 @@ import de.brendamour.jpasskit.signing.PKSigningInformationUtil;
 import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.*;
 
 @Service
@@ -48,7 +57,7 @@ public class AppleWalletService {
                 .build();
         PKField secondaryField = PKField.builder()
                 .key("name")
-                .label("Loyalty member")
+                .label("Card Frumos member")
                 .value(clientsModel.getClientName())
                 .build();
 
@@ -65,7 +74,8 @@ public class AppleWalletService {
                 .description("Card Frumos")
                 .organizationName("Felica Healthcare Group")
                 .formatVersion(1)
-                .logoText("Card Frumos")
+//                .logoText("Card Frumos")
+                .logoText("")
 //                .backgroundColor(
 //                        "rgb(2, 154, 168)"
 //                )
@@ -86,21 +96,59 @@ public class AppleWalletService {
 
                 .build();
 
+//        String cert =  new ClassPathResource("cert/CardfrumosPass.p12").getPath();
+//        String wwdr = new ClassPathResource("cert/WWDR.pem").getPath();
+        ClassPathResource certResource = new ClassPathResource("cert/CardfrumosPass.p12");
+        ClassPathResource wwdrResource = new ClassPathResource("cert/WWDR.pem");
+
+        File tempCertFile = File.createTempFile("signing-cert", ".p12");
+        try (InputStream in = certResource.getInputStream();
+             OutputStream out = new FileOutputStream(tempCertFile)) {
+            in.transferTo(out);
+        }
+
+        File tempWWDRFile = File.createTempFile("ww-dr", ".p12");
+        try(InputStream in = wwdrResource.getInputStream();
+            OutputStream out = new FileOutputStream(tempWWDRFile)){
+                in.transferTo(out);
+            }
+
+
 
         PKSigningInformation signingInformation = new PKSigningInformationUtil().loadSigningInformation(
-                certPath,
-                certPassword, wwdrCertPath
+                tempCertFile.getAbsolutePath(),
+                certPassword, tempWWDRFile.getAbsolutePath()
         );
 
-        String assetsPath = "src/main/resources/assets";
+//        String assetsPath = "src/main/resources/assets";
+//        String assetsPath = new  ClassPathResource( "/assets").getFile().getAbsolutePath();
+
+        File tempDir = Files.createTempDirectory("pkpass-assets").toFile();
+        Resource[] resources = new PathMatchingResourcePatternResolver()
+                .getResources("classpath:/assets/*");
+        for (Resource resource : resources) {
+            if (resource.exists() && resource.isReadable()) {
+                File targetFile = new File(tempDir, Objects.requireNonNull(resource.getFilename()));
+                try (InputStream in = resource.getInputStream();
+                     OutputStream out = new FileOutputStream(targetFile)) {
+                    in.transferTo(out);
+                }
+            }
+        }
 
         PKFileBasedSigningUtil signingUtil = new PKFileBasedSigningUtil();
+      try {
+          return signingUtil.createSignedAndZippedPkPassArchive(
+                  pkPass,
+                  tempDir.getAbsolutePath(),
+                  signingInformation);
+      }finally {
+          FileUtils.deleteDirectory(tempDir);
+          FileUtils.deleteQuietly(tempCertFile);
+          FileUtils.deleteQuietly(tempWWDRFile);
 
-        return signingUtil.createSignedAndZippedPkPassArchive(
-                pkPass,
-                assetsPath,
-                signingInformation
-        );
+      }
+
 
     }
 
