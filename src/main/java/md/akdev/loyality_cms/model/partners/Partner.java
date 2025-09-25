@@ -28,6 +28,8 @@ public class Partner {
     private String shortDescriptionRu;
     private String veryShortDescriptionRo; //5
     private String veryShortDescriptionRu;
+    private boolean showCabinetButton;
+    private String loginLink;
 
     private int discount;
     @Column(name = "active")
@@ -44,10 +46,6 @@ public class Partner {
 
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<PartnerContacts> contacts = new ArrayList<>();
-
-    private boolean showCabinetButton;
-
-    private String loginLink;
 
 
     public void setImages(List<PartnerImage> images) {
