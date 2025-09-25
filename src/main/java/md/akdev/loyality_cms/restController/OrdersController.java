@@ -27,7 +27,7 @@ public class OrdersController {
     public ResponseEntity<?> getOrders(HttpServletRequest request){
         try
         {
-            List<Order> orders = orderService.geetOrders();
+            List<Order> orders = orderService.getOrders();
             logger.info("OrdersController | getOrders: Phone - \u001B[32m"+ request.getUserPrincipal().getName() + "\u001B[0m; " + request.getHeader("Authorization") + " - " + orders.size() + " records");
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }

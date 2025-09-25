@@ -3,7 +3,6 @@ package md.akdev.loyality_cms.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.model.order1c.Order;
-import md.akdev.loyality_cms.model.transaction.TransactionModel;
 import md.akdev.loyality_cms.repository.BranchRepository;
 import md.akdev.loyality_cms.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +29,7 @@ public class OrderService {
     private final BranchRepository branchRepository;
     private final RestTemplate restTemplate;
 
-    public List<Order> geetOrders() throws Exception {
+    public List<Order> getOrders() throws Exception {
         try {
 
             return getOrdersFrom1C();
@@ -59,6 +58,9 @@ public class OrderService {
                 throw new RuntimeException("Error getting transaction from 1c: " + e.getMessage());
             }
             ObjectMapper mapper = new ObjectMapper();
+            // Register the JSR310 module to handle Java 8 date/time types like LocalDateTime
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+
             assert orders != null;
             return Arrays.stream(orders)
                     .map(e -> mapper.convertValue(e, Order.class))

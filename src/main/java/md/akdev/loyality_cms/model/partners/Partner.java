@@ -45,6 +45,10 @@ public class Partner {
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<PartnerContacts> contacts = new ArrayList<>();
 
+    private boolean showCabinetButton;
+
+    private String loginLink;
+
 
     public void setImages(List<PartnerImage> images) {
         this.images =
