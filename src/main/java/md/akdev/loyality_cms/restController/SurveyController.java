@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import md.akdev.loyality_cms.dto.survey.SurveyUsedRequest;
 import md.akdev.loyality_cms.service.SurveyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/survey")
@@ -22,7 +19,7 @@ public class SurveyController {
     }
 
     @PostMapping("/save-used")
-    public ResponseEntity<?> saveSurveyUsed( SurveyUsedRequest request) {
+    public ResponseEntity<?> saveSurveyUsed(@RequestBody SurveyUsedRequest request) {
         surveyService.saveSurveyUsed(request);
         return ResponseEntity.ok().body(
                 surveyService.getActiveSurveysForClient());
