@@ -10,6 +10,9 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SurveyAnswerOptionsResponse {
 
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("answer_text_ru")
     private String answerTextRu;
 
