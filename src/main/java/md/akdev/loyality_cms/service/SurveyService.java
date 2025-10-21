@@ -93,17 +93,19 @@ public class SurveyService {
                 .surveyId(survey.getId())
                 .clientId(clientId)
                 .sendToLoyality(false)
-                .surveyUsedDetails(
+                .build();
+
+        surveyUsed.setSurveyUsedDetails(
                         request.getQuestionAnswers().stream().map(qa ->
                                 SurveyUsedDetail.builder()
                                     .questionId(qa.getQuestionId())
                                     .answerId(qa.getAnswerId())
+                                        .surveyUsed(surveyUsed)
                                     .answerText(qa.getAnswerText())
                                         .build())
                                         .collect(java.util.stream.Collectors.toSet())
 
-                )
-                .build();
+                );
 
         surveyUsedRepository.save(surveyUsed);
 

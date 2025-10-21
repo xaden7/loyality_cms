@@ -14,6 +14,7 @@ public class SurveyUsedRequest {
     @NotNull(message = "survey_id is required")
     private Integer surveyId;
     @JsonProperty("question_answers")
+
     @NotNull(message = "question_answers is required")
     List<QuestionAnswer> questionAnswers;
 

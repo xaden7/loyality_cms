@@ -29,7 +29,6 @@ public class SurveyUsedDetail {
     @Column(name = "question_id", nullable = false)
     private Integer questionId;
 
-    @NotNull
     @Column(name = "answer_id")
     private Integer answerId;
 
