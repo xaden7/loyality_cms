@@ -78,8 +78,10 @@ public class PromotionController {
         if (data.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/jpeg")).body(new byte[0]);
         }
+        //check if data == array then split
 
-        String base64Image = data.split(",")[1];
+        String[] parts = data.split(",");
+        String base64Image = parts.length > 1 ? parts[1] : parts[0];
         byte[] imageBytes = java.util.Base64.getDecoder().decode(base64Image);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf(promotion.get().getImageType()))
