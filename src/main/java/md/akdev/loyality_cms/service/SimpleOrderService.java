@@ -21,7 +21,7 @@ public class SimpleOrderService {
     private final ProductRepository productRepository;
 
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void newOrder (SimpleOrderDTO simpleOrderDTO) {
 
         if (simpleOrderDTO.getProducts().isEmpty()) {

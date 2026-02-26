@@ -17,12 +17,12 @@ public class DeviceService {
         this.devicesRepository = devicesRepository;
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ResponseEntity<?> addDevice(DevicesModel inputDevice) {
             devicesRepository.save(inputDevice);
         return ResponseEntity.ok("successful");
     }
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void lastConnectDate (String deviceId){
         DevicesModel getDevice = devicesRepository.getDeviceByDeviceId(deviceId);
         if(getDevice != null){
