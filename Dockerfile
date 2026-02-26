@@ -11,4 +11,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 EXPOSE 8090
 
-ENTRYPOINT ["java","-Xms512m","-Xmx2g","-jar","target/loyality_cms-1.0.0-ALFA.jar"]
+ENTRYPOINT ["java","-Xms2g","-Xmx4g","-jar","target/loyality_cms-1.0.0-ALFA.jar"]
