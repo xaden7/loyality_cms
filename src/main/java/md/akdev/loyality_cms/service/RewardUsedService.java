@@ -35,7 +35,7 @@ public class RewardUsedService {
     private final ReturnsOfLoyalityCardRepository returnsOfLoyalityCardRepository;
 
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void saveRewardUsed(RewardUsedDTO rewardUsed){
         RewardsType rewardType =
                 rewardService.findById(rewardUsed.getRewardId()).orElseThrow(() -> new NotFoundException("Reward with id " + rewardUsed.getRewardId() + " not found")).getRewardType();
