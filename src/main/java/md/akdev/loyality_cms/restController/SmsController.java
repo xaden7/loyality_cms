@@ -84,7 +84,12 @@ public class SmsController {
 
 
     @PostMapping("/send-sms-card")
+    @Deprecated
     public ResponseEntity<?> sendSmsCard(@NotNull String phone , @RequestParam(defaultValue = "unifun") String provider) {
+
+        return ResponseEntity.badRequest().body("Această funcționalitate nu este actula, va rugam sa renoiți aplicația pentru a primi cele mai noi funcționalități");
+
+        /*
 
         phone = phoneDefaultIfNull(phone);
 
@@ -129,6 +134,8 @@ public class SmsController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.badRequest().body("Error while sending sms");
+
+         */
     }
 
     @PostMapping("/verify-sms")

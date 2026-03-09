@@ -90,6 +90,11 @@ public class AuthRestController {
     @GetMapping("phone={phone}&barcode={barcode}")
     public ResponseEntity<?> getClientDeviceDto(@PathVariable String phone, @PathVariable String barcode){
 
+
+        return ResponseEntity.badRequest().body("Această funcționalitate nu este actula, va rugam sa renoiți aplicația pentru a primi cele mai noi funcționalități");
+
+        /*
+
         phone = phoneDefaultIfNull(phone);
 
         logger.info("AuthRestController | getClientDeviceDto | inputValues: \u001B[32m" + phone +  "\u001B[0m - " + barcode);
@@ -131,6 +136,8 @@ public class AuthRestController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        */
+
     }
 
     @PostMapping("newAccessToken")
