@@ -113,6 +113,12 @@ public class QuestionaryService {
                     if (!Objects.equals(i.getBirthday(), questionaryModel.getBirthday()) && questionaryModel.getBirthday() != null){
                         i.setBirthday(questionaryModel.getBirthday());
                     }
+                    if (!Objects.equals(i.getSmsAllowed(), questionaryModel.getSmsAllowed()) && questionaryModel.getSmsAllowed() != null){
+                        i.setSmsAllowed(questionaryModel.getSmsAllowed());
+                    }
+                    if(!Objects.equals(i.getCallAllowed(), questionaryModel.getCallAllowed()) && questionaryModel.getCallAllowed() != null){
+                        i.setCallAllowed(questionaryModel.getCallAllowed());
+                    }
 
                     questionaryRepository.save(i);
 

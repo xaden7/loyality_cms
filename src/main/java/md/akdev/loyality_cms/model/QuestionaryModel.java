@@ -46,6 +46,10 @@ public class QuestionaryModel implements Serializable{
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    @Column(name="sms_allowed")
+    private Boolean smsAllowed;
+    @Column(name="call_allowed")
+    private Boolean callAllowed;
 
 
     @Override
@@ -64,6 +68,8 @@ public class QuestionaryModel implements Serializable{
                 ", birthday=" + birthday +
                 ", clientId=" + clientIdStr +
                 ", sex='" + sex + '\'' +
+               ", smsAllowed=" + smsAllowed + '\'' +
+               ", callAllowed=" + callAllowed + '\'' +
                 '}';
     }
 }
