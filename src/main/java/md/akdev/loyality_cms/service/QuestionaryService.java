@@ -178,6 +178,8 @@ public class QuestionaryService {
         questionaryDTO.setLanguage(questionaryModel.getLanguage());
         questionaryDTO.setBirthday(questionaryModel.getBirthday());
         questionaryDTO.setSex(questionaryModel.getSex());
+        questionaryDTO.setSmsAllowed(questionaryModel.getSmsAllowed());
+        questionaryDTO.setCallAllowed(questionaryModel.getCallAllowed());
     return questionaryDTO;
     }
 }
