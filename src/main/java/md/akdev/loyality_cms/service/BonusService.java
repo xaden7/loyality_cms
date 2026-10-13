@@ -15,6 +15,7 @@ import java.util.Optional;
 @Service
 public class BonusService {
     @Value("${spring.datasource1c.url.getRefreshBonus}") String urlGetRefreshBonus;
+    @Value("${spring.datasource1c.url.getBonusHistory}") String urlGetBonusHistory;
     @Value("${spring.datasource1c.ipAddress}")
     String ipAddress;
     private final ClientsRepository clientsRepository;
@@ -35,6 +36,20 @@ public class BonusService {
 
         return clientsModel;
         //return clientsModel.map(this::getRefreshBonusFrom1c);
+    }
+
+    public Object getBonusHistory() {
+        String clientUuid1c = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
+            throw new RuntimeException("1c is not available");
+        }
+
+        try {
+            return restTemplate.getForObject(urlGetBonusHistory, Object.class, clientUuid1c);
+        } catch (HttpStatusCodeException e) {
+            throw new RuntimeException("Error getting bonus history from 1c: " + e.getMessage());
+        }
     }
 
     private void getRefreshBonusFrom1c(ClientsModel clientsModel) {

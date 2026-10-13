@@ -43,6 +43,7 @@ public class JwtSecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/api/image/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/partners/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/banners/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/actuator/health")).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)

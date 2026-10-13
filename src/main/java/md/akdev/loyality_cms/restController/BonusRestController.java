@@ -46,5 +46,19 @@ public class BonusRestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/bonusHistory")
+    public ResponseEntity<?> getBonusHistory(HttpServletRequest request) {
+        try {
+            Object history = bonusService.getBonusHistory();
+
+            logger.info("BonusRestController | getBonusHistory: Phone - \u001B[32m" + request.getUserPrincipal().getName() + "\u001B[0m");
+
+            return new ResponseEntity<>(history, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("BonusRestController | getBonusHistory: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
