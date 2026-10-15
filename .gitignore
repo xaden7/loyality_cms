@@ -31,3 +31,21 @@ build/
 
 ### VS Code ###
 .vscode/
+/D:/loyality_cms/db_loyality_cms.mv.db
+/log/loyality_cms.2024-04-02.0.log.gz
+/log/loyality_cms.2024-04-03.0.log.gz
+/log/loyality_cms.2024-04-04.0.log.gz
+/log/loyality_cms.2024-08-29.0.log.gz
+/log/loyality_cms.2024-08-30.0.log.gz
+/log/loyality_cms.2024-08-31.0.log.gz
+/log/loyality_cms.2024-09-01.0.log.gz
+/log/loyality_cms.2024-09-02.0.log.gz
+/log/loyality_cms.2024-11-20.0.log.gz
+/log/loyality_cms.2024-11-21.0.log.gz
+/log/loyality_cms.2024-11-22.0.log.gz
+/log/loyality_cms.2024-11-26.0.log.gz
+/log/loyality_cms.2025-02-26.0.log.gz
+/log/loyality_cms.2025-09-25.0.log.gz
+/log/loyality_cms.2025-10-08.0.log.gz
+/log/loyality_cms.2025-12-01.0.log.gz
+/log/loyality_cms.log
