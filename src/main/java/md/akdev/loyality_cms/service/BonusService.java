@@ -1,14 +1,18 @@
 package md.akdev.loyality_cms.service;
 
+import md.akdev.loyality_cms.exception.NotFoundException;
 import md.akdev.loyality_cms.model.ClientsModel;
 import md.akdev.loyality_cms.repository.ClientsRepository;
 import md.akdev.loyality_cms.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,6 +20,8 @@ import java.util.Optional;
 public class BonusService {
     @Value("${spring.datasource1c.url.getRefreshBonus}") String urlGetRefreshBonus;
     @Value("${spring.datasource1c.url.getBonusHistory}") String urlGetBonusHistory;
+    @Value("${spring.datasource1c.url.getBonusPromotions}") String urlGetBonusPromotions;
+    @Value("${spring.datasource1c.url.getPromotions}") String urlGetPromotions;
     @Value("${spring.datasource1c.ipAddress}")
     String ipAddress;
     private final ClientsRepository clientsRepository;
@@ -49,6 +55,47 @@ public class BonusService {
             return restTemplate.getForObject(urlGetBonusHistory, Object.class, clientUuid1c);
         } catch (HttpStatusCodeException e) {
             throw new RuntimeException("Error getting bonus history from 1c: " + e.getMessage());
+        }
+    }
+
+    public Object getBonusPromotions(String phone) {
+        String clientUuid1c = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String barcode = clientsRepository.getClientByUuid1c(clientUuid1c)
+                .map(ClientsModel::getCodeCard)
+                .orElse("");
+
+        if (!NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
+            throw new RuntimeException("1c is not available");
+        }
+
+        try {
+            ResponseEntity<Object> response = restTemplate.getForEntity(urlGetBonusPromotions, Object.class, phone, barcode);
+            if (response.getStatusCode().is4xxClientError()) {
+                throw new RuntimeException("Error getting bonus promotions from 1c: " + response.getStatusCode() + " " + response.getBody());
+            }
+            return response.getBody();
+        } catch (NotFoundException e) {
+            return Map.of("bonus", List.of());
+        } catch (HttpStatusCodeException e) {
+            throw new RuntimeException("Error getting bonus promotions from 1c: " + e.getMessage());
+        }
+    }
+
+    public Object getPromotions() {
+        if (!NetworkUtils.sourceIsAvailable(ipAddress, 8010)) {
+            throw new RuntimeException("1c is not available");
+        }
+
+        try {
+            ResponseEntity<Object> response = restTemplate.getForEntity(urlGetPromotions, Object.class);
+            if (response.getStatusCode().is4xxClientError()) {
+                throw new RuntimeException("Error getting promotions from 1c: " + response.getStatusCode() + " " + response.getBody());
+            }
+            return response.getBody();
+        } catch (NotFoundException e) {
+            return List.of();
+        } catch (HttpStatusCodeException e) {
+            throw new RuntimeException("Error getting promotions from 1c: " + e.getMessage());
         }
     }
 

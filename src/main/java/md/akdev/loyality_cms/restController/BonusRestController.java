@@ -60,5 +60,33 @@ public class BonusRestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/bonusPromotions")
+    public ResponseEntity<?> getBonusPromotions(HttpServletRequest request) {
+        try {
+            Object promotions = bonusService.getBonusPromotions(request.getUserPrincipal().getName());
+
+            logger.info("BonusRestController | getBonusPromotions: Phone - \u001B[32m" + request.getUserPrincipal().getName() + "\u001B[0m");
+
+            return new ResponseEntity<>(promotions, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("BonusRestController | getBonusPromotions: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/promotions")
+    public ResponseEntity<?> getPromotions(HttpServletRequest request) {
+        try {
+            Object promotions = bonusService.getPromotions();
+
+            logger.info("BonusRestController | getPromotions: Phone - \u001B[32m" + request.getUserPrincipal().getName() + "\u001B[0m");
+
+            return new ResponseEntity<>(promotions, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("BonusRestController | getPromotions: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
